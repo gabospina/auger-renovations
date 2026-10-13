@@ -1,0 +1,329 @@
+{
+    "quote_id": "DEV-2026-0089",
+    "request_id": "REQ-2026-0042",
+    "created_at": "2026-10-05 18:30:00",
+    "materials": [
+        {
+            "desc": "Céramique sol 12x24",
+            "qty": 110,
+            "unit": 4.5,
+            "total": 495
+        },
+        {
+            "desc": "Colle, coulis, membrane Ditra",
+            "qty": 1,
+            "unit": 380,
+            "total": 380
+        }
+    ],
+    "labor": [
+        {
+            "desc": "Démolition et disposition",
+            "hours": 16,
+            "rate": 75,
+            "total": 1200
+        },
+        {
+            "desc": "Pose de céramique et plomberie",
+            "hours": 32,
+            "rate": 85,
+            "total": 2720
+        }
+    ],
+    "summary": {
+        "materials_total": 875,
+        "labor_total": 3920,
+        "subtotal": 4795,
+        "taxes_qc": 718.05,
+        "grand_total": 5513.05
+    },
+    "sent_to_client_at": "2026-10-05 18:45:00",
+    "DEV-20261006-8C6C": {
+        "quote_id": "DEV-20261006-8C6C",
+        "request_id": "REQ-20261006-976C",
+        "date": "2026-10-06 02:28:20",
+        "client": {
+            "name": "Heierne nnksdas",
+            "address": "11 Rue du Château-Kirkland",
+            "email": "gobasuras@gmail.com",
+            "phone": "514-758-6345"
+        },
+        "materials": [
+            {
+                "desc": "Matériaux de plomberie et raccordements",
+                "qty": 1,
+                "unit": 250,
+                "total": "250.00 $"
+            },
+            {
+                "desc": "Paint",
+                "qty": 1,
+                "unit": 250,
+                "total": "250.00 $"
+            }
+        ],
+        "labor": [
+            {
+                "desc": "Démolition et préparation",
+                "hours": 8,
+                "rate": 75,
+                "total": "600.00 $"
+            },
+            {
+                "desc": "Painter",
+                "hours": 5,
+                "rate": 75,
+                "total": "375.00 $"
+            }
+        ],
+        "totals": {
+            "materials": "500.00 $",
+            "labor": "975.00 $",
+            "subtotal": "1475.00 $",
+            "taxes": "220.88 $",
+            "grand_total": "1695.88 $"
+        }
+    },
+    "DEV-20261008-EE95": {
+        "quote_id": "DEV-20261008-EE95",
+        "request_id": "REQ-20261006-C3C7",
+        "date": "2026-10-08 02:12:06",
+        "client": {
+            "name": "Gabriel Ospina",
+            "address": "11 Rue du Château-Kirkland",
+            "email": "gobasuras@gmail.com",
+            "phone": "514-758-6158"
+        },
+        "materials": [
+            {
+                "desc": "Fournitures de plomberie de base, raccords PEX & évacuation",
+                "qty": 1,
+                "unit": 220,
+                "total": "220.00 $"
+            },
+            {
+                "desc": "Panneau de ciment Durock 1\/2 po x 3 pi x 5 pi",
+                "qty": 6,
+                "unit": 17.47,
+                "total": "104.82 $"
+            },
+            {
+                "desc": "Membrane d'étanchéité Schluter Kerdi 108 pi²",
+                "qty": 1,
+                "unit": 149,
+                "total": "149.00 $"
+            },
+            {
+                "desc": "Céramique de douche & coulis scellant",
+                "qty": 96,
+                "unit": 4.5,
+                "total": "432.00 $"
+            },
+            {
+                "desc": "Panneau de gypse Sheetrock 1\/2 po x 4 pi x 8 pi",
+                "qty": 11,
+                "unit": 18.98,
+                "total": "208.78 $"
+            },
+            {
+                "desc": "Peinture salle de bain anti-moisissure (apprêt + 2 couches)",
+                "qty": 2,
+                "unit": 68,
+                "total": "136.00 $"
+            },
+            {
+                "desc": "Panneau de gypse Sheetrock 1\/2 po x 4 pi x 8 pi",
+                "qty": 1,
+                "unit": 18.98,
+                "total": "18.98 $"
+            }
+        ],
+        "labor": [
+            {
+                "desc": "Démolition douche existante et évacuation",
+                "hours": 6,
+                "rate": 75,
+                "total": "450.00 $"
+            },
+            {
+                "desc": "Pose membrane Kerdi, ciment-board et étanchéité",
+                "hours": 8,
+                "rate": 75,
+                "total": "600.00 $"
+            },
+            {
+                "desc": "Pose carrelage mural et coulis douche",
+                "hours": 14,
+                "rate": 75,
+                "total": "1,050.00 $"
+            },
+            {
+                "desc": "Installation vanité, robinetterie et raccordements",
+                "hours": 4.5,
+                "rate": 75,
+                "total": "337.50 $"
+            },
+            {
+                "desc": "Remplacement toilette et bride de plancher",
+                "hours": 2,
+                "rate": 75,
+                "total": "150.00 $"
+            },
+            {
+                "desc": "Plâtrage, tirage de joints et peinture complète",
+                "hours": 18,
+                "rate": 75,
+                "total": "1,350.00 $"
+            }
+        ],
+        "totals": {
+            "materials": "1,269.58 $",
+            "labor": "3,937.50 $",
+            "subtotal": "5,207.08 $",
+            "taxes": "779.76 $",
+            "grand_total": "5,986.84 $"
+        }
+    },
+    "DEV-202610-001": {
+        "quote_id": "DEV-202610-001",
+        "request_id": "REQ-20261005-64C9",
+        "created_at": "2026-10-08 03:05:36",
+        "valid_until": "2026-11-07",
+        "status": "Envoyée",
+        "client": {
+            "name": "Gabriel Ospina",
+            "address": "11 Rue du Château-Kirkland",
+            "email": "gobasuras@gmail.com",
+            "phone": "514-758-6158"
+        },
+        "materials": [
+            {
+                "desc": "Fournitures de plomberie de base, raccords PEX & évacuation",
+                "qty": 1,
+                "unit": 220,
+                "total": "220.00 $"
+            },
+            {
+                "desc": "Panneau de gypse Sheetrock 1\/2 po x 4 pi x 8 pi",
+                "qty": 9,
+                "unit": 18.98,
+                "total": "170.82 $"
+            }
+        ],
+        "labor": [
+            {
+                "desc": "Travaux généraux de menuiserie et rénovation",
+                "hours": 12,
+                "rate": 75,
+                "total": "900.00 $"
+            }
+        ],
+        "totals": {
+            "materials": "390.82 $",
+            "labor": "900.00 $",
+            "subtotal": "1,290.82 $",
+            "taxes": "193.30 $",
+            "grand_total": "1,484.12 $"
+        }
+    },
+    "AR-2026-0011": {
+        "quote_number": "AR-2026-0011",
+        "request_id": "REQ-20261008-AC70",
+        "client": {
+            "name": "Client",
+            "email": "",
+            "phone": "",
+            "address": ""
+        },
+        "totals": {
+            "materials": 1924.23,
+            "labor": 0,
+            "subtotal": 1924.23,
+            "tps": 96.2115,
+            "tvq": 191.9419425,
+            "grand_total": 2212.3834425
+        },
+        "file": "quotes\/quote-AR-2026-0011.html",
+        "created_at": "2026-10-11 16:35"
+    },
+    "AR-2026-0012": {
+        "quote_number": "AR-2026-0012",
+        "request_id": "REQ-20261008-AC70",
+        "client": {
+            "name": "Client",
+            "email": "",
+            "phone": "",
+            "address": ""
+        },
+        "totals": {
+            "materials": 1924.23,
+            "labor": 0,
+            "subtotal": 1924.23,
+            "tps": 96.2115,
+            "tvq": 191.9419425,
+            "grand_total": 2212.3834425
+        },
+        "file": "quotes\/quote-AR-2026-0012.html",
+        "created_at": "2026-10-11 17:20"
+    },
+    "AR-2026-0013": {
+        "quote_number": "AR-2026-0013",
+        "request_id": "REQ-20261008-AC70",
+        "client": {
+            "name": "Client",
+            "email": "",
+            "phone": "",
+            "address": ""
+        },
+        "totals": {
+            "materials": 1924.23,
+            "labor": 0,
+            "subtotal": 1924.23,
+            "tps": 96.2115,
+            "tvq": 191.9419425,
+            "grand_total": 2212.3834425
+        },
+        "file": "quotes\/quote-AR-2026-0013.html",
+        "created_at": "2026-10-11 17:35"
+    },
+    "AR-2026-0014": {
+        "quote_number": "AR-2026-0014",
+        "request_id": "REQ-20261008-AC70",
+        "client": {
+            "name": "Client",
+            "email": "",
+            "phone": "",
+            "address": ""
+        },
+        "totals": {
+            "materials": 1924.23,
+            "labor": 0,
+            "subtotal": 1924.23,
+            "tps": 96.2115,
+            "tvq": 191.9419425,
+            "grand_total": 2212.3834425
+        },
+        "file": "quotes\/quote-AR-2026-0014.html",
+        "created_at": "2026-10-11 20:20"
+    },
+    "AR-2026-0015": {
+        "quote_number": "AR-2026-0015",
+        "request_id": "REQ-20261008-AC70",
+        "client": {
+            "name": "Client",
+            "email": "",
+            "phone": "",
+            "address": ""
+        },
+        "totals": {
+            "materials": 1924.23,
+            "labor": 3540,
+            "subtotal": 5464.23,
+            "tps": 273.2115,
+            "tvq": 545.0569425,
+            "grand_total": 6282.4984425
+        },
+        "file": "quotes\/quote-AR-2026-0015.html",
+        "created_at": "2026-10-11 20:43"
+    }
+}

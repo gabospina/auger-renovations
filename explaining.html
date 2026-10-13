@@ -1,0 +1,216 @@
+
+=========
+
+WEBSITE STEPS:
+
+With the catalog architecture set up to support trade suppliers and our pricing database operational,
+here is the roadmap for what comes next in the **Auger Rénovation** pipeline:
+
+### Step 2: Restructure `tier-presets.json` (Dynamic Material Binding)
+
+* **Goal:** Eliminate hardcoded material prices inside tier presets (Économique, Standard, Haut de gamme).
+* **Work to do:**
+* Map every material line item in your preset packages directly to its catalog key (`materialId`: `SKU-1001728974`,
+ `CANAC-VANITY-36`, `CIOT-CALACATTA-2448`).
+* Define quantity rules (fixed units vs. per square foot of room area).
+* Ensure tier costs dynamically recalculate whenever a material price changes in `materials.json`.
+
+### Step 3: Global Markup Integration in Quotes
+
+* **Goal:** Apply the 15% administrative markup setting seamlessly across cost estimates.
+* **Work to do:**
+* Connect `admin/data/settings.json` (`markup_rate: 0.15`) to the calculation engine.
+* Clearly distinguish between contractor internal cost and client billed price in quote summaries.
+
+### Step 4: Submission & Quote Generator UI (`request.php` & Admin Quotes)
+
+* **Goal:** Connect client quote requests directly to preset tiers and live catalog items.
+* **Work to do:**
+* Automatically generate itemized quotes when a client selects a tier for their room dimensions.
+* Provide an itemized breakdown (materials from Home Depot / Canac / Ciot + labor hours + markup).
+* Allow line-item adjustments before exporting or sending the final quote PDF to the client.
+
+### Step 5: Automated Scheduling & Background Cron Sync
+
+* **Goal:** Enable the automated weekly price sync configured in `materials.html` (Mondays at 6:00 AM).
+* **Work to do:**
+* Set up a Windows Task Scheduler job or lightweight Node/PHP background task to trigger `api-materials.php?action=sync` on schedule.
+* Log sync history and last-updated timestamps to `settings.json`.
+
+Would you like to proceed with **Step 2 (Structuring `tier-presets.json` with dynamic catalog bindings)** next?
+
+=========
+
+Step 5: Registering the Task in Windows Task Scheduler
+Run PowerShell as Administrator to schedule the task to check once every Sunday and Monday at 06:00 AM:
+
+$action = New-ScheduledTaskAction -Execute "C:\Python314\python.exe" -Argument "C:\xampp\htdocs\auger-renovations\admin\auto-sync.py" -WorkingDirectory "C:\xampp\htdocs\auger-renovations\admin"
+$triggerSunday = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At 06:00am
+$triggerMonday = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 06:00am
+Register-ScheduledTask -TaskName "Auger_Materials_AutoSync" -Action $action -Trigger @($triggerSunday, $triggerMonday) -Description "Synchronisation hebdomadaire automatique du catalogue Home Depot"
+
+
+==============
+
+### 1. How to Add a New Product from Home Depot into `materials.json`
+
+There are two ways to add a product: via the **Admin Interface** (`materials.html`) or **Directly into `materials.json**`.
+
+#### Method A: Using the Admin Interface (Recommended)
+
+1. **Find the product on Home Depot:**
+
+* Go to [Home Depot Canada](https://www.homedepot.ca).
+* Note: As seen on your current tab, make sure the item is not discontinued or a dead URL. Pick an active product page.
+* Copy the product URL from your browser's address bar (e.g. `[https://www.homedepot.ca/produit/.../1000xxxxxx](https://www.homedepot.ca/produit/.../1000xxxxxx)`).
+
+2. **Open your catalog manager:**
+* Navigate to `http://localhost/auger-renovations/admin/materials.html`.
+
+3. **Click `+ Ajouter un article`:**
+* Fill out the modal fields:
+* **Code / ID :** Enter a clean reference code (e.g., `PINT-01`, `GYP-01`, or the 10-digit Home Depot SKU like `1000115372`).
+* **Description / Nom :** Paste the title (e.g., `Pintar Couverture de rouleau en Mousse 240mm x 10mm`).
+* **Catégorie :** Choose or type the category (e.g., `Peinture`, `Plomberie`, `Gypse & Finition`).
+* **Unité :** `chaque`, `feuille`, `pi²`, `rouleau`, etc.
+* **Prix coûtant (HD) :** Enter the Home Depot shelf price (e.g., `9.97`).
+* **URL Home Depot :** Paste the copied product link.
+
+4. **Save:**
+* Click **Enregistrer**. The backend `api-materials.php` will write this new record directly into `admin/data/materials.json`.
+
+
+
+---
+
+#### Method B: Adding Directly into `admin/data/materials.json`
+
+If you prefer adding it via code editor (VS Code):
+
+1. Open `admin/data/materials.json`.
+2. Add a new JSON key object matching this exact structure:
+
+```json
+  "PINT-ROULEAU-10MM": {
+    "id": "PINT-ROULEAU-10MM",
+    "name": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
+    "category": "Peinture",
+    "unit": "chaque",
+    "price": 9.97,
+    "url": "https://www.homedepot.ca/produit/pintar-couverture-de-rouleau.../1000xxxxxx",
+    "last_updated": "2026-10-10"
+  }
+
+```
+
+3. Save the file.
+
+---
+
+### 2. How to Update a Price from Home Depot in `materials.html`
+
+You have three options depending on whether you want to update one item manually, scrape live from Home Depot, or bulk-update everything:
+
+#### Option A: Quick Manual Edit (Pen Icon)
+
+1. Open `admin/materials.html`.
+2. Locate the row you want to change.
+3. Click the **pen icon** (`fa-pen-to-square`) under the **Actions** column.
+4. Enter the new Home Depot cost in the prompt box and click **OK**.
+5. `api-materials.php` updates `materials.json`, and the table immediately recalculates the **+15% markup** and the **Prix Facturé**.
+
+---
+
+#### Option B: Automatic Single-Item Scrape (Rotate Arrow Icon)
+
+1. In `admin/materials.html`, ensure the product has its valid Home Depot URL saved.
+2. Click the **blue refresh icon** (`fa-arrows-rotate`) on that item's row.
+3. This triggers a request to `api-materials.php?action=sync&id=...`, which executes `scraper.py` in the background, pulls the latest shelf price from Home Depot, updates `last_updated`, and refreshes the table.
+
+---
+
+#### Option C: Bulk Scrape All Products
+
+1. Click the top-bar button: **« Actualiser tous les prix »** (or run `python admin/scraper.py` from your terminal).
+2. The Python scraper loops through all URLs registered in `materials.json`, fetches the newest prices, and writes the timestamped updates back to `materials.json`.
+3. Refresh `materials.html` (`Ctrl` + `F5`) to see the latest figures.
+
+=============
+
+COMO SE ACTUALIZA EL PRECIO DE UN PRODUCTO:
+
+1. I am in materials.html page
+2. I click on "Voir l'article" 
+3. and a home depot page opens witht he ariticle requested.
+4. I clicked on "Ajouter a Auger"
+5. The price is update in my matrials.json file.
+6. I refresh the materials.html page on the broswer, the price is updated correctly.
+
+=============
+
+CALCULO DE LA MANO DE OBRA POR HORA:
+
+In residential general contracting in Quebec, labor estimates are calculated using **production rates** (règles de rendement). These are derived from empirical time-motion studies published in industry standard cost guides (such as RSMeans, APCHQ guides, and Means Estimating) combined with the typical workflow of an RBQ-licensed carpenter or tradesperson.
+
+A 6-hour allocation for removing a shower is broken down into specific micro-tasks rather than treated as a single action:
+
+### Detailed Breakdown of the 6-Hour Shower Demolition
+
+1. **Site Protection & Staging (0.75 hr / 45 min)**
+* Floor runner installation through hallways/stairs.
+* Polyethylene dust containment zippers over doors and HVAC registers.
+* Setting up the HEPA air scrubber/shop-vac.
+
+
+2. **Mechanical Disconnection & Isolation (0.75 hr / 45 min)**
+* Water line shut-off and isolation caps (crimping PEX or soldering copper end caps).
+* Removing trim, mixing valve cartridges, and shower head arms.
+* Cutting or capping the drain tailpiece without cracking the P-trap below the subfloor.
+
+
+3. **Demolition of Enclosure & Substrate (2.5 hrs)**
+* Removing tempered glass doors, tracks, and sealant beads (0.75 hr).
+* Breaking out wall tiles and removing underlying drywall/cement board down to the bare studs (1.25 hrs).
+* Chiseling out the acrylic base or mud bed/mortar pan without damaging surrounding framing (0.5 hr).
+
+
+4. **Debris Bagging & Disposal (1.25 hrs)**
+* Hauling heavy tile shards, wet drywall, and framing scrap out to the trailer/dumpster.
+* A typical 36"x48" tile shower generates 300 to 500 lbs of heavy rubble requiring multiple trips.
+
+
+5. **Rough Framing Cleanup & De-Nailing (0.75 hr / 45 min)**
+* Pulling remaining drywall screws, staple rings, and nails out of the studs.
+* Vacuuming inside wall cavities to inspect for hidden mold, rotted studs, or leaks.
+
+**Total: 6.0 Man-Hours**
+
+---
+
+### Standard Estimation Formulas by Trade
+
+The automatic rules in your script follow standard contractor metrics:
+
+* **Tile Removal:** $0.15\text{ to }0.25\text{ hours per sq ft}$ (approx. 4 to 6 hours for an 80–100 sq ft shower enclosure).
+* **Tile Installation & Grouting:** $0.25\text{ to }0.35\text{ hours per sq ft}$ plus layout/cuts.
+* **Drywall & Joint Finishing:**
+* Hanging sheets: $0.25\text{ hours per 4'x8' sheet}$ (15 min/sheet).
+* 3-coat taping & sanding: $0.12\text{ to }0.15\text{ hours per sq ft}$ of surface area.
+
+
+* **Standard Fixtures:**
+* Toilet replacement: $1.5\text{ to }2.0\text{ hours}$ (pull old wax ring, verify flange, assemble, seal, leak test).
+* Pre-built vanity (30"-48"): $3.5\text{ to }4.5\text{ hours}$ (leveling, scribing, faucet mount, P-trap & drain hookup,
+
+supply lines, silicone bead).
+
+---
+
+### Customizing the Hours in Your Estimator
+
+Because conditions vary (e.g., ground-floor bungalows vs. 3rd-floor Montreal plexes with narrow staircases),
+the auto-populated numbers are meant to serve as an **accurate baseline**. You can adjust the hours directly
+in the input field on the page before clicking **Enregistrer & Envoyer** or tweak the default multipliers inside
+`assets/js/quote-bathroom.js`.
+
+==============

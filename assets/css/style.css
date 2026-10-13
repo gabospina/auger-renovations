@@ -1,0 +1,960 @@
+:root {
+  --primary: #c47a2c;
+  --primary-dark: #9b5f1f;
+  --bg: #f5f5f5;
+  --text: #222;
+  --muted: #666;
+  --white: #fff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+/* Layout */
+
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.center {
+  text-align: center;
+}
+
+/* Header */
+
+.site-header {
+  background-color: #000;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px 0;
+}
+
+.logo img {
+  height: 48px;
+}
+
+/* Navigation */
+
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 3rem;
+  margin: 0;
+  padding: 0;
+}
+
+/* RBQ Numbers */
+.main-nav a,
+.rbq-nav {
+  font-size: 15px;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-decoration: none;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  color: #d1b06a;
+}
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;        /* White hamburger icon */
+  margin: 4px 0;
+}
+
+/* Hero */
+
+.hero {
+  position: relative;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.2)
+  );
+  z-index: -1;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: url("../images/hero.jpg") center/cover no-repeat;
+  filter: brightness(0.75);
+  z-index: -1;
+}
+
+.hero h1,
+.hero p {
+  color: #fff;          /* Pure white */
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);  /* Adds contrast */
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+/* Page hero (for Réalisations, same style as Accueil) */
+.page-hero {
+  background-color: #1a1a1a;  /* black background */
+  color: #ffffff;             /* white text */
+  padding: 40px 0;            /* vertical spacing similar to accueil */
+  text-align: center;         /* center h1 and p */
+}
+
+.page-hero .container {
+  max-width: 900px;           /* keep content nicely centered */
+  margin: 0 auto;
+}
+
+.page-hero h1 {
+  margin: 0 0 0.5rem;
+}
+
+/* Grids */
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+/* Cards */
+
+.card {
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding-bottom: 1rem;
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card h3 {
+  margin: 1rem 1rem 0.5rem;
+}
+
+.card p {
+  margin: 0 1rem 0.75rem;
+  color: var(--muted);
+}
+
+/* Buttons */
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
+/* About */
+
+.about-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-list li {
+  margin-bottom: 0.5rem;
+}
+
+/* Contact page */
+
+/* Full-screen contact page layout */
+body.contact-page {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* prevents page scroll */
+}
+
+/* Contact form */
+
+/* Contact form background image */
+.contact-form {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0px;
+  border-radius: 12px;
+  /* box-shadow: 0 4px 20px rgba(0,0,0,0.25); */
+  color: black;               /* FIXED */
+}
+
+.contact-form label {
+  color: black;               /* FIXED */
+}
+
+/* Inputs stay readable and clean */
+.contact-form input,
+.contact-form textarea {
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+/* Button styling stays consistent */
+.contact-form .btn-primary {
+  background-color: #333;
+  color: white;
+  border-radius: 6px;
+  padding: 12px 20px;
+  border: none;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font: inherit;
+}
+
+.form-note {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* Background image behind the entire contact section */
+/* Contact page fits in one screen */
+.section.contact-section {
+  flex: 1; /* takes remaining space between header and footer */
+  background-image: url('../images/contact-photo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;                 /* remove extra padding */
+}
+
+.section.contact-section .container {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 20px;
+  border-radius: 12px;
+  max-height: 90vh;           /* prevents overflow */
+  overflow-y: auto;           /* scroll INSIDE if needed */
+}
+
+/* Footer */
+
+.site-footer {
+  background: #222;
+  color: #ccc;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-links a {
+  color: #ccc;
+  margin-left: 1rem;
+  font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+  color: var(--primary);
+}
+
+/* Index Kitchen photo - HERO IMAGE */
+
+.showcase-image-wrapper {
+  position: relative;
+}
+
+/* LOGO OVER PHOTO — CENTERED */
+.showcase-logo-overlay-center {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.overlay-logo-img {
+  max-width: 1000px;
+  height: auto;
+}
+
+/* WHITE BAR BELOW PHOTO */
+
+.showcase-bottom-bar {
+  display: flex;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  padding: 12px 20px;
+}
+
+/* LOGO + CONTACT INLINE (same row) */
+
+.logo-contact-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0px;
+}
+
+/* Smaller/Bigger Black LOGO inside white bar */
+.attached-logo-img {
+  max-width: 200px;
+  height: auto;
+}
+
+/* Contact beside Black logo */
+
+.contact-inline {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: -10px; /* adjust as needed */
+}
+
+/* Logo column */
+.logo-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.logo-rbq-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.contact-name {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.contact-phone {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111;
+  text-decoration: none;
+}
+
+/* Project card title default color */
+.project-card h3 {
+  color: #000;              /* black title */
+  transition: color 0.2s ease;
+}
+
+/* Hover effect when user hovers the card link */
+.project-card:hover h3 {
+  color: var(--primary);    /* your link color */
+}
+
+/* ========COLOR LINK VISITED APGE =============== */
+
+/* Default header link color */
+.main-nav a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+/* Hover color */
+.main-nav a:hover {
+  color: var(--primary);
+}
+
+/* Current page highlight */
+.main-nav a.current {
+  color: var(--primary-dark); /* darker accent */
+}
+
+/* ===== Second photo & Footer ========= */
+
+/* Facebook and Instagrm */
+.contact-socials {
+  display: flex;
+  gap: 16px;   /* increased spacing */
+  margin-top: 4px;
+}
+
+/* Seapration between the two line on the footer */
+.site-footer p {
+  margin: 2px 0;   /* reduces vertical spacing between the two lines */
+}
+
+/* Text styling */
+.overlay-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.overlay-socials a:hover {
+  color: var(--primary);
+}
+
+/* Full-screen hero */
+.showcase-container {
+  position: relative;
+  height: 86vh;
+  overflow: hidden;
+}
+
+.main-kitchen-img {
+  width: 100%;
+  height: 100vh;      /* reduced height so both sections fit */
+  object-fit: cover; /* keeps the photo looking good */
+}
+
+/* ======= TOP Right Logo trasnparent */
+
+.showcase-logo-overlay-topright {
+  position: absolute;
+  top: 50px;        /* distance from top */
+  right: 20px;      /* distance from right */
+  z-index: 5;       /* above the photo */
+}
+
+.showcase-logo-overlay-topright img {
+  width: 260px;     /* increase size */
+  height: auto;
+  display: block;
+}
+
+
+/* Main kitchen page - Black logo overlay positioned bottom-left */
+.showcase-overlay-info {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  background: rgba(0, 0, 0, 0.20); /* transparent black */
+  padding: 5px 10px;
+  border-radius: 8px;
+  color: #fff;
+  /* backdrop-filter: blur(4px);  */
+  /* modern glass effect */
+}
+
+/* LEFT SIDE: Logo */
+.overlay-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Black logo img */
+.overlay-logo-img {
+  width: 180px;       /* THIS FIXES THE INVISIBLE LOGO */
+  height: auto;
+  display: block;
+}
+
+/* RIGHT SIDE: Contact info */
+.overlay-right {
+  width: 195px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+  gap: 1px;
+}
+
+.overlay-name {
+  font-size: 1.1rem;
+  font-weight: 100;
+}
+
+.overlay-phone,
+.overlay-email {
+  color: #fff;
+  /* text-decoration: none; */
+  font-size: 0.95rem;  /* reduced */
+}
+
+.overlay-phone:hover,
+.overlay-email:hover {
+  color: var(--primary);
+}
+
+/* Social icons */
+.overlay-socials {
+  display: flex;
+  gap: 18px;
+  margin-top: 6px;
+}
+
+.overlay-socials a {
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.overlay-socials a:hover {
+  color: var(--primary);
+}
+
+/* services.html - Services de rénovation */
+.hero-small {
+  position: relative;
+  padding: 1px 0;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  text-align: center;
+}
+
+.hero-small .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* centers hero-content horizontally */
+}
+
+/* Reduce spacing between hero title and subtitle */
+.hero-content h1 {
+  margin-top: 3px !important; /* very tight */
+  margin-bottom: 4px !important; /* very tight */
+}
+
+.hero-content p {
+  margin-top: -5px !important; /* very tight */
+}
+
+.hero-content {
+  text-align: center;    /* ensures h1 + p are centered */
+}
+
+.hero-content h1 {
+  font-size: 1.7rem;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.hero-content p {
+  font-size: 1rem;
+  color: #dddddd;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-bottom: 7px;
+  white-space: nowrap;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 14px;
+}
+
+.footer-socials a {
+  color: #cccccc;
+  font-size: 1.1rem;
+  transition: color 0.2s ease;
+}
+
+.footer-socials a:hover {
+  color: #ffffff;
+}
+
+/* ==== accueil reduce space with SERICE PREVIEW */
+.about .container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Fix ABOUT section alignment */
+.about .grid-2 {
+  display: flex;
+  flex-direction: column;   /* stack vertically */
+  align-items: center;       /* center horizontally */
+  text-align: center;        /* center text */
+  gap: 20px;                 /* spacing between the two blocks */
+  max-width: 800px;          /* keeps content nicely centered */
+  margin: 0 auto;            /* center inside container */
+}
+
+.section.about {
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+.section.services-preview {
+  padding-top: 0;
+}
+
+/* ==== sapce between SERVICES PREVIEW class=center */
+.services-preview .center {
+  margin-top: 20px;   /* increase spacing */
+}
+
+/* === Testimonies ==== */
+.section.services-preview {
+  padding-bottom: 5px;
+}
+
+/* Testimonial slider layout */
+
+/* Override old testimonial styles inside slider */
+.testimonial-slider blockquote {
+  padding: 0 !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  border-radius: 10px !important;
+}
+
+.testimonial-slider footer {
+  margin-top: 4px !important;
+  color: #555 !important;
+}
+
+.testimonial-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 3px;
+}
+
+.testimonial-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 0;
+  padding: 0;
+}
+
+.testimonial-slider::-webkit-scrollbar {
+  display: none; /* hide scrollbar */
+}
+
+.testimonial {
+  min-width: 260px;
+  max-width: 260px;
+  background: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 10px;      /* space between text and box edges */
+  margin: 7px;   
+  /* remove any leftover spacing */
+}
+
+/* Remove default spacing inside testimonial boxes */
+.testimonial p,
+.testimonial footer {
+  margin: 5px;          /* remove browser default margins */
+  padding: 5px;         /* remove padding */
+  line-height: 1.3;   /* tighter text spacing */
+}
+
+/* Arrows */
+.testimonial-arrow {
+  background: #c59d5f;
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.testimonial-arrow:hover {
+  background: #b38a4f;
+}
+
+.section.testimonials {
+  padding-top: 5px;
+  padding-bottom: 10px;   /* reduce space under testimonials */
+}
+
+.section.cta {
+  padding-top: 5px;      /* reduce space above CTA */
+}
+
+/* ===== Bathrooms ======== */
+.project-card img {
+  width: 100%;
+  height: auto;        /* ensures full photo is visible */
+  object-fit: contain; /* prevents cropping */
+  max-height: 480px;   /* increase this number to make photos bigger */
+  border-radius: 8px;
+}
+
+.project-card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px !important; /* ensures round corners everywhere */
+  display: block;
+}
+
+
+@media (max-width: 768px) {
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .header-inner {
+    flex-wrap: wrap;
+  }
+
+  .main-nav {
+    display: none;
+    width: 100%;
+  }
+
+  .main-nav.open {
+    display: block;
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  .hero {
+    padding: 3.5rem 0;
+  }
+
+  .admin-badge {
+    margin-left: 1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    background: #333;
+    color: #fff;
+    font-size: 0.8rem;
+  }
+
+  .admin-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .admin-nav {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto;
+  }
+
+  .admin-nav a {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* Reduce top padding of the services section right below the hero */
+  .services-all {
+    padding-top: 5px !important;    /* was 60px */
+    padding-bottom: 10px !important;
+  }
+
+  /* Tighten the section heading & flashing text */
+  .services-all h2 {
+    margin: 0 0 6px 0 !important;
+    line-height: 1.2;
+  }
+
+  .services-all .center > p {
+    margin: 0 0 15px 0 !important;
+    line-height: 1.3;
+  }
+
+  /* --- services.html - Spacing --- */
+  
+  /* services.html - space above Nos Services de Rénovation */
+  .section {
+    padding: 15px 0;
+    /* padding-bottom: 1rem; reduce global bottom spacing */
+  }
+  
+  .section.services-all {
+    padding-top: 10px !important;
+    padding-bottom: 15px !important;
+  }
+
+  .services-all .container.center {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .services-all h2 {
+    margin: 0 0 4px 0 !important;
+    line-height: 1.2;
+  }
+
+  .services-all .center > p {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.3;
+  }
+
+  /* redner.com use only */
+  /* Dropdown Navigation */
+.main-nav ul li.nav-dropdown {
+  position: relative;
+}
+
+.main-nav ul li.nav-dropdown .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #ffffff;
+  min-width: 210px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 8px 0;
+  margin: 0;
+  list-style: none;
+  z-index: 1000;
+}
+
+.main-nav ul li.nav-dropdown:hover .dropdown-menu,
+.main-nav ul li.nav-dropdown:focus-within .dropdown-menu {
+  display: block;
+}
+
+.main-nav ul li.nav-dropdown .dropdown-menu li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav ul li.nav-dropdown .dropdown-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: #374151;
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 500;
+  transition: background 0.15s ease;
+}
+
+.main-nav ul li.nav-dropdown .dropdown-menu li a:hover {
+  background: #f3f4f6;
+  color: #b45309;
+}
+
+  /* admin/send-quote.php */
+  .badge.status-sent {
+  background-color: #e6f6eb;
+  color: #1e7e34;
+  border: 1px solid #c3e6cb;
+}
+
+}

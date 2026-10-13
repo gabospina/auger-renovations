@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Catalogue des Matériaux | Auger Rénovation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin-estimator.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .table-container {
+      background: #ffffff;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      overflow-x: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    table.data-table th, table.data-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid #e1e4e8;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+    table.data-table th {
+      background-color: #f6f8fa;
+      font-weight: 700;
+      color: #24292e;
+    }
+    table.data-table tr:hover {
+      background-color: #fdfaf3;
+    }
+    .badge-cat {
+      background: #eef2f6;
+      color: #333;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .btn-action-icon {
+      background: #f1f3f5;
+      border: 1px solid #d0d7de;
+      color: #333;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-left: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-action-icon:hover {
+      background: #d1b06a;
+      color: #fff;
+      border-color: #d1b06a;
+    }
+    .btn-action-icon.delete-btn:hover {
+      background: #c92a2a;
+      color: #fff;
+      border-color: #c92a2a;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      width: 520px;
+      max-width: 90%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .modal-card input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body class="admin-estimator-body">
+
+  <header class="admin-topbar">
+    <div class="admin-container">
+      <div class="admin-title">
+        <strong>Auger Rénovation</strong> — Portail Administratif
+      </div>
+      <div>
+        <a href="requests.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none;">
+          <i class="fa-solid fa-list-check"></i> Demandes de soumission
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width: 1350px; margin: 30px auto;">
+    <div class="dashboard-header">
+      <div>
+        <h1 style="margin: 0 0 6px 0; font-size: 24px;">Catalogue des Matériaux & Prix</h1>
+        <p style="margin: 0; color: #666;">Synchronisé avec les prix locaux Home Depot (Vaudreuil-Dorion #7242).</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-outline" onclick="openModal()"><i class="fa-solid fa-plus"></i> Ajouter un article</button>
+        <button class="btn btn-primary" id="btn-sync-all" onclick="syncAll()"><i class="fa-solid fa-arrows-rotate"></i> Actualiser tous les prix</button>
+      </div>
+    </div>
+
+    <!-- AUTOMATIC SYNC SCHEDULE CARD -->
+    <div style="background: #ffffff; padding: 14px 18px; border: 1px solid #e1e4e8; border-radius: 8px; margin-bottom: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <i class="fa-solid fa-clock-rotate-left" style="color: #2563eb; font-size: 20px;"></i>
+        <div>
+          <strong style="color: #1f2937; font-size: 14px;">Mise à jour automatique planifiée</strong>
+          <span id="last-sync-label" style="color: #6b7280; font-size: 12px; display: block;">Dernière synchronisation : Jamais</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+        <!-- Enable / Disable Checkbox -->
+        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer;">
+          <input type="checkbox" id="auto-sync-checkbox" onchange="toggleScheduleInputs()">
+          Activer l'automatisation
+        </label>
+
+        <!-- Day Selector -->
+        <select id="auto-sync-day" style="padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; background: #f9fafb;">
+          <option value="monday">Tous les lundis</option>
+          <option value="sunday">Tous les dimanches</option>
+        </select>
+
+        <!-- Time Selector -->
+        <input type="time" id="auto-sync-time" value="06:00" style="padding: 5px 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px;">
+
+        <!-- Save Button -->
+        <button type="button" class="btn btn-sm btn-outline" onclick="saveSyncSchedule()" style="border-color: #2563eb; color: #2563eb;">
+          <i class="fa-solid fa-floppy-disk"></i> Enregistrer l'horaire
+        </button>
+      </div>
+    </div>
+
+    <!-- GLOBAL MARKUP CONTROLS BAR -->
+    <div style="background: #ffffff; padding: 12px 18px; border: 1px solid #e1e4e8; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-percent" style="color: #d97706; font-size: 18px;"></i>
+        <div>
+          <strong style="color: #1f2937; font-size: 14px;">Taux de marge globale :</strong>
+          <span style="color: #6b7280; font-size: 12px; display: block;">Appliqué automatiquement au catalogue et aux soumissions</span>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <input type="number" id="global-markup-input" step="1" min="0" max="100" style="width: 70px; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px; text-align: right; font-weight: 700; font-size: 14px;">
+        <strong style="font-size: 14px; color: #374151;">%</strong>
+        <button type="button" class="btn btn-sm btn-primary" onclick="saveGlobalMarkup()" style="margin-left: 6px;">
+          Mettre à jour
+        </button>
+      </div>
+    </div>
+
+    <!-- SEARCH & CATEGORY FILTER BAR -->
+    <div style="background: #ffffff; padding: 14px 18px; border: 1px solid #e1e4e8; border-radius: 8px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center;">
+      
+      <!-- Search Input -->
+      <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 260px;">
+        <i class="fa-solid fa-magnifying-glass" style="color: #6b7280; font-size: 14px;"></i>
+        <input 
+          type="text" 
+          id="catalog-search-input" 
+          placeholder="Rechercher par SKU ou nom (ex: 1001728974, sheetrock...)" 
+          style="width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px;"
+          oninput="applyFilters()"
+        >
+      </div>
+
+      <!-- Category Dropdown Filter -->
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <label for="catalog-cat-select" style="font-size: 13px; font-weight: 600; color: #374151; white-space: nowrap;">Catégorie :</label>
+        <select 
+          id="catalog-cat-select" 
+          style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; background-color: #f9fafb; cursor: pointer;"
+          onchange="applyFilters()"
+        >
+          <option value="ALL">Toutes les catégories</option>
+        </select>
+      </div>
+
+      <!-- Fournisseur Dropdown Filter -->
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <label for="catalog-supp-select" style="font-size: 13px; font-weight: 600; color: #374151; white-space: nowrap;">Fournisseur :</label>
+        <select 
+          id="catalog-supp-select" 
+          style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; background-color: #f9fafb; cursor: pointer;"
+          onchange="applyFilters()"
+        >
+          <option value="ALL">Tous les fournisseurs</option>
+        </select>
+      </div>
+
+      <!-- Live Count Indicator -->
+      <div id="catalog-count-badge" style="font-size: 12px; font-weight: 600; color: #4b5563; background: #f3f4f6; padding: 6px 12px; border-radius: 20px; white-space: nowrap;">
+        Affichage de 0 sur 0 articles
+      </div>
+
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th onclick="toggleSkuSort()" style="cursor: pointer; width: 110px;">
+              SKU/Code <span id="sku-sort-icon"></span>
+            </th>
+            <th>Description</th>
+            <th style="width: 130px;">Fournisseur</th>
+            <th style="width: 140px;">Catégorie</th>
+            <th style="width: 70px;">Unité</th>
+            <th style="width: 90px;">Coût</th>
+            <th style="width: 85px;">Marge</th>
+            <th style="width: 100px;">Prix Facturé</th>
+            <th style="width: 95px;">Mis à jour</th>
+            <th style="width: 70px;">Lien</th>
+            <th style="text-align: right; width: 100px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="materials-tbody">
+          <tr><td colspan="8" style="text-align:center; padding: 30px;">Chargement du catalogue...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Add/Edit -->
+  <div class="modal-overlay" id="material-modal">
+    <div class="modal-card">
+      <h3 id="modal-title" style="margin-top: 0;">Ajouter un matériau</h3>
+      <input type="hidden" id="mat-key"> <!-- Holds the original SKU key during edits -->
+      
+      <div style="margin-bottom: 12px;">
+        <label>Numéro de SKU (Home Depot) :</label>
+        <input type="text" id="mat-sku" placeholder="Ex: 1001728974">
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label>Nom de l'article :</label>
+        <input type="text" id="mat-name" placeholder="Ex: CGC Sheetrock Composé tout usage...">
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label>Catégorie :</label>
+        <input type="text" id="mat-category" placeholder="Ex: Drywall compound, Plomberie, Gypse">
+      </div>
+      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        <div style="flex: 1;">
+          <label>Unité :</label>
+          <input type="text" id="mat-unit" placeholder="Ex: unité, feuille, pi²">
+        </div>
+        <div style="flex: 1;">
+          <label>Prix unitaire ($) :</label>
+          <input type="number" step="0.01" id="mat-price" placeholder="0.00">
+        </div>
+      </div>
+      <div style="margin-bottom: 18px;">
+        <label>Lien du produit (homedepot.ca) :</label>
+        <input type="url" id="mat-url" placeholder="https://www.homedepot.ca/produit/...">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button type="button" class="btn btn-outline" onclick="closeModal()">Annuler</button>
+        <button type="button" class="btn btn-primary" onclick="saveMaterial()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let materialsData = {};
+
+    function getTableBody() {
+      return document.getElementById('materials-tbody');
+    }
+
+    // 'asc' = lower to higher (1000... to 1001...), 'desc' = higher to lower
+    let currentSkuSortOrder = 'asc';
+
+    function toggleSkuSort() {
+      currentSkuSortOrder = currentSkuSortOrder === 'asc' ? 'desc' : 'asc';
+      renderTable();
+    }
+
+    let currentSearchTerm = '';
+    let currentSelectedCategory = 'ALL';
+
+    // Automatically build unique category list from catalog data
+    function populateCategoryDropdown() {
+      const catSelect = document.getElementById('catalog-cat-select');
+      if (!catSelect) return;
+
+      const savedChoice = currentSelectedCategory;
+      const categories = new Set();
+
+      Object.values(materialsData).forEach(item => {
+        if (item.category && item.category.trim() !== '') {
+          categories.add(item.category.trim());
+        }
+      });
+
+      const sortedCategories = Array.from(categories).sort((a, b) => a.localeCompare(b));
+
+      catSelect.innerHTML = '<option value="ALL">Toutes les catégories</option>';
+      sortedCategories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        if (cat === savedChoice) opt.selected = true;
+        catSelect.appendChild(opt);
+      });
+    }
+
+    // Triggered on search typing or category selection
+    function applyFilters() {
+      const searchInput = document.getElementById('catalog-search-input');
+      const catSelect = document.getElementById('catalog-cat-select');
+
+      currentSearchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      currentSelectedCategory = catSelect ? catSelect.value : 'ALL';
+
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = getTableBody();
+      tbody.innerHTML = '';
+
+      const allItems = Object.values(materialsData);
+
+      // 1. Filter items by Search Term (SKU or Name) and Category
+      const filteredItems = allItems.filter(item => {
+        const sku = String(item.id || '').toLowerCase();
+        const name = String(item.name || '').toLowerCase();
+        const category = String(item.category || '').trim();
+
+        const matchesSearch = !currentSearchTerm || sku.includes(currentSearchTerm) || name.includes(currentSearchTerm);
+        const matchesCategory = currentSelectedCategory === 'ALL' || category.toLowerCase() === currentSelectedCategory.toLowerCase();
+
+        return matchesSearch && matchesCategory;
+      });
+
+      // 2. Update Count Badge
+      const countBadge = document.getElementById('catalog-count-badge');
+      if (countBadge) {
+        countBadge.textContent = `Affichage de ${filteredItems.length} sur ${allItems.length} articles`;
+      }
+
+      // 3. Handle Empty Results
+      if (filteredItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px; color:#6b7280;">
+          Aucun article ne correspond à vos critères de recherche.
+        </td></tr>`;
+        return;
+      }
+
+      // 4. Update Header Sort Icon
+      const sortIcon = document.getElementById('sku-sort-icon');
+      if (sortIcon) {
+        sortIcon.innerHTML = currentSkuSortOrder === 'asc' 
+          ? '<i class="fa-solid fa-arrow-down-1-9" style="color: #b45309;"></i>' 
+          : '<i class="fa-solid fa-arrow-up-9-1" style="color: #b45309;"></i>';
+      }
+
+      // 5. Sort by SKU
+      filteredItems.sort((a, b) => {
+        const skuA = String(a.id || '').replace(/^SKU-/i, '');
+        const skuB = String(b.id || '').replace(/^SKU-/i, '');
+
+        const numA = parseFloat(skuA);
+        const numB = parseFloat(skuB);
+
+        let comparison = 0;
+        if (!isNaN(numA) && !isNaN(numB)) {
+          comparison = numA - numB;
+        } else {
+          comparison = skuA.localeCompare(skuB, undefined, { numeric: true, sensitivity: 'base' });
+        }
+
+        return currentSkuSortOrder === 'asc' ? comparison : -comparison;
+      });
+
+      const rate = (typeof currentMarkupRate !== 'undefined') ? currentMarkupRate : 0.15;
+      const marginPercentLabel = `+${Math.round(rate * 100)}%`;
+
+      // 6. Render Table Rows
+      filteredItems.forEach(m => {
+        const tr = document.createElement('tr');
+        const numPrice = parseFloat(m.price) || 0;
+        
+        const marginAmount = numPrice * rate;
+        const totalPrice = numPrice + marginAmount;
+
+        const formattedBase = '$' + numPrice.toFixed(2);
+        const formattedMargin = '+$' + marginAmount.toFixed(2);
+        const formattedTotal = '$' + totalPrice.toFixed(2);
+
+        tr.innerHTML = `
+          <td><strong>${m.id || ''}</strong></td>
+          <td>${m.name || 'Sans nom'}</td>
+          <td><span class="badge-cat">${m.category || 'Général'}</span></td>
+          <td>${m.unit || 'unité'}</td>
+          <td style="color: #666; font-size: 13px;">${formattedBase}</td>
+          <td style="color: #d97706; font-size: 13px; font-weight: 600;" title="Marge ${marginPercentLabel}">${formattedMargin}</td>
+          <td><strong style="color: #15803d; font-size: 14px;">${formattedTotal}</strong></td>
+          <td style="font-size: 12px; color: #666;">${m.last_updated || '—'}</td>
+          <td>
+            ${m.url ? `<a href="${m.url}" target="_blank" style="color:#0071dc; text-decoration:none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voir</a>` : '—'}
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            <button class="btn-action-icon" onclick="syncSingleItem(event, '${m.id}')" title="Actualiser le prix Home Depot">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+            <button class="btn-action-icon" onclick="editItem('${m.id}')" title="Modifier l'article">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="btn-action-icon delete-btn" onclick="deleteItem('${m.id}')" title="Supprimer">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+    // Opens the modal pre-filled with the clicked product's details
+    function editItem(id) {
+      const item = materialsData[id] || 
+                   materialsData[String(id)] || 
+                   materialsData['SKU-' + id] || 
+                   Object.values(materialsData).find(m => String(m.id) === String(id));
+
+      if (!item) {
+        alert('Article introuvable : ' + id);
+        return;
+      }
+
+      openModal(item);
+    }
+
+    function openModal(item = null) {
+      const modal = document.getElementById('material-modal');
+      const title = document.getElementById('modal-title');
+      
+      if (item) {
+        // Pre-fill existing data for EDIT mode
+        title.textContent = 'Modifier le matériau';
+        document.getElementById('mat-key').value = item.sku_key || ('SKU-' + item.id);
+        document.getElementById('mat-sku').value = item.id || '';
+        document.getElementById('mat-name').value = item.name || '';
+        document.getElementById('mat-category').value = item.category || '';
+        document.getElementById('mat-unit').value = item.unit || '';
+        document.getElementById('mat-price').value = item.price !== undefined ? item.price : '';
+        document.getElementById('mat-url').value = item.url || '';
+      } else {
+        // Clear all fields for NEW item mode
+        title.textContent = 'Ajouter un matériau';
+        document.getElementById('mat-key').value = '';
+        document.getElementById('mat-sku').value = '';
+        document.getElementById('mat-name').value = '';
+        document.getElementById('mat-category').value = '';
+        document.getElementById('mat-unit').value = '';
+        document.getElementById('mat-price').value = '';
+        document.getElementById('mat-url').value = '';
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('material-modal').style.display = 'none';
+    }
+
+    let currentMarkupRate = 0.15; // Fallback initial default
+
+    // 1. Fetch saved rate from settings.json (with localStorage backup for instant display)
+    async function loadGlobalSettings() {
+      // Check local cache first so there is zero flicker on refresh
+      const cachedRate = localStorage.getItem('auger_markup_rate');
+      if (cachedRate !== null) {
+        currentMarkupRate = parseFloat(cachedRate);
+        const input = document.getElementById('global-markup-input');
+        if (input) input.value = Math.round(currentMarkupRate * 100);
+      }
+
+      try {
+        const res = await fetch('api-materials.php?action=get_settings&t=' + Date.now(), { cache: 'no-store' });
+        const settings = await res.json();
+        if (settings && typeof settings.markup_rate !== 'undefined') {
+          currentMarkupRate = parseFloat(settings.markup_rate);
+          localStorage.setItem('auger_markup_rate', currentMarkupRate);
+          
+          const input = document.getElementById('global-markup-input');
+          if (input) {
+            input.value = Math.round(currentMarkupRate * 100);
+          }
+        }
+      } catch (e) {
+        console.error('Erreur chargement des paramètres:', e);
+      }
+    }
+
+    // 2. Save new rate to server and local storage
+    async function saveGlobalMarkup() {
+      const input = document.getElementById('global-markup-input');
+      const percent = parseFloat(input?.value);
+
+      if (isNaN(percent) || percent < 0) {
+        alert('Veuillez entrer un pourcentage valide.');
+        return;
+      }
+
+      const rate = percent / 100;
+
+      try {
+        const res = await fetch('api-materials.php?action=save_settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ markup_rate: rate })
+        });
+        const result = await res.json();
+        if (result.success) {
+          currentMarkupRate = rate;
+          localStorage.setItem('auger_markup_rate', rate);
+          renderTable();
+          alert(`Taux de marge mis à jour à ${percent}% avec succès !`);
+        } else {
+          alert("Erreur lors de l'enregistrement de la marge.");
+        }
+      } catch (e) {
+        alert('Erreur de communication avec le serveur.');
+      }
+    }
+
+    // 3. Ensure settings load BEFORE the table renders
+    async function loadMaterials() {
+      const tbody = getTableBody();
+      
+      // Await settings first so currentMarkupRate is up-to-date
+      await loadGlobalSettings();
+
+      try {
+        const res = await fetch('api-materials.php?action=list&t=' + Date.now(), { cache: 'no-store' });
+        const text = await res.text();
+        
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (jsonErr) {
+          console.error("Réponse serveur :", text);
+          tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#c00; padding:20px;">
+            Erreur de format JSON reçu.<br><small style="color:#666;">${text.substring(0, 150)}</small>
+          </td></tr>`;
+          return;
+        }
+
+        materialsData = {};
+
+        if (Array.isArray(data)) {
+          data.forEach(item => {
+            if (item && item.id) {
+              const uniqueKey = item.sku_key || ('SKU-' + item.id);
+              item.sku_key = uniqueKey;
+              materialsData[uniqueKey] = item;
+            }
+          });
+        } else if (data && typeof data === 'object') {
+          const raw = data.materials || data;
+          Object.keys(raw).forEach(k => {
+            if (raw[k] && typeof raw[k] === 'object') {
+              raw[k].sku_key = k;
+              materialsData[k] = raw[k];
+            }
+          });
+        }
+        populateCategoryDropdown();
+        renderTable();
+      } catch (err) {
+        console.error('Erreur chargement matériaux:', err);
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#c00; padding:20px;">
+          Impossible de contacter le serveur (XAMPP). Vérifiez qu'Apache fonctionne.
+        </td></tr>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMaterials();
+    });
+
+    function toggleScheduleInputs() {
+      const isEnabled = document.getElementById('auto-sync-checkbox').checked;
+      document.getElementById('auto-sync-day').disabled = !isEnabled;
+      document.getElementById('auto-sync-time').disabled = !isEnabled;
+    }
+
+    async function loadScheduleSettings() {
+      try {
+        const res = await fetch('api-materials.php?action=get_settings&t=' + Date.now(), { cache: 'no-store' });
+        const data = await res.json();
+        if (!data) return;
+
+        const chk = document.getElementById('auto-sync-checkbox');
+        const day = document.getElementById('auto-sync-day');
+        const time = document.getElementById('auto-sync-time');
+        const label = document.getElementById('last-sync-label');
+
+        if (chk) chk.checked = !!data.auto_sync_enabled;
+        if (day && data.sync_day) day.value = data.sync_day;
+        if (time && data.sync_time) time.value = data.sync_time;
+        if (label && data.last_auto_sync) {
+          label.textContent = `Dernière synchronisation automatique : ${data.last_auto_sync}`;
+        }
+
+        toggleScheduleInputs();
+      } catch (err) {
+        console.error('Erreur chargement horaire:', err);
+      }
+    }
+
+    async function saveSyncSchedule() {
+      const isEnabled = document.getElementById('auto-sync-checkbox').checked;
+      const syncDay = document.getElementById('auto-sync-day').value;
+      const syncTime = document.getElementById('auto-sync-time').value;
+
+      try {
+        const res = await fetch('api-materials.php?action=save_settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            auto_sync_enabled: isEnabled,
+            sync_day: syncDay,
+            sync_time: syncTime
+          })
+        });
+        const result = await res.json();
+        if (result.success) {
+          const jourNom = syncDay === 'sunday' ? 'dimanche' : 'lundi';
+          const msg = isEnabled 
+            ? `Automatisation activée : chaque ${jourNom} à ${syncTime}.` 
+            : "Automatisation désactivée. Les mises à jour manuelles restent disponibles.";
+          alert(msg);
+        } else {
+          alert("Erreur lors de l'enregistrement de l'horaire.");
+        }
+      } catch (err) {
+        alert("Erreur de communication avec le serveur.");
+      }
+    }
+
+    async function saveMaterial() {
+      const key = document.getElementById('mat-key').value.trim();
+      const sku = document.getElementById('mat-sku').value.trim();
+      const name = document.getElementById('mat-name').value.trim();
+      const category = document.getElementById('mat-category').value.trim();
+      const unit = document.getElementById('mat-unit').value.trim();
+      const price = parseFloat(document.getElementById('mat-price').value) || 0;
+      const url = document.getElementById('mat-url').value.trim();
+
+      if (!sku) {
+        alert('Veuillez entrer le numéro de SKU.');
+        return;
+      }
+      if (!name) {
+        alert("Veuillez entrer le nom de l'article.");
+        return;
+      }
+
+      const payload = {
+        original_key: key,
+        sku: sku,
+        name: name,
+        category: category || 'Général',
+        unit: unit || 'unité',
+        price: price,
+        url: url
+      };
+
+      try {
+        const res = await fetch('api-materials.php?action=save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+          closeModal();
+          // Forces a full refresh immediately to display the updated row and totals
+          window.location.reload();
+
+        } else {
+          alert('Erreur: ' + (result.error || "Impossible d'enregistrer"));
+        }
+      } catch (err) {
+        alert("Erreur de communication avec l'API.");
+      }
+    }
+
+    async function deleteItem(id) {
+      if (!confirm(`Supprimer définitivement l'article ${id} ?`)) return;
+      try {
+        const res = await fetch('api-materials.php?action=delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id })
+        });
+        const result = await res.json();
+        if (result.success) {
+          delete materialsData[id];
+          renderTable();
+        }
+      } catch (e) {
+        alert('Erreur lors de la suppression.');
+      }
+    }
+
+    async function syncSingleItem(e, id) {
+      const btn = e.currentTarget;
+      const icon = btn.querySelector('i');
+      icon.classList.add('fa-spin');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`api-materials.php?action=sync&id=${encodeURIComponent(id)}`, { cache: 'no-store' });
+        const text = await res.text();
+        
+        let data = null;
+        try {
+          data = JSON.parse(text);
+        } catch (jsonErr) {
+          console.warn("Réponse brute non-JSON reçue :", text);
+        }
+
+        // Always reload table since the file was updated on disk
+        await loadMaterials();
+
+        if (data && !data.success) {
+          alert('Note : ' + (data.output || data.error || 'Erreur pendant la mise à jour'));
+        }
+      } catch (err) {
+        console.error('Erreur réseau:', err);
+        // Refresh catalog anyway in case the backend wrote to materials.json
+        await loadMaterials();
+      } finally {
+        // Stop the spinning icon and re-enable button
+        icon.classList.remove('fa-spin');
+        btn.disabled = false;
+      }
+    }
+
+    async function syncAll() {
+      const btn = document.getElementById('btn-sync-all');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Actualisation en cours...';
+
+      try {
+        const res = await fetch('api-materials.php?action=sync', { cache: 'no-store' });
+        const data = await res.json();
+        
+        if (data.success) {
+          await loadMaterials();
+          alert('Synchronisation terminée ! Tous les prix ont été mis à jour.');
+        } else {
+          alert('Erreur lors de la synchronisation générale :\n' + (data.output || data.error || 'Échec'));
+        }
+      } catch (err) {
+        alert('Erreur réseau pendant la synchronisation : ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Actualiser tous les prix';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMaterials);
+  </script>
+</body>
+</html>

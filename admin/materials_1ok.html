@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Catalogue des Matériaux | Auger Rénovation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/admin-estimator.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .table-container {
+      background: #ffffff;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      overflow-x: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    table.data-table th, table.data-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid #e1e4e8;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+    table.data-table th {
+      background-color: #f6f8fa;
+      font-weight: 700;
+      color: #24292e;
+    }
+    table.data-table tr:hover {
+      background-color: #fdfaf3;
+    }
+    .badge-cat {
+      background: #eef2f6;
+      color: #333;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .btn-action-icon {
+      background: #f1f3f5;
+      border: 1px solid #d0d7de;
+      color: #333;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-left: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-action-icon:hover {
+      background: #d1b06a;
+      color: #fff;
+      border-color: #d1b06a;
+    }
+    .btn-action-icon.delete-btn:hover {
+      background: #c92a2a;
+      color: #fff;
+      border-color: #c92a2a;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 8px;
+      width: 520px;
+      max-width: 90%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .modal-card input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body class="admin-estimator-body">
+
+  <header class="admin-topbar">
+    <div class="admin-container">
+      <div class="admin-title">
+        <strong>Auger Rénovation</strong> — Portail Administratif
+      </div>
+      <div>
+        <a href="requests.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none;">
+          <i class="fa-solid fa-list-check"></i> Demandes de soumission
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width: 1350px; margin: 30px auto;">
+    <div class="dashboard-header">
+      <div>
+        <h1 style="margin: 0 0 6px 0; font-size: 24px;">Catalogue des Matériaux & Prix</h1>
+        <p style="margin: 0; color: #666;">Synchronisé avec les prix locaux Home Depot (Vaudreuil-Dorion #7242).</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-outline" onclick="openModal()"><i class="fa-solid fa-plus"></i> Ajouter un article</button>
+        <button class="btn btn-primary" id="btn-sync-all" onclick="syncAll()"><i class="fa-solid fa-arrows-rotate"></i> Actualiser tous les prix</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Description</th>
+            <th>Catégorie</th>
+            <th>Unité</th>
+            <th>Coûtant (HD)</th>
+            <th>Marge (+15%)</th>
+            <th>Prix Facturé</th>
+            <th>Dernière MAJ</th>
+            <th>Lien</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="materials-tbody">
+          <tr><td colspan="8" style="text-align:center; padding: 30px;">Chargement du catalogue...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Add/Edit -->
+  <div class="modal-overlay" id="material-modal">
+    <div class="modal-card">
+      <h3 id="modal-title" style="margin-top: 0;">Ajouter un matériau</h3>
+      <input type="hidden" id="mat-id">
+      
+      <div style="margin-bottom: 12px;">
+        <label>Nom de l'article :</label>
+        <input type="text" id="mat-name" placeholder="Ex: Panneau de gypse Sheetrock 1/2 po">
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label>Catégorie :</label>
+        <input type="text" id="mat-category" placeholder="Ex: Plomberie, Gypse, Finition">
+      </div>
+      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        <div style="flex: 1;">
+          <label>Unité :</label>
+          <input type="text" id="mat-unit" placeholder="Ex: feuille, pi², unité">
+        </div>
+        <div style="flex: 1;">
+          <label>Prix unitaire ($) :</label>
+          <input type="number" step="0.01" id="mat-price" placeholder="0.00">
+        </div>
+      </div>
+      <div style="margin-bottom: 18px;">
+        <label>Lien du produit (homedepot.ca) :</label>
+        <input type="url" id="mat-url" placeholder="https://www.homedepot.ca/produit/...">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button type="button" class="btn btn-outline" onclick="closeModal()">Annuler</button>
+        <button type="button" class="btn btn-primary" onclick="saveMaterial()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let materialsData = {};
+
+    function getTableBody() {
+      return document.getElementById('materials-tbody');
+    }
+
+    async function loadMaterials() {
+      const tbody = getTableBody();
+      try {
+        const res = await fetch('api-materials.php?action=list', { cache: 'no-store' });
+        const text = await res.text();
+        
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (jsonErr) {
+          console.error("Réponse serveur :", text);
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#c00; padding:20px;">
+            Erreur de format JSON reçu.<br><small style="color:#666;">${text.substring(0, 150)}</small>
+          </td></tr>`;
+          return;
+        }
+
+        materialsData = {};
+
+        if (Array.isArray(data)) {
+          data.forEach(item => { if (item && item.id) materialsData[item.id] = item; });
+        } else if (data && data.materials && Array.isArray(data.materials)) {
+          data.materials.forEach(item => { if (item && item.id) materialsData[item.id] = item; });
+        } else if (data && typeof data === 'object') {
+          const raw = data.materials || data;
+          Object.keys(raw).forEach(k => {
+            if (raw[k] && typeof raw[k] === 'object' && raw[k].id) {
+              materialsData[raw[k].id] = raw[k];
+            }
+          });
+        }
+
+        renderTable();
+      } catch (err) {
+        console.error('Erreur chargement matériaux:', err);
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#c00; padding:20px;">
+          Impossible de contacter le serveur (XAMPP). Vérifiez qu'Apache fonctionne.
+        </td></tr>`;
+      }
+    }
+
+    function renderTable() {
+      const tbody = getTableBody();
+      tbody.innerHTML = '';
+
+      const items = Object.values(materialsData);
+
+      if (items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:30px; color:#666;">Aucun article dans le catalogue. Cliquez sur "+ Ajouter un article" pour commencer.</td></tr>';
+        return;
+      }
+
+      const MARKUP_RATE = 0.15; // 15% automatic markup
+
+      items.forEach(m => {
+        const tr = document.createElement('tr');
+        const numPrice = parseFloat(m.price) || 0;
+        
+        // Calculations
+        const marginAmount = numPrice * MARKUP_RATE;
+        const totalPrice = numPrice + marginAmount;
+
+        const formattedBase = '$' + numPrice.toFixed(2);
+        const formattedMargin = '+$' + marginAmount.toFixed(2);
+        const formattedTotal = '$' + totalPrice.toFixed(2);
+
+        tr.innerHTML = `
+          <td><strong>${m.id || ''}</strong></td>
+          <td>${m.name || 'Sans nom'}</td>
+          <td><span class="badge-cat">${m.category || 'Général'}</span></td>
+          <td>${m.unit || 'unité'}</td>
+          <td style="color: #666; font-size: 13px;">${formattedBase}</td>
+          <td style="color: #d97706; font-size: 13px; font-weight: 600;">${formattedMargin}</td>
+          <td><strong style="color: #15803d; font-size: 14px;">${formattedTotal}</strong></td>
+          <td style="font-size: 12px; color: #666;">${m.last_updated || '—'}</td>
+          <td>
+            ${m.url ? `<a href="${m.url}" target="_blank" style="color:#0071dc; text-decoration:none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voir</a>` : '—'}
+          </td>
+          <td style="text-align: right; white-space: nowrap;">
+            <button class="btn-action-icon" onclick="syncSingleItem(event, '${m.id}')" title="Actualiser le prix Home Depot">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+            <button class="btn-action-icon" onclick="quickEditPrice('${m.id}', ${numPrice})" title="Modifier le prix de base">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="btn-action-icon delete-btn" onclick="deleteItem('${m.id}')" title="Supprimer">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function quickEditPrice(id, currentPrice) {
+      const newPriceStr = prompt(`Nouveau prix pour ${id} ($ CAD) :`, currentPrice.toFixed(2));
+      if (newPriceStr === null) return;
+
+      const newPrice = parseFloat(newPriceStr.replace(',', '.').replace('$', '').trim());
+      if (isNaN(newPrice)) {
+        alert('Prix invalide.');
+        return;
+      }
+
+      try {
+        const res = await fetch('api-materials.php?action=update_price', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id, price: newPrice })
+        });
+        const result = await res.json();
+        if (result.success) {
+          if (materialsData[id]) {
+            materialsData[id].price = newPrice;
+            materialsData[id].last_updated = new Date().toISOString().slice(0, 19).replace('T', ' ');
+          }
+          renderTable();
+        } else {
+          alert('Erreur: ' + (result.error || 'Impossible de sauvegarder'));
+        }
+      } catch (e) {
+        alert('Erreur de communication avec le serveur.');
+      }
+    }
+
+    function openModal(id = null) {
+      const modal = document.getElementById('material-modal');
+      const title = document.getElementById('modal-title');
+
+      if (id && materialsData[id]) {
+        const it = materialsData[id];
+        title.textContent = "Modifier l'article";
+        document.getElementById('mat-id').value = it.id;
+        document.getElementById('mat-name').value = it.name || '';
+        document.getElementById('mat-category').value = it.category || '';
+        document.getElementById('mat-unit').value = it.unit || '';
+        document.getElementById('mat-price').value = it.price || '';
+        document.getElementById('mat-url').value = it.url || '';
+      } else {
+        title.textContent = "Ajouter un matériau";
+        document.getElementById('mat-id').value = '';
+        document.getElementById('mat-name').value = '';
+        document.getElementById('mat-category').value = '';
+        document.getElementById('mat-unit').value = 'unité';
+        document.getElementById('mat-price').value = '';
+        document.getElementById('mat-url').value = '';
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('material-modal').style.display = 'none';
+    }
+
+    async function saveMaterial() {
+      const id = document.getElementById('mat-id').value.trim();
+      const name = document.getElementById('mat-name').value.trim();
+      const category = document.getElementById('mat-category').value.trim();
+      const unit = document.getElementById('mat-unit').value.trim();
+      const price = parseFloat(document.getElementById('mat-price').value) || 0;
+      const url = document.getElementById('mat-url').value.trim();
+
+      if (!name) {
+        alert('Veuillez entrer le nom de l\'article.');
+        return;
+      }
+
+      const payload = { id, name, category, unit, price, url };
+
+      try {
+        const res = await fetch('api-materials.php?action=save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.success) {
+          closeModal();
+          loadMaterials();
+        } else {
+          alert('Erreur: ' + (result.error || 'Impossible d\'enregistrer'));
+        }
+      } catch (err) {
+        alert('Erreur réseau lors de l\'enregistrement.');
+      }
+    }
+
+    async function deleteItem(id) {
+      if (!confirm(`Supprimer définitivement l'article ${id} ?`)) return;
+      try {
+        const res = await fetch('api-materials.php?action=delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id })
+        });
+        const result = await res.json();
+        if (result.success) {
+          delete materialsData[id];
+          renderTable();
+        }
+      } catch (e) {
+        alert('Erreur lors de la suppression.');
+      }
+    }
+
+    async function syncSingleItem(e, id) {
+      const btn = e.currentTarget;
+      const icon = btn.querySelector('i');
+      icon.classList.add('fa-spin');
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`api-materials.php?action=sync&id=${encodeURIComponent(id)}`, { cache: 'no-store' });
+        const text = await res.text();
+        
+        let data = null;
+        try {
+          data = JSON.parse(text);
+        } catch (jsonErr) {
+          console.warn("Réponse brute non-JSON reçue :", text);
+        }
+
+        // Always reload table since the file was updated on disk
+        await loadMaterials();
+
+        if (data && !data.success) {
+          alert('Note : ' + (data.output || data.error || 'Erreur pendant la mise à jour'));
+        }
+      } catch (err) {
+        console.error('Erreur réseau:', err);
+        // Refresh catalog anyway in case the backend wrote to materials.json
+        await loadMaterials();
+      } finally {
+        // Stop the spinning icon and re-enable button
+        icon.classList.remove('fa-spin');
+        btn.disabled = false;
+      }
+    }
+
+    async function syncAll() {
+      const btn = document.getElementById('btn-sync-all');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Actualisation en cours...';
+
+      try {
+        const res = await fetch('api-materials.php?action=sync', { cache: 'no-store' });
+        const data = await res.json();
+        
+        if (data.success) {
+          await loadMaterials();
+          alert('Synchronisation terminée ! Tous les prix ont été mis à jour.');
+        } else {
+          alert('Erreur lors de la synchronisation générale :\n' + (data.output || data.error || 'Échec'));
+        }
+      } catch (err) {
+        alert('Erreur réseau pendant la synchronisation : ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Actualiser tous les prix';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMaterials);
+  </script>
+</body>
+</html>

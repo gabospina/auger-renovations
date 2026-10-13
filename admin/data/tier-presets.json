@@ -1,0 +1,174 @@
+{
+  "budget": {
+    "label": "Économique",
+    "materials": [
+      {
+        "material_id": "SKU-1000150993",
+        "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger",
+        "qty": 6,
+        "qty_type": "fixed",
+        "unit_fallback": 16.52
+      },
+      {
+        "material_id": "SKU-1001728974",
+        "desc": "Composé à joints tout usage CGC Sheetrock (Seau 17 L)",
+        "qty": 1,
+        "qty_type": "fixed",
+        "unit_fallback": 37.31
+      },
+      {
+        "material_id": "SKU-1000738382",
+        "desc": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
+        "qty": 2,
+        "qty_type": "fixed",
+        "unit_fallback": 9.97
+      }
+    ],
+    "labor": [
+      {
+        "desc": "Démolition & évacuation de base",
+        "hours": 14,
+        "rate": 0
+      },
+      {
+        "desc": "Installation plomberie et vanité en place",
+        "hours": 18,
+        "rate": 0
+      },
+      {
+        "desc": "Finition joints, plâtre et peinture",
+        "hours": 16,
+        "rate": 0
+      }
+    ]
+  },
+
+  "standard": {
+    "label": "Standard",
+    "materials": [
+      {
+        "material_id": "SKU-1000113392",
+        "desc": "Panneau d'appui en ciment Durock 1/2 po x 3 pi x 5 pi",
+        "qty": 8,
+        "qty_type": "fixed",
+        "unit_fallback": 26.98
+      },
+      {
+        "material_id": "SKU-1000150993",
+        "desc": "Panneau de gypse résistant à l'humidité CGC Mold Tough 1/2 po x 4 pi x 8 pi",
+        "qty": 8,
+        "qty_type": "fixed",
+        "unit_fallback": 89.99
+      },
+      {
+        "material_id": "SKU-1001728974",
+        "desc": "Composé à joints tout usage CGC Sheetrock (Seau 17 L)",
+        "qty": 2,
+        "qty_type": "fixed",
+        "unit_fallback": 37.31
+      },
+      {
+        "material_id": "CENTURA-KERDI-KIT",
+        "desc": "Membrane d'étanchéité Schluter-KERDI (108 pi²)",
+        "qty": 1,
+        "qty_type": "fixed",
+        "unit_fallback": 149.00
+      },
+      {
+        "material_id": "CANAC-VANITY-36",
+        "desc": "Meuble-vanité 36 po chêne naturel avec comptoir quartz",
+        "qty": 1,
+        "qty_type": "fixed",
+        "unit_fallback": 829.00
+      }
+    ],
+    "labor": [
+      {
+        "desc": "Démolition complète & préparation substrat",
+        "hours": 20,
+        "rate": 0
+      },
+      {
+        "desc": "Plomberie & raccordement nouvelle robinetterie",
+        "hours": 24,
+        "rate": 0
+      },
+      {
+        "desc": "Membrane d'étanchéité & pose de carrelage mural",
+        "hours": 28,
+        "rate": 0
+      },
+      {
+        "desc": "Plâtrage soigné, joints & peinture 2 couches",
+        "hours": 22,
+        "rate": 0
+      }
+    ]
+  },
+
+  "premium": {
+    "label": "Haut de gamme",
+    "materials": [
+      {
+        "material_id": "SKU-1000113392",
+        "desc": "Panneau d'appui en ciment Durock 1/2 po x 3 pi x 5 pi",
+        "qty": 12,
+        "qty_type": "fixed",
+        "unit_fallback": 26.98
+      },
+      {
+        "material_id": "CENTURA-KERDI-KIT",
+        "desc": "Ensemble complet douche étanche Schluter-Kerdi 38x60",
+        "qty": 1,
+        "qty_type": "fixed",
+        "unit_fallback": 685.00
+      },
+      {
+        "material_id": "CIOT-CALACATTA-2448",
+        "desc": "Carreaux porcelaine grand format Calacatta 24x48 (boîte 16 pi²)",
+        "qty": 6,
+        "qty_type": "fixed",
+        "unit_fallback": 118.00
+      },
+      {
+        "material_id": "CUSTOM-VANITY-60",
+        "desc": "Vanité suspendue sur mesure 60 po double vasque en noyer véritable",
+        "qty": 1,
+        "qty_type": "fixed",
+        "unit_fallback": 2450.00
+      }
+    ],
+    "labor": [
+      {
+        "desc": "Démolition structurelle & mise à niveau plancher",
+        "hours": 25,
+        "rate": 0
+      },
+      {
+        "desc": "Reconfiguration plomberie encastrée & drain linéaire",
+        "hours": 32,
+        "rate": 0
+      },
+      {
+        "desc": "Installation fil chauffant + coulée chape",
+        "hours": 12,
+        "rate": 0
+      },
+      {
+        "desc": "Pose porcelaine grand format & finitions de luxe",
+        "hours": 40,
+        "rate": 0
+      },
+      {
+        "desc": "Électricité & éclairage d'ambiance encastré",
+        "hours": 14,
+        "rate": 0
+      },
+      {
+        "desc": "Finition haut de gamme plâtre et peinture lavable",
+        "hours": 26,
+        "rate": 0
+      }
+    ]
+  }
+}

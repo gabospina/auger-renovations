@@ -1,0 +1,223 @@
+{
+    "REQ-20261006-C3C7": {
+        "request_id": "REQ-20261006-C3C7",
+        "created_at": "2026-10-06 01:51:53",
+        "status": "sent",
+        "client": {
+            "name": "Gabriel Ospina",
+            "address": "11 Rue du Château-Kirkland",
+            "email": "gobasuras@gmail.com",
+            "phone": "514-758-6158"
+        },
+        "project": {
+            "type": "complete",
+            "condition": "moyen",
+            "size_sqft": "120",
+            "work_items": [
+                "Retirer la douche",
+                "Remplacer la vanité",
+                "Peinture murs et plafond",
+                "Remplacer la toilette"
+            ],
+            "notes": "The color is blue. Toillete chines."
+        },
+        "photos": {
+            "current": [
+                "uploads/REQ-20261006-C3C7/Orange_Pi_Zero_3_45AngleBack_6ac43819ec874.png"
+            ],
+            "desired": [
+                "uploads/REQ-20261006-C3C7/Orange_Pi_Zero_3_MicroSD_Slot_6ac43819ecbe1.png"
+            ]
+        }
+    },
+    "REQ-20261006-94B4": {
+        "request_id": "REQ-20261006-94B4",
+        "created_at": "2026-10-06 02:04:16",
+        "status": "pending",
+        "client": {
+            "name": "Go Basuras",
+            "address": "11 Rue du Château-Kirkland",
+            "email": "gobasuras@gmail.com",
+            "phone": "514-758-6158"
+        },
+        "project": {
+            "type": "partielle",
+            "condition": "mauvais",
+            "size_sqft": "110",
+            "work_items": [
+                "Retirer la douche",
+                "Remplacer la vanité",
+                "Remplacer la toilette"
+            ],
+            "notes": "dgadfbbcbvfsvvdsagvds"
+        },
+        "photos": {
+            "current": [
+                "uploads/REQ-20261006-94B4/Orange_Pi_Zero_3_4GB_TopView_6ac43b006964b.png"
+            ],
+            "desired": [
+                "uploads/REQ-20261006-94B4/TP4056_6ac43b0069856.png"
+            ]
+        }
+    },
+    "REQ-20261006-976C": {
+        "request_id": "REQ-20261006-976C",
+        "created_at": "2026-10-06 02:23:47",
+        "status": "sent",
+        "client": {
+            "name": "Heierne nnksdas",
+            "address": "11 Rue du Château-Kirkland",
+            "email": "gobasuras@gmail.com",
+            "phone": "514-758-6345"
+        },
+        "project": {
+            "type": "partielle",
+            "condition": "moyen",
+            "size_sqft": "90",
+            "work_items": [
+                "Retirer la douche",
+                "Ajouter un bain",
+                "Remplacer la vanité",
+                "Remplacer le closet"
+            ],
+            "notes": "Wall blue."
+        },
+        "photos": {
+            "current": [
+                "uploads/REQ-20261006-976C/Orange_Pi_Zero_3_4GB_TopView_6ac43f93c995d.png"
+            ],
+            "desired": [
+                "uploads/REQ-20261006-976C/Orange_Pi_Zero_3-PinDiagram-i2c3_6ac43f93c9b48.png"
+            ]
+        }
+    },
+    "REQ-20261005-8317": {
+        "request_id": "REQ-20261005-8317",
+        "created_at": "2026-10-05 21:07:12",
+        "status": "pending",
+        "client": {
+            "name": "tryrtyrw sfg",
+            "address": "sfsfgs vdgfs",
+            "email": "fdsgfgsgfdg@dgdsfds.com",
+            "phone": "514-758-6158"
+        },
+        "project": {
+            "type": "partielle",
+            "condition": "moyen",
+            "size_sqft": "",
+            "work_items": [
+                "Ajouter un bain",
+                "Remplacer la vanité",
+                "Remplacer la toilette"
+            ],
+            "notes": "fgsfgggfgf"
+        },
+        "photos": {
+            "current": [
+                "uploads/REQ-20261005-8317/SpaceX-15kms-Altitude_6ac449c038d80.png"
+            ],
+            "desired": [
+                "uploads/REQ-20261005-8317/TP4056_6ac449c039203.png"
+            ]
+        }
+    },
+    "REQ-20261005-64C9": {
+        "request_id": "REQ-20261005-64C9",
+        "created_at": "2026-10-05 21:10:10",
+        "status": "Soumission envoyée",
+        "client": {
+            "name": "Gabriel Ospina",
+            "address": "11 Rue du Château-Kirkland",
+            "email": "gobasuras@gmail.com",
+            "phone": "514-758-6158"
+        },
+        "project": {
+            "type": "complete",
+            "condition": "moyen",
+            "size_sqft": "",
+            "work_items": [
+                "Ajouter un bain",
+                "Remplacer le closet"
+            ],
+            "notes": "cxvvxcvxcv"
+        },
+        "photos": {
+            "current": [
+                "uploads/REQ-20261005-64C9/Orange_Pi_Zero_3_45AngleBack_6ac44a72e668d.png"
+            ],
+            "desired": [
+                "uploads/REQ-20261005-64C9/Orange_Pi_Zero_3_MicroSD_Slot_6ac44a72e6899.png"
+            ]
+        },
+        "quote_id": "DEV-202610-001",
+        "quote_amount": "1,484.12 $",
+        "quote_sent_at": "2026-10-08 03:05:36"
+    },
+    "REQ-20261008-93ED": {
+        "request_id": "REQ-20261008-93ED",
+        "created_at": "2026-10-08 15:30:55",
+        "status": "pending",
+        "client": {
+            "name": "Gabriel Ospina",
+            "address": "11 Rue du Château-Kirkland",
+            "email": "gobasuras@gmail.com",
+            "phone": "514-758-6345"
+        },
+        "project": {
+            "type": "complete",
+            "condition": "moyen",
+            "size_sqft": "",
+            "work_items": [
+                "Retirer la douche",
+                "Ajouter un bain",
+                "Remplacer le plancher",
+                "Remplacer la vanité",
+                "Remplacer le closet",
+                "Peinture murs et plafond",
+                "Remplacer la toilette"
+            ],
+            "notes": "New modern tooilette adn shower head"
+        },
+        "photos": {
+            "current": [
+                "uploads/REQ-20261008-93ED/ARenovation-BathroomWhiteShowerFloorDarkGray_6ac7ef6fd99e1.jpg"
+            ],
+            "desired": [
+                "uploads/REQ-20261008-93ED/Bathroom-5_6ac7ef6fd9e58.png"
+            ]
+        }
+    },
+    "REQ-20261008-AC70": {
+        "request_id": "REQ-20261008-AC70",
+        "created_at": "2026-10-08 16:16:14",
+        "status": "pending",
+        "client": {
+            "name": "Jorge Alvarez",
+            "address": "Rue 4567",
+            "email": "go@gmail.com",
+            "phone": "514-432-6158"
+        },
+        "project": {
+            "type": "complete",
+            "condition": "moyen",
+            "size_sqft": "95",
+            "work_items": [
+                "Retirer la douche",
+                "Remplacer le plancher",
+                "Remplacer la vanité",
+                "Remplacer le closet",
+                "Peinture murs et plafond",
+                "Remplacer la toilette"
+            ],
+            "notes": "I need is on the attached photo"
+        },
+        "photos": {
+            "current": [
+                "uploads/REQ-20261008-AC70/ARenovation-BathroomShowerGrayGlassMetalFrameVanityGrayCountertopWhite_6ac7fa0e6ae99.jpeg"
+            ],
+            "desired": [
+                "uploads/REQ-20261008-AC70/ARenovation-BathroomShowerFloorGrayVanityWhiteLargeMirror_6ac7fa0e6b085.jpeg"
+            ]
+        }
+    }
+}
