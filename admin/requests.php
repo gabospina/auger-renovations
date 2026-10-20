@@ -55,6 +55,70 @@ if (file_exists($quotesFile)) {
         }
     }
 }
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function getPriorityBadge($priority)
+{
+    switch ($priority) {
+
+        case 'urgent':
+            return '<span class="badge badge-sent">ASAP</span>';
+
+        case 'next_month':
+            return '<span class="badge badge-accepted">1 mois</span>';
+
+        case 'next_2_months':
+            return '<span class="badge badge-pending">2 mois</span>';
+
+        case 'not_urgent':
+            return '<span class="badge" style="background:#eee;color:#666;">Pas urgent</span>';
+
+        default:
+            return '—';
+    }
+}
+
+function formatBudgetLabel($budget)
+{
+    $map = [
+        'under_5000'  => '< 5 000 $',
+        '5000_10000'  => '5 000 $ - 10 000 $',
+        '10000_20000' => '10 000 $ - 20 000 $',
+        '20000_40000' => '20 000 $ - 40 000 $',
+        '40000_plus'  => '40 000 $+'
+    ];
+    return $map[$budget] ?? ($budget ?: '—');
+}
+
+function formatStyleLabel($style)
+{
+    $map = [
+        'modern'       => 'Moderne',
+        'contemporary' => 'Contemporain',
+        'scandinavian' => 'Scandinave',
+        'traditional'  => 'Traditionnel',
+        'farmhouse'    => 'Farmhouse',
+        'luxury'       => 'Spa / Luxe'
+    ];
+    return $map[$style] ?? ($style ? ucfirst($style) : '—');
+}
+
+function formatRenovationType($project)
+{
+    $map = [
+        'refresh'   => 'Rafraîchissement',
+        'partial'   => 'Partielle',
+        'partielle' => 'Partielle',
+        'complete'  => 'Complète',
+        'complète'  => 'Complète',
+        'luxury'    => 'Haut de gamme'
+    ];
+    $raw = strtolower($project['renovation_level'] ?? ($project['type'] ?? 'complete'));
+    return $map[$raw] ?? ucfirst($raw);
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -239,6 +303,9 @@ if (file_exists($quotesFile)) {
             <th>Client</th>
             <th>Téléphone</th>
             <th>Projet</th>
+            <th>Budget</th>
+            <th>Priorité</th>
+            <th>Style</th>
             <th>Photos</th>
             <th>Statut</th>
             <th style="text-align: right;">Action</th>
@@ -247,7 +314,7 @@ if (file_exists($quotesFile)) {
         <tbody>
           <?php if (empty($requests)): ?>
             <tr>
-              <td colspan="8" style="text-align: center; color: #888; padding: 40px;">
+              <td colspan="11" style="text-align: center; color: #888; padding: 40px;">
                 <i class="fa-regular fa-folder-open" style="font-size: 32px; display: block; margin-bottom: 8px;"></i>
                 Aucune demande de soumission enregistrée pour le moment.
               </td>
@@ -266,8 +333,14 @@ if (file_exists($quotesFile)) {
                 $clientPhone = $client['phone'] ?? '—';
 
                 $project = is_array($req['project'] ?? null) ? $req['project'] : [];
-                $projType = !empty($project['type']) ? ucfirst($project['type']) : 'Standard';
-                $projSize = !empty($project['size_sqft']) ? $project['size_sqft'] . ' pi²' : '? pi²';
+
+                // Old clean format: Renovation Level + Square footage
+                $projType = formatRenovationType($project);
+                $projSize = !empty($project['size_sqft']) ? $project['size_sqft'] . ' pi²' : '';
+
+                $budget    = $project['budget_range'] ?? ($project['budget'] ?? '');
+                $style     = $project['design_style'] ?? ($project['style'] ?? '');
+                $priority  = $project['project_priority'] ?? ($project['priority'] ?? '');
 
                 $photos = is_array($req['photos'] ?? null) ? $req['photos'] : [];
                 $curCount = is_array($photos['current'] ?? null) ? count($photos['current']) : 0;
@@ -276,9 +349,9 @@ if (file_exists($quotesFile)) {
 
                 // Check quote status
                 $matchingQuote = $quotesByReq[$reqId] ?? null;
-                $quoteId = $req['quote_id'] ?? ($matchingQuote['quote_id'] ?? null);
+                $quoteId = $req['quote_id'] ?? ($matchingQuote['quote_id'] ?? ($matchingQuote['quote_number'] ?? null));
                 $quoteAmount = $req['quote_amount'] ?? ($matchingQuote['totals']['grand_total'] ?? null);
-
+  
                 $rawStatus = strtolower($req['status'] ?? 'pending');
                 $isAccepted = (strpos($rawStatus, 'accept') !== false);
                 $isSent = ($isAccepted || in_array($rawStatus, ['sent', 'soumission envoyée', 'envoyée']) || !empty($quoteId));
@@ -306,10 +379,36 @@ if (file_exists($quotesFile)) {
                     <?= htmlspecialchars($clientPhone) ?>
                   </a>
                 </td>
-                <td><?= htmlspecialchars($projType) ?> (<?= htmlspecialchars($projSize) ?>)</td>
+
+                <!-- Colonne Projet (Ancien format propre : Complète / Partielle + pi²) -->
+                <td>
+                  <strong><?= htmlspecialchars($projType) ?></strong>
+                  <?php if ($projSize): ?>
+                    <br><small style="color:#555;"><?= htmlspecialchars($projSize) ?></small>
+                  <?php endif; ?>
+                </td>
+
+                <!-- Colonne Budget -->
+                <td>
+                  <small><?= htmlspecialchars(formatBudgetLabel($budget)) ?></small>
+                </td>
+
+                <!-- Colonne Priorité -->
+                <td>
+                  <?= getPriorityBadge($priority) ?>
+                </td>
+
+                <!-- Colonne Style -->
+                <td>
+                  <small><?= htmlspecialchars(formatStyleLabel($style)) ?></small>
+                </td>
+
+                <!-- Colonne Photos -->
                 <td>
                   <i class="fa-regular fa-images"></i> <?= $photoCount ?> photo(s)
                 </td>
+
+                <!-- Colonne Statut -->
                 <td>
                   <?php if ($isAccepted): ?>
                     <span class="badge badge-accepted">Accepté</span>
@@ -321,13 +420,18 @@ if (file_exists($quotesFile)) {
 
                   <?php if ($quoteId): ?>
                     <div class="quote-meta-info">
-                      <strong><?= htmlspecialchars($quoteId) ?></strong> (<?= htmlspecialchars($quoteAmount ?? '0.00 $') ?>)<br>
+                      <strong><?= htmlspecialchars($quoteId) ?></strong>
+                      <?php if ($quoteAmount !== null): ?>
+                        (<?= is_numeric($quoteAmount) ? number_format((float)$quoteAmount, 2, '.', ',') . ' $' : htmlspecialchars($quoteAmount) ?>)
+                      <?php endif; ?><br>
                       <a href="../view-quote.php?quote_id=<?= urlencode($quoteId) ?>" target="_blank" class="link-view-quote">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Voir le devis client
                       </a>
                     </div>
                   <?php endif; ?>
                 </td>
+
+                <!-- Colonne Action -->
                 <td style="text-align: right;">
                   <a href="estimate-bathroom.php?request_id=<?= urlencode($reqId) ?>" class="btn-estimate">
                     <i class="fa-solid fa-calculator"></i> <?= $isSent ? 'Modifier / Revoir' : 'Préparer la soumission' ?>

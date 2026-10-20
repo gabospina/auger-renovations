@@ -950,11 +950,15 @@ body.contact-page {
   color: #b45309;
 }
 
-  /* admin/send-quote.php */
-  .badge.status-sent {
-  background-color: #e6f6eb;
-  color: #1e7e34;
-  border: 1px solid #c3e6cb;
+/* admin/send-quote.php */
+.badge.status-sent {
+background-color: #e6f6eb;
+color: #1e7e34;
+border: 1px solid #c3e6cb;
+}
+
+.card-schedule {
+  margin-bottom: 25px !important;
 }
 
 }

@@ -352,18 +352,37 @@ $filePath = $quotesDir . '/quote-' . $quoteNumber . '.html';
 file_put_contents($filePath, $htmlQuote);
 
 // 6. Append to quotes.json Database
+$validUntil = date('Y-m-d', strtotime('+30 days'));
 $allQuotes[$quoteNumber] = [
+    'quote_id'     => $quoteNumber,
     'quote_number' => $quoteNumber,
     'request_id'   => $data['request_id'] ?? '',
     'client'       => $client,
+    'materials'    => $materials,
+    'labor'        => $labor,
     'totals'       => $totals,
+    'status'       => 'Envoyée',
     'file'         => 'quotes/quote-' . $quoteNumber . '.html',
-    'created_at'   => $dateCreated
+    'created_at'   => $dateCreated,
+    'valid_until'  => $validUntil
 ];
-file_put_contents($quotesLogFile, json_encode($allQuotes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+file_put_contents($quotesLogFile, json_encode($allQuotes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
-// 7. Return Public Link to Estimator
-$viewUrl = 'quotes/quote-' . $quoteNumber . '.html';
+// 6b. Update requests.json so the status becomes "Soumission envoyée" in requests.php
+$reqId = $data['request_id'] ?? '';
+$requestsFile = $dataDir . '/requests.json';
+if (!empty($reqId) && file_exists($requestsFile)) {
+    $allRequests = json_decode(file_get_contents($requestsFile), true) ?: [];
+    if (isset($allRequests[$reqId])) {
+        $allRequests[$reqId]['status']       = 'Soumission envoyée';
+        $allRequests[$reqId]['quote_id']     = $quoteNumber;
+        $allRequests[$reqId]['quote_amount'] = number_format((float)($totals['grand_total'] ?? 0), 2, '.', ' ') . ' $';
+        file_put_contents($requestsFile, json_encode($allRequests, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    }
+}
+
+// 7. Return Public Link to dynamic view-quote.php in root
+$viewUrl = '../view-quote.php?quote_id=' . urlencode($quoteNumber);
 
 echo json_encode([
     'success'      => true,

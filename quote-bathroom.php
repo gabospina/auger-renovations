@@ -83,45 +83,303 @@ $submittedReqId = $_GET['req'] ?? '';
 
       <!-- Bathroom Details -->
       <article class="card quote-card">
-        <h2>Détails de la salle de bain</h2>
 
-        <div class="form-row-3">
-          <div class="form-group">
-            <label for="bath-type">Type de salle de bain</label>
-            <select id="bath-type" name="bath_type">
-              <option value="complete">Complète</option>
-              <option value="partielle">Partielle</option>
-              <option value="ensuite">Ensuite</option>
-            </select>
+          <h2>Détails de la salle de bain</h2>
+
+          <!-- General Information -->
+          <div class="form-row-3">
+              <div class="form-group">
+                  <label for="bath-type">Type de salle de bain</label>
+                  <select id="bath-type" name="bath_type">
+                      <option value="powder">Salle d'eau</option>
+                      <option value="complete" selected>Salle de bain complète</option>
+                      <option value="ensuite">Salle de bain attenante</option>
+                      <option value="basement">Sous-sol</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="bath-condition">État actuel</label>
+                  <select id="bath-condition" name="bath_condition">
+                      <option value="excellent">Excellent</option>
+                      <option value="good">Bon</option>
+                      <option value="average" selected>Moyen</option>
+                      <option value="poor">Mauvais</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                  <label for="renovation-level">Type de rénovation</label>
+                  <select id="renovation-level" name="renovation_level">
+                      <option value="refresh">Rafraîchissement</option>
+                      <option value="partial">Rénovation partielle</option>
+                      <option value="complete" selected>Rénovation complète</option>
+                      <option value="luxury">Haut de gamme</option>
+                  </select>
+              </div>
           </div>
 
-          <div class="form-group">
-            <label for="bath-condition">État actuel</label>
-            <select id="bath-condition" name="bath_condition">
-              <option value="bon">Bon</option>
-              <option value="moyen" selected>Moyen</option>
-              <option value="mauvais">Mauvais</option>
-            </select>
+          <!-- Dimensions -->
+          <h3>Dimensions</h3>
+          <div class="form-row-3">
+              <div class="form-group">
+                  <label>Longueur (pi)</label>
+                  <input type="number" step="0.1" min="0" name="bath_length">
+              </div>
+
+              <div class="form-group">
+                  <label>Largeur (pi)</label>
+                  <input type="number" step="0.1" min="0" name="bath_width">
+              </div>
+
+              <div class="form-group">
+                  <label>Hauteur du plafond (pi)</label>
+                  <input type="number" step="0.1" min="0" name="ceiling_height">
+              </div>
           </div>
 
-          <div class="form-group">
-            <label for="bath-size">Superficie (pi²)</label>
-            <input type="number" id="bath-size" name="bath_size" min="0">
-          </div>
-        </div>
-
-        <div class="form-group" style="margin-top: 10px;">
-          <label>Travaux souhaités</label>
+          <!-- Existing Problems -->
+          <h3>Conditions actuelles</h3>
           <div class="checkbox-columns">
-            <label><input type="checkbox" name="work[]" value="Retirer la douche"> Retirer la douche</label>
-            <label><input type="checkbox" name="work[]" value="Ajouter un bain"> Ajouter un bain</label>
-            <label><input type="checkbox" name="work[]" value="Remplacer le plancher"> Remplacer le plancher</label>
-            <label><input type="checkbox" name="work[]" value="Remplacer la vanité"> Remplacer la vanité</label>
-            <label><input type="checkbox" name="work[]" value="Remplacer le closet"> Remplacer le closet</label>
-            <label><input type="checkbox" name="work[]" value="Peinture murs et plafond"> Peinture murs et plafond</label>
-            <label><input type="checkbox" name="work[]" value="Remplacer la toilette"> Remplacer la toilette</label>
+              <label><input type="checkbox" name="issues[]" value="water_damage"> Dégâts d'eau</label>
+              <label><input type="checkbox" name="issues[]" value="mold"> Moisissure</label>
+              <label><input type="checkbox" name="issues[]" value="leaks"> Fuite d'eau</label>
+              <label><input type="checkbox" name="issues[]" value="soft_floor"> Plancher mou</label>
+              <label><input type="checkbox" name="issues[]" value="cracked_tiles"> Céramique fissurée</label>
+              <label><input type="checkbox" name="issues[]" value="none"> Aucun problème connu</label>
           </div>
-        </div>
+
+          <!-- Demolition -->
+          <h3>Démolition requise</h3>
+          <div class="checkbox-columns">
+              <label><input type="checkbox" name="demo[]" value="vanity"> Retirer la vanité</label>
+              <label><input type="checkbox" name="demo[]" value="toilet"> Retirer la toilette</label>
+              <label><input type="checkbox" name="demo[]" value="bathtub"> Retirer le bain</label>
+              <label><input type="checkbox" name="demo[]" value="shower"> Retirer la douche</label>
+              <label><input type="checkbox" name="demo[]" value="floor_tile"> Retirer le plancher</label>
+              <label><input type="checkbox" name="demo[]" value="wall_tile"> Retirer les céramiques murales</label>
+              <label><input type="checkbox" name="demo[]" value="drywall"> Retirer le gypse</label>
+              <label><input type="checkbox" name="demo[]" value="ceiling"> Retirer le plafond</label>
+          </div>
+
+          <!-- Plumbing -->
+          <h3>Travaux de plomberie</h3>
+          <div class="checkbox-columns">
+              <label><input type="checkbox" name="plumbing[]" value="replace_toilet"> Nouvelle toilette</label>
+              <label><input type="checkbox" name="plumbing[]" value="replace_vanity"> Nouvelle vanité</label>
+              <label><input type="checkbox" name="plumbing[]" value="replace_sink"> Nouveau lavabo</label>
+              <label><input type="checkbox" name="plumbing[]" value="replace_faucet"> Nouveau robinet</label>
+              <label><input type="checkbox" name="plumbing[]" value="replace_shower_head"> Nouvelle pomme de douche</label>
+              <label><input type="checkbox" name="plumbing[]" value="replace_tub"> Nouveau bain</label>
+              <label><input type="checkbox" name="plumbing[]" value="move_plumbing"> Déplacer les conduites de plomberie</label>
+          </div>
+
+          <!-- Electrical -->
+          <h3>Travaux électriques</h3>
+          <div class="checkbox-columns">
+              <label><input type="checkbox" name="electrical[]" value="potlights"> Ajouter des encastrés (pot lights)</label>
+              <label><input type="checkbox" name="electrical[]" value="fan_replace"> Remplacer le ventilateur</label>
+              <label><input type="checkbox" name="electrical[]" value="fan_new"> Ajouter un ventilateur</label>
+              <label><input type="checkbox" name="electrical[]" value="gfci"> Ajouter une prise GFCI</label>
+              <label><input type="checkbox" name="electrical[]" value="heated_floor"> Plancher chauffant</label>
+              <label><input type="checkbox" name="electrical[]" value="led_mirror"> Miroir DEL</label>
+          </div>
+
+          <!-- DOUCHE -->
+          <h3>Douche</h3>
+          <div class="checkbox-columns">
+            <label>
+              <input type="checkbox" name="shower[]" value="replace_standard_shower">
+              Remplacer la douche standard
+            </label>
+            <label>
+              <input type="checkbox" name="shower[]" value="walk_in_shower">
+              Douche italienne (Walk-In)
+            </label>
+            <label>
+              <input type="checkbox" name="shower[]" value="glass_shower">
+              Porte de douche en verre
+            </label>
+            <label>
+              <input type="checkbox" name="shower[]" value="frameless_glass">
+              Verre sans cadre
+            </label>
+            <label>
+              <input type="checkbox" name="shower[]" value="rain_shower">
+              Pomme de douche pluie
+            </label>
+            <label>
+              <input type="checkbox" name="shower[]" value="body_jets">
+              Jets corporels
+            </label>
+            <label>
+              <input type="checkbox" name="shower[]" value="linear_drain">
+              Drain linéaire
+            </label>
+            <label>
+              <input type="checkbox" name="shower[]" value="waterproof_membrane">
+              Membrane d'étanchéité
+            </label>
+          </div>
+
+          <!-- PLANCHER (Choix unique - Radio) -->
+          <h3>Plancher</h3>
+          <div class="checkbox-columns">
+            <label>
+              <input type="radio" name="floor" value="ceramic">
+              Céramique
+            </label>
+            <label>
+              <input type="radio" name="floor" value="porcelain">
+              Porcelaine
+            </label>
+            <label>
+              <input type="radio" name="floor" value="luxury_vinyl">
+              Vinyle de luxe
+            </label>
+            <label>
+              <input type="radio" name="floor" value="natural_stone">
+              Pierre naturelle
+            </label>
+          </div>
+
+          <!-- VANITÉ (Choix unique - Radio) -->
+          <h3>Vanité</h3>
+          <div class="checkbox-columns">
+            <label>
+              <input type="radio" name="vanity" value="24">
+              Vanité 24"
+            </label>
+            <label>
+              <input type="radio" name="vanity" value="30">
+              Vanité 30"
+            </label>
+            <label>
+              <input type="radio" name="vanity" value="36">
+              Vanité 36"
+            </label>
+            <label>
+              <input type="radio" name="vanity" value="48">
+              Vanité 48"
+            </label>
+            <label>
+              <input type="radio" name="vanity" value="60">
+              Vanité 60"
+            </label>
+          </div>
+
+          <!-- COMPTOIR (Choix unique - Radio) -->
+          <h3>Comptoir</h3>
+          <div class="checkbox-columns">
+            <label>
+              <input type="radio" name="countertop" value="laminate">
+              Stratifié
+            </label>
+            <label>
+              <input type="radio" name="countertop" value="quartz">
+              Quartz
+            </label>
+            <label>
+              <input type="radio" name="countertop" value="granite">
+              Granit
+            </label>
+            <label>
+              <input type="radio" name="countertop" value="marble">
+              Marbre
+            </label>
+            <label>
+              <input type="radio" name="countertop" value="none">
+              Aucun / Inclus avec vanité
+            </label>
+          </div>
+
+          <!-- PEINTURE -->
+          <h3>Peinture</h3>
+          <div class="checkbox-columns">
+            <label>
+              <input type="checkbox" name="painting[]" value="walls">Murs
+            </label>
+            <label>
+              <input type="checkbox" name="painting[]" value="ceiling">Plafond
+            </label>
+            <label>
+              <input type="checkbox" name="painting[]" value="door">Porte
+            </label>
+            <label>
+              <input type="checkbox" name="painting[]" value="trim">Moulures
+            </label>
+          </div>
+
+          <h3>Budget approximatif</h3>
+          <div class="checkbox-columns">
+            <label>
+              <input type="radio" name="budget_range" value="under_5000">
+              Moins de 5 000 $
+            </label>
+            <label>
+              <input type="radio" name="budget_range" value="5000_10000">
+              5 000 $ à 10 000 $
+            </label>
+            <label>
+              <input type="radio" name="budget_range" value="10000_20000">
+              10 000 $ à 20 000 $
+            </label>
+            <label>
+              <input type="radio" name="budget_range" value="20000_40000">
+              20 000 $ à 40 000 $
+            </label>
+            <label>
+              <input type="radio" name="budget_range" value="40000_plus">
+              40 000 $ et plus
+            </label>
+          </div>
+
+          <h3>Style désiré</h3>
+          <div class="checkbox-columns">
+            <label>
+              <input type="radio" name="design_style" value="modern">
+              Moderne
+            </label>
+            <label>
+              <input type="radio" name="design_style" value="contemporary">
+              Contemporain
+            </label>
+            <label>
+              <input type="radio" name="design_style" value="scandinavian">
+              Scandinave
+            </label>
+            <label>
+              <input type="radio" name="design_style" value="traditional">
+              Traditionnel
+            </label>
+            <label>
+              <input type="radio" name="design_style" value="farmhouse">
+              Farmhouse
+            </label>
+            <label>
+              <input type="radio" name="design_style" value="luxury">
+              Spa / Luxe
+            </label>
+          </div>
+
+          <h3>Échéancier</h3>
+          <div class="form-group">
+              <label>Date souhaitée pour débuter</label>
+              <input
+                  type="date"
+                  name="desired_start_date"
+                  style="max-width:170px;"
+              >
+          </div>
+          <div class="priority-row">
+            <span class="field-title">Priorité du projet</span>
+            <div class="priority-inline">
+              <label><input type="radio" name="project_priority" value="urgent"> ASAP</label>
+              <label><input type="radio" name="project_priority" value="not_urgent"> Pas urgent</label>
+              <label><input type="radio" name="project_priority" value="next_month"> 1 mois</label>
+              <label><input type="radio" name="project_priority" value="next_2_months"> 2 mois</label>
+            </div>
+          </div>
       </article>
 
       <!-- Notes supplémentaires -->
@@ -187,20 +445,41 @@ $submittedReqId = $_GET['req'] ?? '';
   </div>
 </footer>
 
-<!-- Relative path fix without leading slash -->
-<!-- <script src="assets/js/quote-bathroom_v1.js"></script> -->
+<!-- Lightbox Modal for Photo Thumbnails -->
+<div id="photo-lightbox" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; padding:20px; cursor:zoom-out;">
+  <button type="button" style="position:absolute; top:20px; right:25px; background:none; border:none; color:#fff; font-size:32px; cursor:pointer;">&times;</button>
+  <img id="lightbox-img" src="" alt="Aperçu agrandi" style="max-width:92%; max-height:90vh; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+</div>
 
-<!-- (Note: Since quote-bathroom.php is in your root directory, 
-use assets/js/... rather than ../assets/js/... so the browser resolves the paths correctly). -->
-
-<!-- 1. Shared core engine (Catalog, Autocomplete, Quebec Tax Math, Send Quote) -->
+<!-- 1. Shared core engine -->
 <script src="assets/js/quote-engine.js"></script>
 
-<!-- 2. Shared tier preset engine (Économique / Standard / Haut de gamme) -->
+<!-- 2. Shared tier preset engine -->
 <script src="assets/js/quote-tiers.js"></script>
 
-<!-- 3. Bathroom-specific logic (Fixtures, Room Pre-fill, Photo Previews) -->
+<!-- 3. Bathroom-specific logic -->
 <script src="assets/js/quote-bathroom.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const lightbox = document.getElementById('photo-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    if (!lightbox || !lightboxImg) return;
+
+    document.addEventListener('click', (e) => {
+      const thumbImg = e.target.closest('.photo-thumb-item img');
+      if (thumbImg) {
+        lightboxImg.src = thumbImg.src;
+        lightbox.style.display = 'flex';
+      }
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.style.display = 'none';
+      lightboxImg.src = '';
+    });
+  });
+</script>
 
 </body>
 </html>

@@ -12,8 +12,7 @@
   grid-template-columns: 1fr !important;
   max-width: 600px;
   margin: 0 auto;
-  margin-top: 20px !important; /*  reduce space */
-  /* margin-top: 0 !important; */
+  margin-top: 20px !important; /* reduce space */
   gap: 15px !important;
 }
 
@@ -30,6 +29,12 @@
   border: 1px solid #d0d0d0;
   margin: 0 !important;
   margin-bottom: 10px !important;
+}
+
+/* 3. Add extra space below this specific card before the next <article class="card quote-card"> */
+.quote-card:has(.priority-row) {
+  margin-bottom: 28px !important;
+  padding-bottom: 14px !important;
 }
 
 /* Reduce spacing above "Actions" title */
@@ -74,22 +79,54 @@
   font-size: 13px;
 }
 
-/* Larger Choose File boxes */
-.form-group input[type="file"] {
-  height: 40px !important;        /* bigger box */
-  padding: 8px 10px !important;   /* more padding */
-  font-size: 14px !important;     /* bigger text */
-  width: 100% !important;         /* full width */
-  box-sizing: border-box;         /* prevents overflow */
-}
-
-/* Two fields side-by-side */
+/* Two equal fields side-by-side (50% / 50%) */
 .form-row-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 16px;
+  align-items: start;
 }
 
+@media (max-width: 540px) {
+  .form-row-2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Uniform alignment for labels and groups inside 2-column rows */
+.form-row-2 .form-group {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.form-row-2 .form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #1f2937;
+  min-height: 20px;
+}
+
+/* Well-structured Choose File boxes */
+.form-group input[type="file"] {
+  height: auto !important;
+  min-height: 40px !important;
+  padding: 7px 10px !important;
+  font-size: 13px !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  background-color: #f9fafb;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-group input[type="file"]:hover {
+  border-color: #1a3d6f;
+  background-color: #f1f5f9;
+}
 
 /* ================================
    THREE-FIELD HORIZONTAL ROW
@@ -114,12 +151,17 @@
 .checkbox-columns label {
   font-size: 12px;
   line-height: 1.1;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
 }
 
-.checkbox-columns input[type="checkbox"] {
+.checkbox-columns input[type="checkbox"],
+.checkbox-columns input[type="radio"] {
   width: 14px;
   height: 14px;
-  margin-right: 4px;
+  margin: 0 5px 0 0;
+  cursor: pointer;
 }
 
 /* Thumbnail container & interactive delete badge */
@@ -202,4 +244,57 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  cursor: zoom-in;
+}
+
+/* ================================
+   PRIORITÉ DU PROJET & SPACING FIX
+   ================================ */
+
+/* Force horizontal alignment on the row container */
+.priority-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 15px !important;
+  margin-top: 10px !important;
+  margin-bottom: 0px !important; /* Spacing inside the card before bottom */
+}
+
+/* 1. Bold Title */
+.priority-row .field-title {
+  display: inline-block !important;
+  font-size: 13px !important;
+  font-weight: 700 !important; /* Bold */
+  color: #1f2937 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* 2. Options aligned side-by-side with title */
+.priority-row .priority-inline {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 !important;
+}
+
+.priority-row .priority-inline label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+.priority-row .priority-inline input[type="radio"] {
+  margin: 0 !important;
+  width: 14px !important;
+  height: 14px !important;
+  cursor: pointer !important;
 }

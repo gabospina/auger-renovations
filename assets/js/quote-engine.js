@@ -4,6 +4,15 @@
 let availableCatalog = [];
 let MARKUP_RATE = 0.15;
 
+// Expose on window object
+window.QuoteEngine = window.QuoteEngine || {};
+window.QuoteEngine.markupRate = MARKUP_RATE;
+
+window.QuoteEngine.getBilledPrice = function(baseCost) {
+  const base = parseFloat(baseCost) || 0;
+  return parseFloat((base * (1 + MARKUP_RATE)).toFixed(2));
+};
+
 // 1. SETTINGS & CATALOG INITIALIZATION
 async function loadMarkupSetting() {
   const apiPath = window.location.pathname.includes('/admin/') 
@@ -14,6 +23,7 @@ async function loadMarkupSetting() {
     const settings = await res.json();
     if (settings && typeof settings.markup_rate !== 'undefined') {
       MARKUP_RATE = parseFloat(settings.markup_rate);
+      window.QuoteEngine.markupRate = MARKUP_RATE;
     }
   } catch (err) {
     console.warn('Impossible de charger le taux de marge personnalisé, repli sur 15%.');
@@ -45,6 +55,7 @@ async function initCatalogAutocomplete() {
           billed_price: parseFloat(billed.toFixed(2))
         };
       });
+      window.QuoteEngine.catalog = availableCatalog;
     }
   } catch (err) {
     console.error('Erreur chargement catalogue:', err);
@@ -107,6 +118,7 @@ function updateCalculations() {
 
 window.recalcSummary = updateCalculations;
 window.calculateTotals = updateCalculations;
+window.formatMoney = formatMoney;
 
 // 3. AUTOCOMPLETE COMPONENT
 function attachAutocomplete(input) {
@@ -336,16 +348,185 @@ function addLaborRow(desc = '', hours = 0, rate = 0) {
 
 // 5. PRINT & INVOICE TRANSMISSION
 function printDetailedBreakdown() {
-  document.body.classList.remove('print-quote-only');
-  document.body.classList.add('print-breakdown-only');
-  window.print();
+  const materialsTotal = document.getElementById('materials-total')?.innerText || '0.00 $';
+  const laborTotal = document.getElementById('labor-total')?.innerText || '0.00 $';
+  const subtotal = document.getElementById('subtotal')?.innerText || '0.00 $';
+  const tps = document.getElementById('tps')?.innerText || '0.00 $';
+  const tvq = document.getElementById('tvq')?.innerText || '0.00 $';
+  const grandTotal = document.getElementById('grand-total')?.innerText || '0.00 $';
+
+  const clientName = document.getElementById('client-name')?.value || 'Client';
+  const clientAddress = document.getElementById('client-address')?.value || '';
+
+  // Detect language from <html lang="...">
+  const isEn = (document.documentElement.lang || '').toLowerCase().startsWith('en');
+
+  // Multi-language dictionary
+  const txt = isEn ? {
+    pageTitle: 'Detailed Worksheet | Auger Renovation',
+    bannerTitle: 'DETAILED SITE WORKSHEET — Auger Renovation',
+    clientLabel: 'Client',
+    addressLabel: 'Address',
+    sec1: '1. Materials',
+    sec2: '2. Labor',
+    colDesc: 'Description',
+    colQty: 'Qty',
+    colPrice: 'Unit Price',
+    colHours: 'Hours',
+    colRate: 'Rate / Hr',
+    colTotal: 'Total',
+    totMat: 'Materials Total',
+    totLab: 'Labor Total',
+    subtotal: 'Subtotal',
+    tps: 'GST (5%)',
+    tvq: 'QST (9.975%)',
+    total: 'Total'
+  } : {
+    pageTitle: 'Bordereau Détaillé | Auger Rénovation',
+    bannerTitle: 'BORDEREAU DÉTAILLÉ DE CHANTIER — Auger Rénovation',
+    clientLabel: 'Client',
+    addressLabel: 'Adresse',
+    sec1: '1. Matériaux',
+    sec2: '2. Main-d\'œuvre',
+    colDesc: 'Description',
+    colQty: 'Qté',
+    colPrice: 'Prix Unitaire',
+    colHours: 'Heures',
+    colRate: 'Taux / Heure',
+    colTotal: 'Total',
+    totMat: 'Total Matériaux',
+    totLab: 'Total Main-d\'œuvre',
+    subtotal: 'Sous-total',
+    tps: 'TPS (5%)',
+    tvq: 'TVQ (9.975%)',
+    total: 'Total'
+  };
+
+  const printWindow = window.open('', '_blank', 'width=850,height=1100');
+  if (!printWindow) return;
+
+  const doc = printWindow.document;
+  doc.open();
+  doc.write(`<!DOCTYPE html><html lang="${isEn ? 'en' : 'fr'}"><head><meta charset="UTF-8"><title>${txt.pageTitle}</title></head><body></body></html>`);
+  doc.close();
+
+  const style = doc.createElement('style');
+  style.textContent = `
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: #1f2937; margin: 0; padding: 30px; line-height: 1.5; background: #ffffff; }
+    .logo-banner { text-align: center !important; margin-bottom: 20px !important; width: 100% !important; }
+    .logo-banner img { max-height: 90px !important; width: auto !important; display: inline-block !important; }
+    h1 { font-size: 20px; color: #111827; border-bottom: 2px solid #b45309; padding-bottom: 8px; margin-bottom: 20px; }
+    h3 { font-size: 16px; margin-top: 25px; color: #374151; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 20px 0; font-size: 13px; }
+    th, td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+    th { background: #f3f4f6; font-weight: 700; }
+    .summary-box { width: 300px; margin-left: auto; font-size: 14px; margin-top: 20px; border-top: 2px solid #111827; padding-top: 10px; }
+    .summary-row { display: flex; justify-content: space-between; padding: 4px 0; }
+    .summary-row.grand { font-weight: 800; font-size: 16px; margin-top: 6px; }
+  `;
+  doc.head.appendChild(style);
+
+  const container = doc.createElement('div');
+
+  const materialRows = Array.from(document.querySelectorAll('#materials-list .quote-row')).map(row => {
+    const desc = row.querySelector('.mat-desc')?.value || '';
+    const qty = row.querySelector('.mat-qty')?.value || '0';
+    const unit = row.querySelector('.mat-unit')?.value || '0';
+    const lineTotal = row.querySelector('.mat-total')?.innerText || '0.00 $';
+    if (!desc) return '';
+    return `<tr><td>${desc}</td><td style="text-align:center;">${qty}</td><td style="text-align:right;">${unit} $</td><td style="text-align:right;">${lineTotal}</td></tr>`;
+  }).join('');
+
+  const laborRows = Array.from(document.querySelectorAll('#labor-list .quote-row')).map(row => {
+    const desc = row.querySelector('.lab-desc')?.value || '';
+    const hours = row.querySelector('.lab-hours')?.value || '0';
+    const rate = row.querySelector('.lab-rate')?.value || '0';
+    const lineTotal = row.querySelector('.lab-total')?.innerText || '0.00 $';
+    if (!desc) return '';
+    return `<tr><td>${desc}</td><td style="text-align:center;">${hours}</td><td style="text-align:right;">${rate} $</td><td style="text-align:right;">${lineTotal}</td></tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="logo-banner">
+      <img src="../assets/images/Auger_Logo.png" alt="Auger Renovation">
+    </div>
+
+    <h1>${txt.bannerTitle}</h1>
+    <p><strong>${txt.clientLabel} :</strong> ${clientName} | <strong>${txt.addressLabel} :</strong> ${clientAddress}</p>
+    
+    <h3>${txt.sec1}</h3>
+    <table>
+      <thead><tr><th>${txt.colDesc}</th><th style="text-align:center;">${txt.colQty}</th><th style="text-align:right;">${txt.colPrice}</th><th style="text-align:right;">${txt.colTotal}</th></tr></thead>
+      <tbody>${materialRows}</tbody>
+    </table>
+    <div style="text-align: right; font-weight: bold;">${txt.totMat} : ${materialsTotal}</div>
+
+    <h3>${txt.sec2}</h3>
+    <table>
+      <thead><tr><th>${txt.colDesc}</th><th style="text-align:center;">${txt.colHours}</th><th style="text-align:right;">${txt.colRate}</th><th style="text-align:right;">${txt.colTotal}</th></tr></thead>
+      <tbody>${laborRows}</tbody>
+    </table>
+    <div style="text-align: right; font-weight: bold;">${txt.totLab} : ${laborTotal}</div>
+
+    <div class="summary-box">
+      <div class="summary-row"><span>${txt.subtotal} :</span><span>${subtotal}</span></div>
+      <div class="summary-row"><span>${txt.tps} :</span><span>${tps}</span></div>
+      <div class="summary-row"><span>${txt.tvq} :</span><span>${tvq}</span></div>
+      <div class="summary-row grand"><span>${txt.total} :</span><span>${grandTotal}</span></div>
+    </div>
+  `;
+
+  doc.body.appendChild(container);
+  printWindow.focus();
+
+  setTimeout(() => {
+    printWindow.print();
+  }, 350);
 }
 
 function printClientQuote() {
   if (typeof generatePreview === 'function') generatePreview();
-  document.body.classList.remove('print-breakdown-only');
-  document.body.classList.add('print-quote-only');
-  window.print();
+
+  const isEn = (document.documentElement.lang || '').toLowerCase().startsWith('en');
+  const alertMsg = isEn 
+    ? "Please click 'Refresh Preview' first to compile the quote." 
+    : "Veuillez d'abord cliquer sur « Actualiser l'aperçu » pour compiler la soumission.";
+  const docTitle = isEn 
+    ? "Official Quote | Auger Renovation" 
+    : "Soumission Officielle | Auger Rénovation";
+
+  const previewBox = document.getElementById('quote-preview');
+  if (!previewBox || !previewBox.innerHTML.trim() || previewBox.innerHTML.includes('Cliquez') || previewBox.innerHTML.includes('Click')) {
+    alert(alertMsg);
+    return;
+  }
+
+  const printWindow = window.open('', '_blank', 'width=850,height=1100');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="${isEn ? 'en' : 'fr'}">
+    <head>
+      <meta charset="UTF-8">
+      <title>${docTitle}</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: #1f2937; margin: 0; padding: 30px; line-height: 1.5; background: #ffffff; }
+        .logo-banner img { max-height: 90px; width: auto; display: block; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+        th { background: #f3f4f6; font-weight: 700; }
+        .text-right { text-align: right; }
+      </style>
+    </head>
+    <body>
+      ${previewBox.innerHTML}
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => {
+    printWindow.print();
+  }, 350);
 }
 
 async function sendQuote() {

@@ -61,6 +61,22 @@ function processUploadedFiles($fileInputKey, $targetDir, $requestId) {
 $currentPhotos = processUploadedFiles('photo_current', $targetUploadDir, $requestId);
 $desiredPhotos = processUploadedFiles('photo_desired', $targetUploadDir, $requestId);
 
+// Calculate bathroom area automatically
+
+$length = floatval($_POST['bath_length'] ?? 0);
+$width  = floatval($_POST['bath_width'] ?? 0);
+
+$computedSqft = null;
+
+if ($length > 0 && $width > 0) {
+    $computedSqft = round($length * $width, 1);
+}
+
+$sizeSqft = $computedSqft
+    ? (string)$computedSqft
+    : trim($_POST['bath_size'] ?? '');
+
+
 // Build structured record // Include full local date and time (e.g., 2026-10-05 20:33:53)
 $newRequest = [
     'request_id' => $requestId,
@@ -72,12 +88,54 @@ $newRequest = [
         'email'   => trim($_POST['client_email'] ?? ''),
         'phone'   => trim($_POST['client_phone'] ?? '')
     ],
-    'project'    => [
-        'type'       => $_POST['bath_type'] ?? 'complete',
-        'condition'  => $_POST['bath_condition'] ?? 'moyen',
-        'size_sqft'  => trim($_POST['bath_size'] ?? ''),
-        'work_items' => $_POST['work'] ?? [],
-        'notes'      => trim($_POST['bath_notes'] ?? '')
+    'project' => [
+
+    'type' => $_POST['bath_type'] ?? '',
+
+    'condition' => $_POST['bath_condition'] ?? '',
+
+    'renovation_level' =>
+        $_POST['renovation_level'] ?? '',
+
+    'size_sqft' => $sizeSqft,
+
+    'length' =>
+        trim($_POST['bath_length'] ?? ''),
+
+    'width' =>
+        trim($_POST['bath_width'] ?? ''),
+
+    'ceiling_height' =>
+        trim($_POST['ceiling_height'] ?? ''),
+
+    'issues'              => isset($_POST['issues']) ? (array)$_POST['issues'] : [],
+    'demo'                => isset($_POST['demo']) ? (array)$_POST['demo'] : [],
+    'plumbing'            => isset($_POST['plumbing']) ? (array)$_POST['plumbing'] : [],
+    'electrical'          => isset($_POST['electrical']) ? (array)$_POST['electrical'] : [],
+    'shower'              => isset($_POST['shower']) ? (array)$_POST['shower'] : [],
+    'floor'               => isset($_POST['floor']) ? (array)$_POST['floor'] : [],
+    'vanity'              => isset($_POST['vanity']) ? (array)$_POST['vanity'] : [],
+    'countertop'          => isset($_POST['countertop']) ? (array)$_POST['countertop'] : [],
+    'painting'            => isset($_POST['painting']) ? (array)$_POST['painting'] : [],
+
+    'budget_range' =>
+        $_POST['budget_range'] ?? '',
+
+    'design_style' =>
+        $_POST['design_style'] ?? '',
+
+    'desired_start_date' =>
+        $_POST['desired_start_date'] ?? '',
+
+    'project_priority' =>
+        $_POST['project_priority'] ?? '',
+
+    'ai_render_requested' =>
+        isset($_POST['ai_render_requested']),
+
+    'notes' =>
+        trim($_POST['bath_notes'] ?? '')
+
     ],
     'photos'     => [
         'current' => $currentPhotos,

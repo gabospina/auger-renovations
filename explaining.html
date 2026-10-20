@@ -79,8 +79,6 @@ There are two ways to add a product: via the **Admin Interface** (`materials.htm
 4. **Save:**
 * Click **Enregistrer**. The backend `api-materials.php` will write this new record directly into `admin/data/materials.json`.
 
-
-
 ---
 
 #### Method B: Adding Directly into `admin/data/materials.json`
@@ -212,5 +210,57 @@ Because conditions vary (e.g., ground-floor bungalows vs. 3rd-floor Montreal ple
 the auto-populated numbers are meant to serve as an **accurate baseline**. You can adjust the hours directly
 in the input field on the page before clicking **Enregistrer & Envoyer** or tweak the default multipliers inside
 `assets/js/quote-bathroom.js`.
+
+==============
+
+How Economique/Standard/Premium button and Auto-Fill Request button work, displaying different products.
+
+1. How Each Button Works in the Code -
+
+The Finish Tier Buttons (applyPresetTier('budget')):
+
+Reads predefined packages from tier-presets.json.
+
+Provides a generic, baseline starter package scaled strictly to square footage.
+
+In the budget tier definition, only basic dry-area drywall and paint prep materials are loaded
+(CGC Sheetrock, joint compound, roller sleeve). It is completely unaware of specific client options
+like a tiled shower or heated floors.
+
+The "Auto-Fill Request" Button (prefillFromClientRequest()):
+
+Reads the specific project record (CURRENT_PROJECT_SPEC / requests.json).
+
+Evaluates individual trade checkboxes selected by the client:
+
+shower: adds waterproof shower backer board (CGC Durock), a Kerdi shower kit, and wall tile.
+
+floor: adds porcelain tile and polymer mortar.
+
+electrical: adds Schluter DITRA-HEAT floor heating cable.
+
+drywall/paint: calculates the remaining room walls/ceilings and adds standard drywall (CGC Sheetrock) and joint compound.
+
+Calculates material quantities dynamically based on room dimensions (floorSqft, wallSqft, perimeter, ceiling height).
+
+===============
+
+1. The tier-presets.json file is a hard copylist information of the materials need to start package scaled strictly to square footage on any bathroom project?
+
+Yes,tier-presets.json is a hard-coded, formula-driven baseline blueprint. Its job is to provide generic starter lines scaled by formulas
+(e.g., coverage_sqft per drywall sheet or tile box) so that when Simon opens any bathroom project and toggles Économique, Standard, or Haut de gamme,
+a realistic base estimate appears instantly.
+
+2. We add to tier-presets.json all the materials of each finish tier on the initial Economique/Standard/Premium invoice calculation.
+
+For instance:
+
+Économique: Budget ceramic floor tile ($3.50/sq ft), acrylic shower surround, basic vanity ($400), basic toilet ($180), Sheetrock, primer/paint.
+
+Standard: Mid-range porcelain tile ($6.50/sq ft), Schluter Kerdi shower base, 36" vanity ($850), Kohler toilet ($320), Sheetrock/Durock, paint.
+
+Premium: Calacatta large-format porcelain ($12+/sq ft), custom Schluter walk-in shower with linear drain, custom quartz vanity ($1,800+), smart bidet toilet, heated floor cable, Durock, premium Benjamin Moore paint.
+
+Having these defined in tier-presets.json ensures that switching tiers immediately gives a realistic initial total before Simon even touches custom client requests.
 
 ==============
