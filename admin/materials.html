@@ -115,7 +115,7 @@
     <div class="dashboard-header">
       <div>
         <h1 style="margin: 0 0 6px 0; font-size: 24px;">Catalogue des Matériaux & Prix</h1>
-        <p style="margin: 0; color: #666;">Synchronisé avec les prix locaux Home Depot (Vaudreuil-Dorion #7242).</p>
+        <p style="margin: 0; color: #666;">Synchronisé avec les prix locaux Home Depot (Vaudreuil-Dorion #7187).</p>
       </div>
       <div style="display: flex; gap: 10px;">
         <button class="btn btn-outline" onclick="openModal()"><i class="fa-solid fa-plus"></i> Ajouter un article</button>
@@ -241,7 +241,7 @@
           </tr>
         </thead>
         <tbody id="materials-tbody">
-          <tr><td colspan="8" style="text-align:center; padding: 30px;">Chargement du catalogue...</td></tr>
+          <tr><td colspan="11" style="text-align:center; padding: 30px;">Chargement du catalogue...</td></tr>
         </tbody>
       </table>
     </div>
@@ -253,9 +253,15 @@
       <h3 id="modal-title" style="margin-top: 0;">Ajouter un matériau</h3>
       <input type="hidden" id="mat-key"> <!-- Holds the original SKU key during edits -->
       
-      <div style="margin-bottom: 12px;">
-        <label>Numéro de SKU (Home Depot) :</label>
-        <input type="text" id="mat-sku" placeholder="Ex: 1001728974">
+      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        <div style="flex: 1;">
+          <label>Numéro de SKU / Code :</label>
+          <input type="text" id="mat-sku" placeholder="Ex: 1001728974">
+        </div>
+        <div style="flex: 1;">
+          <label>Fournisseur :</label>
+          <input type="text" id="mat-supplier" placeholder="Ex: Home Depot">
+        </div>
       </div>
       <div style="margin-bottom: 12px;">
         <label>Nom de l'article :</label>
@@ -289,55 +295,83 @@
 
   <script>
     let materialsData = {};
+    let currentSkuSortOrder = 'asc';
+    let currentSearchTerm = '';
+    let currentSelectedCategory = 'ALL';
+    let currentSelectedSupplier = 'ALL';
+    let currentMarkupRate = 0.15;
 
     function getTableBody() {
       return document.getElementById('materials-tbody');
     }
 
-    // 'asc' = lower to higher (1000... to 1001...), 'desc' = higher to lower
-    let currentSkuSortOrder = 'asc';
+    function restoreScrollPosition() {
+      const savedScroll = sessionStorage.getItem('materialsScroll');
+      if (savedScroll !== null) {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, parseInt(savedScroll, 10));
+          sessionStorage.removeItem('materialsScroll');
+        });
+      }
+    }
 
     function toggleSkuSort() {
       currentSkuSortOrder = currentSkuSortOrder === 'asc' ? 'desc' : 'asc';
       renderTable();
     }
 
-    let currentSearchTerm = '';
-    let currentSelectedCategory = 'ALL';
-
-    // Automatically build unique category list from catalog data
-    function populateCategoryDropdown() {
+    function populateFilterDropdowns() {
       const catSelect = document.getElementById('catalog-cat-select');
-      if (!catSelect) return;
+      const suppSelect = document.getElementById('catalog-supp-select');
 
-      const savedChoice = currentSelectedCategory;
+      const savedCat = currentSelectedCategory;
+      const savedSupp = currentSelectedSupplier;
+
       const categories = new Set();
+      const suppliers = new Set();
 
       Object.values(materialsData).forEach(item => {
         if (item.category && item.category.trim() !== '') {
           categories.add(item.category.trim());
         }
+        if (item.supplier && item.supplier.trim() !== '') {
+          suppliers.add(item.supplier.trim());
+        }
       });
 
-      const sortedCategories = Array.from(categories).sort((a, b) => a.localeCompare(b));
+      if (catSelect) {
+        const sortedCategories = Array.from(categories).sort((a, b) => a.localeCompare(b));
+        catSelect.innerHTML = '<option value="ALL">Toutes les catégories</option>';
+        sortedCategories.forEach(cat => {
+          const opt = document.createElement('option');
+          opt.value = cat;
+          opt.textContent = cat;
+          if (cat === savedCat) opt.selected = true;
+          catSelect.appendChild(opt);
+        });
+      }
 
-      catSelect.innerHTML = '<option value="ALL">Toutes les catégories</option>';
-      sortedCategories.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        if (cat === savedChoice) opt.selected = true;
-        catSelect.appendChild(opt);
-      });
+      if (suppSelect) {
+        const sortedSuppliers = Array.from(suppliers).sort((a, b) => a.localeCompare(b));
+        suppSelect.innerHTML = '<option value="ALL">Tous les fournisseurs</option>';
+        sortedSuppliers.forEach(supp => {
+          const opt = document.createElement('option');
+          opt.value = supp;
+          opt.textContent = supp;
+          if (supp === savedSupp) opt.selected = true;
+          suppSelect.appendChild(opt);
+        });
+      }
     }
 
-    // Triggered on search typing or category selection
     function applyFilters() {
       const searchInput = document.getElementById('catalog-search-input');
       const catSelect = document.getElementById('catalog-cat-select');
+      const suppSelect = document.getElementById('catalog-supp-select');
 
       currentSearchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
       currentSelectedCategory = catSelect ? catSelect.value : 'ALL';
+      currentSelectedSupplier = suppSelect ? suppSelect.value : 'ALL';
 
       renderTable();
     }
@@ -348,16 +382,18 @@
 
       const allItems = Object.values(materialsData);
 
-      // 1. Filter items by Search Term (SKU or Name) and Category
+      // 1. Filter items by Search Term, Category, and Supplier
       const filteredItems = allItems.filter(item => {
         const sku = String(item.id || '').toLowerCase();
         const name = String(item.name || '').toLowerCase();
         const category = String(item.category || '').trim();
+        const supplier = String(item.supplier || 'Home Depot').trim();
 
         const matchesSearch = !currentSearchTerm || sku.includes(currentSearchTerm) || name.includes(currentSearchTerm);
         const matchesCategory = currentSelectedCategory === 'ALL' || category.toLowerCase() === currentSelectedCategory.toLowerCase();
+        const matchesSupplier = currentSelectedSupplier === 'ALL' || supplier.toLowerCase() === currentSelectedSupplier.toLowerCase();
 
-        return matchesSearch && matchesCategory;
+        return matchesSearch && matchesCategory && matchesSupplier;
       });
 
       // 2. Update Count Badge
@@ -368,7 +404,7 @@
 
       // 3. Handle Empty Results
       if (filteredItems.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px; color:#6b7280;">
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding:30px; color:#6b7280;">
           Aucun article ne correspond à vos critères de recherche.
         </td></tr>`;
         return;
@@ -391,7 +427,7 @@
         const numB = parseFloat(skuB);
 
         let comparison = 0;
-        if (!isNaN(numA) && !isNaN(numB)) {
+        if (!isNaN(numA) && !isNaN(numB) && String(numA) === skuA && String(numB) === skuB) {
           comparison = numA - numB;
         } else {
           comparison = skuA.localeCompare(skuB, undefined, { numeric: true, sensitivity: 'base' });
@@ -403,7 +439,7 @@
       const rate = (typeof currentMarkupRate !== 'undefined') ? currentMarkupRate : 0.15;
       const marginPercentLabel = `+${Math.round(rate * 100)}%`;
 
-      // 6. Render Table Rows
+      // 6. Render Table Rows (All 11 columns aligned)
       filteredItems.forEach(m => {
         const tr = document.createElement('tr');
         const numPrice = parseFloat(m.price) || 0;
@@ -418,6 +454,7 @@
         tr.innerHTML = `
           <td><strong>${m.id || ''}</strong></td>
           <td>${m.name || 'Sans nom'}</td>
+          <td>${m.supplier || 'Home Depot'}</td>
           <td><span class="badge-cat">${m.category || 'Général'}</span></td>
           <td>${m.unit || 'unité'}</td>
           <td style="color: #666; font-size: 13px;">${formattedBase}</td>
@@ -442,7 +479,7 @@
         tbody.appendChild(tr);
       });
     }
-    // Opens the modal pre-filled with the clicked product's details
+
     function editItem(id) {
       const item = materialsData[id] || 
                    materialsData[String(id)] || 
@@ -462,20 +499,20 @@
       const title = document.getElementById('modal-title');
       
       if (item) {
-        // Pre-fill existing data for EDIT mode
         title.textContent = 'Modifier le matériau';
         document.getElementById('mat-key').value = item.sku_key || ('SKU-' + item.id);
         document.getElementById('mat-sku').value = item.id || '';
+        document.getElementById('mat-supplier').value = item.supplier || 'Home Depot';
         document.getElementById('mat-name').value = item.name || '';
         document.getElementById('mat-category').value = item.category || '';
         document.getElementById('mat-unit').value = item.unit || '';
         document.getElementById('mat-price').value = item.price !== undefined ? item.price : '';
         document.getElementById('mat-url').value = item.url || '';
       } else {
-        // Clear all fields for NEW item mode
         title.textContent = 'Ajouter un matériau';
         document.getElementById('mat-key').value = '';
         document.getElementById('mat-sku').value = '';
+        document.getElementById('mat-supplier').value = 'Home Depot';
         document.getElementById('mat-name').value = '';
         document.getElementById('mat-category').value = '';
         document.getElementById('mat-unit').value = '';
@@ -489,11 +526,7 @@
       document.getElementById('material-modal').style.display = 'none';
     }
 
-    let currentMarkupRate = 0.15; // Fallback initial default
-
-    // 1. Fetch saved rate from settings.json (with localStorage backup for instant display)
     async function loadGlobalSettings() {
-      // Check local cache first so there is zero flicker on refresh
       const cachedRate = localStorage.getItem('auger_markup_rate');
       if (cachedRate !== null) {
         currentMarkupRate = parseFloat(cachedRate);
@@ -518,7 +551,6 @@
       }
     }
 
-    // 2. Save new rate to server and local storage
     async function saveGlobalMarkup() {
       const input = document.getElementById('global-markup-input');
       const percent = parseFloat(input?.value);
@@ -550,27 +582,14 @@
       }
     }
 
-    // 3. Ensure settings load BEFORE the table renders
     async function loadMaterials() {
       const tbody = getTableBody();
       
-      // Await settings first so currentMarkupRate is up-to-date
       await loadGlobalSettings();
 
       try {
-        const res = await fetch('api-materials.php?action=list&t=' + Date.now(), { cache: 'no-store' });
-        const text = await res.text();
-        
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (jsonErr) {
-          console.error("Réponse serveur :", text);
-          tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#c00; padding:20px;">
-            Erreur de format JSON reçu.<br><small style="color:#666;">${text.substring(0, 150)}</small>
-          </td></tr>`;
-          return;
-        }
+        const res = await fetch('api-materials.php?action=list&_t=' + Date.now(), { cache: 'no-store' });
+        const data = await res.json();
 
         materialsData = {};
 
@@ -582,28 +601,18 @@
               materialsData[uniqueKey] = item;
             }
           });
-        } else if (data && typeof data === 'object') {
-          const raw = data.materials || data;
-          Object.keys(raw).forEach(k => {
-            if (raw[k] && typeof raw[k] === 'object') {
-              raw[k].sku_key = k;
-              materialsData[k] = raw[k];
-            }
-          });
         }
-        populateCategoryDropdown();
+
+        populateFilterDropdowns();
         renderTable();
+        restoreScrollPosition();
       } catch (err) {
         console.error('Erreur chargement matériaux:', err);
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:#c00; padding:20px;">
-          Impossible de contacter le serveur (XAMPP). Vérifiez qu'Apache fonctionne.
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; color:#c00; padding:20px;">
+          Erreur de chargement des données. Vérifiez la console (F12).
         </td></tr>`;
       }
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      loadMaterials();
-    });
 
     function toggleScheduleInputs() {
       const isEnabled = document.getElementById('auto-sync-checkbox').checked;
@@ -668,6 +677,7 @@
     async function saveMaterial() {
       const key = document.getElementById('mat-key').value.trim();
       const sku = document.getElementById('mat-sku').value.trim();
+      const supplier = document.getElementById('mat-supplier').value.trim();
       const name = document.getElementById('mat-name').value.trim();
       const category = document.getElementById('mat-category').value.trim();
       const unit = document.getElementById('mat-unit').value.trim();
@@ -686,12 +696,16 @@
       const payload = {
         original_key: key,
         sku: sku,
+        supplier: supplier || 'Home Depot',
         name: name,
         category: category || 'Général',
         unit: unit || 'unité',
         price: price,
         url: url
       };
+
+      // Save scroll position so the page stays right on the edited product
+      sessionStorage.setItem('materialsScroll', window.scrollY);
 
       try {
         const res = await fetch('api-materials.php?action=save', {
@@ -702,9 +716,7 @@
         const result = await res.json();
         if (result.success) {
           closeModal();
-          // Forces a full refresh immediately to display the updated row and totals
-          window.location.reload();
-
+          await loadMaterials();
         } else {
           alert('Erreur: ' + (result.error || "Impossible d'enregistrer"));
         }
@@ -715,6 +727,8 @@
 
     async function deleteItem(id) {
       if (!confirm(`Supprimer définitivement l'article ${id} ?`)) return;
+      sessionStorage.setItem('materialsScroll', window.scrollY);
+
       try {
         const res = await fetch('api-materials.php?action=delete', {
           method: 'POST',
@@ -723,8 +737,7 @@
         });
         const result = await res.json();
         if (result.success) {
-          delete materialsData[id];
-          renderTable();
+          await loadMaterials();
         }
       } catch (e) {
         alert('Erreur lors de la suppression.');
@@ -737,31 +750,38 @@
       icon.classList.add('fa-spin');
       btn.disabled = true;
 
+      sessionStorage.setItem('materialsScroll', window.scrollY);
+
       try {
         const res = await fetch(`api-materials.php?action=sync&id=${encodeURIComponent(id)}`, { cache: 'no-store' });
         const text = await res.text();
-        
+
         let data = null;
         try {
           data = JSON.parse(text);
         } catch (jsonErr) {
-          console.warn("Réponse brute non-JSON reçue :", text);
+          // console.error("JSON PARSE ERROR:", jsonErr);
+          // console.error("RAW RESPONSE:", text);
+          // alert("Le serveur a retourné une réponse invalide. Voir Console (F12).");
+          return;
         }
-
-        // Always reload table since the file was updated on disk
-        await loadMaterials();
 
         if (data && !data.success) {
           alert('Note : ' + (data.output || data.error || 'Erreur pendant la mise à jour'));
         }
+
+        // ⏱️ 600ms delay to let the server filesystem settle before reloading table
+        await new Promise(resolve => setTimeout(resolve, 600));
+        await loadMaterials();
+
       } catch (err) {
         console.error('Erreur réseau:', err);
-        // Refresh catalog anyway in case the backend wrote to materials.json
+        await new Promise(resolve => setTimeout(resolve, 600));
         await loadMaterials();
       } finally {
-        // Stop the spinning icon and re-enable button
         icon.classList.remove('fa-spin');
         btn.disabled = false;
+        restoreScrollPosition();
       }
     }
 
@@ -770,11 +790,15 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Actualisation en cours...';
 
+      sessionStorage.setItem('materialsScroll', window.scrollY);
+
       try {
         const res = await fetch('api-materials.php?action=sync', { cache: 'no-store' });
         const data = await res.json();
         
         if (data.success) {
+          // ⏱️ 800ms delay for bulk save to settle before reloading table
+          await new Promise(resolve => setTimeout(resolve, 800));
           await loadMaterials();
           alert('Synchronisation terminée ! Tous les prix ont été mis à jour.');
         } else {
@@ -785,10 +809,14 @@
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Actualiser tous les prix';
+        restoreScrollPosition();
       }
     }
-
-    document.addEventListener('DOMContentLoaded', loadMaterials);
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMaterials();
+      loadScheduleSettings();
+    });
   </script>
 </body>
 </html>

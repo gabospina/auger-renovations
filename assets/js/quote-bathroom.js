@@ -392,13 +392,57 @@ function setupPhotoPreviews() {
 
 // BOOTSTRAP INITIALIZATION
 
+// BOOTSTRAP INITIALIZATION
+
 document.addEventListener('DOMContentLoaded', async () => {
   await initCatalogAutocomplete();
   await loadTierPresets();
   setupPhotoPreviews();
 
-  // DEFAULT: Load the true "Économique (Budget)" preset from tier-presets.json
-  applyPresetTier('budget');
+  // 1. Read active tier from URL query parameters (default to 'budget' if not set)
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialTier = urlParams.get('tier') || 'budget';
+  window.currentActiveTier = initialTier;
+
+  // 2. Highlight the correct active tier button on load
+  document.querySelectorAll('.btn-tier').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tier-btn-${initialTier}`)?.classList.add('active');
+
+  // 3. Apply the preset tier corresponding to the active bracket
+  applyPresetTier(initialTier);
+
+  // ==========================================
+  // TIER BUTTONS INTERACTIVE & PRICE BRACKETS
+  // ==========================================
+  // A. When a tier button is clicked, remember where we scrolled
+  document.querySelectorAll('.btn-tier').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const selectedTier = e.currentTarget.dataset.tier;
+      if (!selectedTier) return;
+
+      // Save current scroll position so we don't lose our place
+      sessionStorage.setItem('scrollPosition', window.scrollY);
+
+      // Run client preset
+      if (typeof applyPresetTier === 'function') {
+        applyPresetTier(selectedTier);
+      }
+
+      // Reload with new tier parameter
+      const url = new URL(window.location.href);
+      url.searchParams.set('tier', selectedTier);
+      window.location.href = url.toString();
+    });
+  });
+
+  const savedScroll = sessionStorage.getItem('scrollPosition');
+  if (savedScroll !== null) {
+    window.scrollTo(0, parseInt(savedScroll, 10));
+    sessionStorage.removeItem('scrollPosition'); // Clean up
+  }
+  
+  // ------------------------------------------
 
   // Row creation listeners
   document.getElementById('add-material')?.addEventListener('click', () => addMaterialRow());

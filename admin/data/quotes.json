@@ -1,8 +1,34 @@
-{
-    "quote_id": "DEV-2026-0089",
-    "request_id": "REQ-2026-0042",
-    "created_at": "2026-10-05 18:30:00",
-    "materials": [
+[
+    {
+        "id": "quote_6add1e7e71946",
+        "client_name": "Simon",
+        "project_title": "Salle de Bain",
+        "items": [
+            {
+                "id": 1792876136496,
+                "desc": "CGC Durock Panneau de ciment avec EdgeGuard 1\/2 pouce. x 3 pieds x 5",
+                "qty": 1,
+                "unitPrice": 31.027
+            },
+            {
+                "id": 1792876139104,
+                "desc": "CGC Sheetrock 1\/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger résistant à la moisissure",
+                "qty": 1,
+                "unitPrice": 34.477000000000004
+            },
+            {
+                "id": 1792876144192,
+                "desc": "APOLLO Tuyau PEX-B blanc de 1\/2 po x 10 pi",
+                "qty": 1,
+                "unitPrice": 8.027000000000001
+            }
+        ],
+        "saved_at": "2026-10-24 23:09:33"
+    },
+    "DEV-2026-0089",
+    "REQ-2026-0042",
+    "2026-10-05 18:30:00",
+    [
         {
             "desc": "Céramique sol 12x24",
             "qty": 110,
@@ -16,7 +42,7 @@
             "total": 380
         }
     ],
-    "labor": [
+    [
         {
             "desc": "Démolition et disposition",
             "hours": 16,
@@ -30,61 +56,15 @@
             "total": 2720
         }
     ],
-    "summary": {
+    {
         "materials_total": 875,
         "labor_total": 3920,
         "subtotal": 4795,
         "taxes_qc": 718.05,
         "grand_total": 5513.05
     },
-    "sent_to_client_at": "2026-10-05 18:45:00",
-    "DEV-20261006-8C6C": {
-        "quote_id": "DEV-20261006-8C6C",
-        "request_id": "REQ-20261006-976C",
-        "date": "2026-10-06 02:28:20",
-        "client": {
-            "name": "Heierne nnksdas",
-            "address": "11 Rue du Château-Kirkland",
-            "email": "gobasuras@gmail.com",
-            "phone": "514-758-6345"
-        },
-        "materials": [
-            {
-                "desc": "Matériaux de plomberie et raccordements",
-                "qty": 1,
-                "unit": 250,
-                "total": "250.00 $"
-            },
-            {
-                "desc": "Paint",
-                "qty": 1,
-                "unit": 250,
-                "total": "250.00 $"
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition et préparation",
-                "hours": 8,
-                "rate": 75,
-                "total": "600.00 $"
-            },
-            {
-                "desc": "Painter",
-                "hours": 5,
-                "rate": 75,
-                "total": "375.00 $"
-            }
-        ],
-        "totals": {
-            "materials": "500.00 $",
-            "labor": "975.00 $",
-            "subtotal": "1475.00 $",
-            "taxes": "220.88 $",
-            "grand_total": "1695.88 $"
-        }
-    },
-    "DEV-20261008-EE95": {
+    "2026-10-05 18:45:00",
+    {
         "quote_id": "DEV-20261008-EE95",
         "request_id": "REQ-20261006-C3C7",
         "date": "2026-10-08 02:12:06",
@@ -102,7 +82,7 @@
                 "total": "220.00 $"
             },
             {
-                "desc": "Panneau de ciment Durock 1/2 po x 3 pi x 5 pi",
+                "desc": "Panneau de ciment Durock 1\/2 po x 3 pi x 5 pi",
                 "qty": 6,
                 "unit": 17.47,
                 "total": "104.82 $"
@@ -120,7 +100,7 @@
                 "total": "432.00 $"
             },
             {
-                "desc": "Panneau de gypse Sheetrock 1/2 po x 4 pi x 8 pi",
+                "desc": "Panneau de gypse Sheetrock 1\/2 po x 4 pi x 8 pi",
                 "qty": 11,
                 "unit": 18.98,
                 "total": "208.78 $"
@@ -132,7 +112,7 @@
                 "total": "136.00 $"
             },
             {
-                "desc": "Panneau de gypse Sheetrock 1/2 po x 4 pi x 8 pi",
+                "desc": "Panneau de gypse Sheetrock 1\/2 po x 4 pi x 8 pi",
                 "qty": 1,
                 "unit": 18.98,
                 "total": "18.98 $"
@@ -184,7 +164,7 @@
             "grand_total": "5,986.84 $"
         }
     },
-    "DEV-202610-001": {
+    {
         "quote_id": "DEV-202610-001",
         "request_id": "REQ-20261005-64C9",
         "created_at": "2026-10-08 03:05:36",
@@ -204,7 +184,7 @@
                 "total": "220.00 $"
             },
             {
-                "desc": "Panneau de gypse Sheetrock 1/2 po x 4 pi x 8 pi",
+                "desc": "Panneau de gypse Sheetrock 1\/2 po x 4 pi x 8 pi",
                 "qty": 9,
                 "unit": 18.98,
                 "total": "170.82 $"
@@ -226,7 +206,7 @@
             "grand_total": "1,484.12 $"
         }
     },
-    "AR-2026-0011": {
+    {
         "quote_number": "AR-2026-0011",
         "request_id": "REQ-20261008-AC70",
         "client": {
@@ -243,10 +223,10 @@
             "tvq": 191.9419425,
             "grand_total": 2212.3834425
         },
-        "file": "quotes/quote-AR-2026-0011.html",
+        "file": "quotes\/quote-AR-2026-0011.html",
         "created_at": "2026-10-11 16:35"
     },
-    "AR-2026-0012": {
+    {
         "quote_number": "AR-2026-0012",
         "request_id": "REQ-20261008-AC70",
         "client": {
@@ -263,10 +243,10 @@
             "tvq": 191.9419425,
             "grand_total": 2212.3834425
         },
-        "file": "quotes/quote-AR-2026-0012.html",
+        "file": "quotes\/quote-AR-2026-0012.html",
         "created_at": "2026-10-11 17:20"
     },
-    "AR-2026-0013": {
+    {
         "quote_number": "AR-2026-0013",
         "request_id": "REQ-20261008-AC70",
         "client": {
@@ -283,10 +263,10 @@
             "tvq": 191.9419425,
             "grand_total": 2212.3834425
         },
-        "file": "quotes/quote-AR-2026-0013.html",
+        "file": "quotes\/quote-AR-2026-0013.html",
         "created_at": "2026-10-11 17:35"
     },
-    "AR-2026-0014": {
+    {
         "quote_number": "AR-2026-0014",
         "request_id": "REQ-20261008-AC70",
         "client": {
@@ -303,10 +283,10 @@
             "tvq": 191.9419425,
             "grand_total": 2212.3834425
         },
-        "file": "quotes/quote-AR-2026-0014.html",
+        "file": "quotes\/quote-AR-2026-0014.html",
         "created_at": "2026-10-11 20:20"
     },
-    "AR-2026-0015": {
+    {
         "quote_number": "AR-2026-0015",
         "request_id": "REQ-20261008-AC70",
         "client": {
@@ -323,10 +303,10 @@
             "tvq": 545.0569425,
             "grand_total": 6282.4984425
         },
-        "file": "quotes/quote-AR-2026-0015.html",
+        "file": "quotes\/quote-AR-2026-0015.html",
         "created_at": "2026-10-11 20:43"
     },
-    "AR-2026-0016": {
+    {
         "quote_number": "AR-2026-0016",
         "request_id": "REQ-20261015-A0DE",
         "client": {
@@ -349,7 +329,7 @@
                 "total": 117.30000000000001
             },
             {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
+                "desc": "CGC Sheetrock 1\/2 po x 4 pi x 8 pi",
                 "qty": 19,
                 "unit": 21.83,
                 "total": 414.77
@@ -414,730 +394,7 @@
             "grand_total": 3255.0457275
         },
         "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0016.html",
+        "file": "quotes\/quote-AR-2026-0016.html",
         "created_at": "2026-10-17 16:17"
-    },
-    "AR-2026-0017": {
-        "quote_id": "AR-2026-0017",
-        "quote_number": "AR-2026-0017",
-        "request_id": "REQ-20261015-A0DE",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "Porcelaine rectifiée Calacatta Gold 24x48 (boîte 16 pi²)",
-                "qty": 11,
-                "unit": 135.7,
-                "total": 1492.6999999999998
-            },
-            {
-                "desc": "Ciment-colle polymère et coulis pour carrelage",
-                "qty": 3,
-                "unit": 39.1,
-                "total": 117.30000000000001
-            },
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 19,
-                "unit": 21.83,
-                "total": 414.77
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 2,
-                "unit": 42.91,
-                "total": 85.82
-            },
-            {
-                "desc": "Fournitures de plomberie PEX, vannes d'arrêt & raccords d'évacuation",
-                "qty": 1,
-                "unit": 184,
-                "total": 184
-            },
-            {
-                "desc": "Câble chauffant Schluter-DITRA-HEAT (112 pi²) & thermostat",
-                "qty": 1,
-                "unit": 448.5,
-                "total": 448.5
-            },
-            {
-                "desc": "Meuble-vanité 36 po chêne naturel avec comptoir quartz",
-                "qty": 1,
-                "unit": 829,
-                "total": 829
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition, arrachage et disposition des rebuts (140 pi²)",
-                "hours": 11,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Préparation sous-plancher, pose carrelage sol & coulis (140 pi²)",
-                "hours": 13,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Pose de gypse, tirage de joints 3 couches & sablage (19 feuilles)",
-                "hours": 21,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Pose câble chauffant et connexion sonde thermostat",
-                "hours": 4,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Mise aux normes électriques, boîtiers et appareillages",
-                "hours": 4,
-                "rate": 0,
-                "total": 0
-            }
-        ],
-        "totals": {
-            "materials": 3572.0899999999997,
-            "labor": 0,
-            "subtotal": 3572.0899999999997,
-            "tps": 178.6045,
-            "tvq": 356.3159775,
-            "grand_total": 4107.0104775
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0017.html",
-        "created_at": "2026-10-17 16:35",
-        "valid_until": "2026-11-16"
-    },
-    "AR-2026-0018": {
-        "quote_id": "AR-2026-0018",
-        "quote_number": "AR-2026-0018",
-        "request_id": "REQ-20261015-A0DE",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "Porcelaine rectifiée Calacatta Gold 24x48 (boîte 16 pi²)",
-                "qty": 11,
-                "unit": 135.7,
-                "total": 1492.6999999999998
-            },
-            {
-                "desc": "Ciment-colle polymère et coulis pour carrelage",
-                "qty": 3,
-                "unit": 39.1,
-                "total": 117.30000000000001
-            },
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 19,
-                "unit": 21.83,
-                "total": 414.77
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 2,
-                "unit": 42.91,
-                "total": 85.82
-            },
-            {
-                "desc": "Fournitures de plomberie PEX, vannes d'arrêt & raccords d'évacuation",
-                "qty": 1,
-                "unit": 184,
-                "total": 184
-            },
-            {
-                "desc": "Câble chauffant Schluter-DITRA-HEAT (112 pi²) & thermostat",
-                "qty": 1,
-                "unit": 448.5,
-                "total": 448.5
-            },
-            {
-                "desc": "Meuble-vanité 36 po chêne naturel avec comptoir quartz",
-                "qty": 1,
-                "unit": 829,
-                "total": 829
-            },
-            {
-                "desc": "Porcelaine rectifiée Calacatta Gold 24x48 (boîte 16 pi²)",
-                "qty": 1,
-                "unit": 118,
-                "total": 118
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition, arrachage et disposition des rebuts (140 pi²)",
-                "hours": 11,
-                "rate": 10,
-                "total": 110
-            },
-            {
-                "desc": "Préparation sous-plancher, pose carrelage sol & coulis (140 pi²)",
-                "hours": 13,
-                "rate": 20,
-                "total": 260
-            },
-            {
-                "desc": "Pose de gypse, tirage de joints 3 couches & sablage (19 feuilles)",
-                "hours": 21,
-                "rate": 30,
-                "total": 630
-            },
-            {
-                "desc": "Pose câble chauffant et connexion sonde thermostat",
-                "hours": 4,
-                "rate": 70,
-                "total": 280
-            },
-            {
-                "desc": "Mise aux normes électriques, boîtiers et appareillages",
-                "hours": 4,
-                "rate": 57,
-                "total": 228
-            }
-        ],
-        "totals": {
-            "materials": 3690.0899999999997,
-            "labor": 1508,
-            "subtotal": 5198.09,
-            "tps": 259.90450000000004,
-            "tvq": 518.5094775,
-            "grand_total": 5976.5039775
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0018.html",
-        "created_at": "2026-10-17 16:41",
-        "valid_until": "2026-11-16"
-    },
-    "AR-2026-0019": {
-        "quote_id": "AR-2026-0019",
-        "quote_number": "AR-2026-0019",
-        "request_id": "REQ-20261015-A0DE",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 14,
-                "unit": 19,
-                "total": 266
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 1,
-                "unit": 42.91,
-                "total": 42.91
-            },
-            {
-                "desc": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
-                "qty": 2,
-                "unit": 11.47,
-                "total": 22.94
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition & évacuation de base",
-                "hours": 11,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Installation plomberie et vanité en place",
-                "hours": 6,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Finition joints, plâtre et peinture",
-                "hours": 15,
-                "rate": 0,
-                "total": 0
-            }
-        ],
-        "totals": {
-            "materials": 331.84999999999997,
-            "labor": 0,
-            "subtotal": 331.84999999999997,
-            "tps": 16.592499999999998,
-            "tvq": 33.1020375,
-            "grand_total": 381.54453749999993
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0019.html",
-        "created_at": "2026-10-17 23:29",
-        "valid_until": "2026-11-16"
-    },
-    "AR-2026-0020": {
-        "quote_id": "AR-2026-0020",
-        "quote_number": "AR-2026-0020",
-        "request_id": "REQ-20261017-8633",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "CGC Durock Panneau de ciment avec EdgeGuard 1/2 pouce. x 3 pieds x 5",
-                "qty": 6,
-                "unit": 32.17,
-                "total": 193.02
-            },
-            {
-                "desc": "Ensemble complet douche étanche Schluter-Kerdi 38x60",
-                "qty": 1,
-                "unit": 787.75,
-                "total": 787.75
-            },
-            {
-                "desc": "Carrelage mural de douche & coulis scellant",
-                "qty": 92,
-                "unit": 6.32,
-                "total": 581.44
-            },
-            {
-                "desc": "Porcelaine rectifiée Calacatta Gold 24x48 (boîte 16 pi²)",
-                "qty": 11,
-                "unit": 135.7,
-                "total": 1492.6999999999998
-            },
-            {
-                "desc": "Ciment-colle polymère et coulis pour carrelage",
-                "qty": 3,
-                "unit": 39.1,
-                "total": 117.30000000000001
-            },
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 16,
-                "unit": 21.83,
-                "total": 349.28
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 2,
-                "unit": 42.91,
-                "total": 85.82
-            },
-            {
-                "desc": "Fournitures de plomberie PEX, vannes d'arrêt & raccords d'évacuation",
-                "qty": 1,
-                "unit": 184,
-                "total": 184
-            },
-            {
-                "desc": "Câble chauffant Schluter-DITRA-HEAT (112 pi²) & thermostat",
-                "qty": 1,
-                "unit": 448.5,
-                "total": 448.5
-            },
-            {
-                "desc": "Peinture salle de bain fini perle anti-moisissure (Gal)",
-                "qty": 2,
-                "unit": 74.75,
-                "total": 149.5
-            },
-            {
-                "desc": "Ensemble complet douche étanche Schluter-Kerdi 38x60",
-                "qty": 1,
-                "unit": 685,
-                "total": 685
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition, arrachage et disposition des rebuts (140 pi²)",
-                "hours": 11,
-                "rate": 10,
-                "total": 110
-            },
-            {
-                "desc": "Installation base de douche, membrane étanche & panneaux Durock",
-                "hours": 10,
-                "rate": 12,
-                "total": 120
-            },
-            {
-                "desc": "Pose de céramique murale douche & coulis (80 pi²)",
-                "hours": 12,
-                "rate": 9,
-                "total": 108
-            },
-            {
-                "desc": "Préparation sous-plancher, pose carrelage sol & coulis (140 pi²)",
-                "hours": 13,
-                "rate": 10,
-                "total": 130
-            },
-            {
-                "desc": "Pose de gypse, tirage de joints 3 couches & sablage (16 feuilles)",
-                "hours": 18,
-                "rate": 10,
-                "total": 180
-            },
-            {
-                "desc": "Pose câble chauffant et connexion sonde thermostat",
-                "hours": 4,
-                "rate": 11,
-                "total": 44
-            },
-            {
-                "desc": "Mise aux normes électriques, boîtiers et appareillages",
-                "hours": 4,
-                "rate": 9,
-                "total": 36
-            },
-            {
-                "desc": "Application peinture apprêt et 2 couches de finition",
-                "hours": 8,
-                "rate": 9,
-                "total": 72
-            }
-        ],
-        "totals": {
-            "materials": 5074.3099999999995,
-            "labor": 800,
-            "subtotal": 5874.3099999999995,
-            "tps": 293.71549999999996,
-            "tvq": 585.9624225,
-            "grand_total": 6753.9879224999995
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0020.html",
-        "created_at": "2026-10-18 00:42",
-        "valid_until": "2026-11-17"
-    },
-    "AR-2026-0021": {
-        "quote_id": "AR-2026-0021",
-        "quote_number": "AR-2026-0021",
-        "request_id": "REQ-20261017-8633",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 14,
-                "unit": 19,
-                "total": 266
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 1,
-                "unit": 42.91,
-                "total": 42.91
-            },
-            {
-                "desc": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
-                "qty": 2,
-                "unit": 11.47,
-                "total": 22.94
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition & évacuation de base",
-                "hours": 11,
-                "rate": 13,
-                "total": 143
-            },
-            {
-                "desc": "Installation plomberie et vanité en place",
-                "hours": 6,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Finition joints, plâtre et peinture",
-                "hours": 15,
-                "rate": 0,
-                "total": 0
-            }
-        ],
-        "totals": {
-            "materials": 331.84999999999997,
-            "labor": 143,
-            "subtotal": 474.84999999999997,
-            "tps": 23.7425,
-            "tvq": 47.3662875,
-            "grand_total": 545.9587875
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0021.html",
-        "created_at": "2026-10-19 13:17",
-        "valid_until": "2026-11-18"
-    },
-    "AR-2026-0022": {
-        "quote_id": "AR-2026-0022",
-        "quote_number": "AR-2026-0022",
-        "request_id": "REQ-20261017-8633",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 14,
-                "unit": 19,
-                "total": 266
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 1,
-                "unit": 42.91,
-                "total": 42.91
-            },
-            {
-                "desc": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
-                "qty": 2,
-                "unit": 11.47,
-                "total": 22.94
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition & évacuation de base",
-                "hours": 11,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Installation plomberie et vanité en place",
-                "hours": 6,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Finition joints, plâtre et peinture",
-                "hours": 15,
-                "rate": 0,
-                "total": 0
-            }
-        ],
-        "totals": {
-            "materials": 331.84999999999997,
-            "labor": 0,
-            "subtotal": 331.84999999999997,
-            "tps": 16.592499999999998,
-            "tvq": 33.1020375,
-            "grand_total": 381.54453749999993
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0022.html",
-        "created_at": "2026-10-19 13:17",
-        "valid_until": "2026-11-18"
-    },
-    "AR-2026-0023": {
-        "quote_id": "AR-2026-0023",
-        "quote_number": "AR-2026-0023",
-        "request_id": "REQ-20261017-8633",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 14,
-                "unit": 19,
-                "total": 266
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 1,
-                "unit": 42.91,
-                "total": 42.91
-            },
-            {
-                "desc": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
-                "qty": 2,
-                "unit": 11.47,
-                "total": 22.94
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition & évacuation de base",
-                "hours": 11,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Installation plomberie et vanité en place",
-                "hours": 6,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Finition joints, plâtre et peinture",
-                "hours": 15,
-                "rate": 0,
-                "total": 0
-            }
-        ],
-        "totals": {
-            "materials": 331.84999999999997,
-            "labor": 0,
-            "subtotal": 331.84999999999997,
-            "tps": 16.592499999999998,
-            "tvq": 33.1020375,
-            "grand_total": 381.54453749999993
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0023.html",
-        "created_at": "2026-10-19 13:24",
-        "valid_until": "2026-11-18"
-    },
-    "AR-2026-0024": {
-        "quote_id": "AR-2026-0024",
-        "quote_number": "AR-2026-0024",
-        "request_id": "REQ-20261017-8633",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 14,
-                "unit": 19,
-                "total": 266
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 1,
-                "unit": 42.91,
-                "total": 42.91
-            },
-            {
-                "desc": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
-                "qty": 2,
-                "unit": 11.47,
-                "total": 22.94
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition & évacuation de base",
-                "hours": 11,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Installation plomberie et vanité en place",
-                "hours": 6,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Finition joints, plâtre et peinture",
-                "hours": 15,
-                "rate": 0,
-                "total": 0
-            }
-        ],
-        "totals": {
-            "materials": 331.84999999999997,
-            "labor": 0,
-            "subtotal": 331.84999999999997,
-            "tps": 16.592499999999998,
-            "tvq": 33.1020375,
-            "grand_total": 381.54453749999993
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0024.html",
-        "created_at": "2026-10-19 13:25",
-        "valid_until": "2026-11-18"
-    },
-    "AR-2026-0025": {
-        "quote_id": "AR-2026-0025",
-        "quote_number": "AR-2026-0025",
-        "request_id": "REQ-20261017-8633",
-        "client": {
-            "name": "Client",
-            "email": "",
-            "phone": "",
-            "address": ""
-        },
-        "materials": [
-            {
-                "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi",
-                "qty": 14,
-                "unit": 19,
-                "total": 266
-            },
-            {
-                "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
-                "qty": 1,
-                "unit": 42.91,
-                "total": 42.91
-            },
-            {
-                "desc": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
-                "qty": 2,
-                "unit": 11.47,
-                "total": 22.94
-            }
-        ],
-        "labor": [
-            {
-                "desc": "Démolition & évacuation de base",
-                "hours": 11,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Installation plomberie et vanité en place",
-                "hours": 6,
-                "rate": 0,
-                "total": 0
-            },
-            {
-                "desc": "Finition joints, plâtre et peinture",
-                "hours": 15,
-                "rate": 0,
-                "total": 0
-            }
-        ],
-        "totals": {
-            "materials": 331.84999999999997,
-            "labor": 0,
-            "subtotal": 331.84999999999997,
-            "tps": 16.592499999999998,
-            "tvq": 33.1020375,
-            "grand_total": 381.54453749999993
-        },
-        "status": "Envoyée",
-        "file": "quotes/quote-AR-2026-0025.html",
-        "created_at": "2026-10-19 22:54",
-        "valid_until": "2026-11-18"
     }
-}
+]

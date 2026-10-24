@@ -1,5 +1,10 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // admin/api-materials.php
+
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -10,6 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 header('Content-Type: application/json; charset=utf-8');
+
+/*
+|--------------------------------------------------------------------------
+| Timezone Configuration
+|--------------------------------------------------------------------------
+*/
+date_default_timezone_set('America/Montreal');
 
 $dataFile = __DIR__ . '/data/materials.json';
 $settingsFile = __DIR__ . '/data/settings.json';
@@ -54,7 +66,6 @@ if ($action === 'update_price') {
     $id = trim($p['id'] ?? '');
     $price = floatval($p['price'] ?? 0);
 
-    // Look up by exact key or search in array
     $targetKey = null;
     if (isset($materials[$id])) {
         $targetKey = $id;
@@ -81,7 +92,7 @@ if ($action === 'update_price') {
     exit;
 }
 
-// 3. SAVE / ADD (Supports Multi-Suppliers & Both SKU / Custom IDs)
+// 3. SAVE / ADD
 if ($action === 'save') {
     $p = getPayload();
     $name = trim($p['name'] ?? '');
@@ -98,9 +109,6 @@ if ($action === 'save') {
         exit;
     }
 
-    // Determine clean ID and dictionary Key:
-    // If it's a numeric Home Depot SKU, maintain the 'SKU-XXXXXXXXXX' convention.
-    // If it's a trade partner code (e.g. MAT-DUROCK-35, CIOT-2448), preserve it cleanly.
     $cleanSku = preg_replace('/^SKU-?/i', '', $rawSku);
     $cleanSku = preg_replace('/[^a-zA-Z0-9_-]/', '', $cleanSku);
 
@@ -112,7 +120,6 @@ if ($action === 'save') {
         $storedId = $rawSku;
     }
 
-    // If editing and the key changed, remove the old key
     $originalKey = trim($p['original_key'] ?? '');
     if ($originalKey && $originalKey !== $key && isset($materials[$originalKey])) {
         unset($materials[$originalKey]);
@@ -163,7 +170,7 @@ if ($action === 'delete') {
     exit;
 }
 
-// 5. SYNC (Runs scraper.py via Python for Home Depot items)
+// 5. SYNC (Runs scraper.py via Python)
 if ($action === 'sync') {
     @set_time_limit(300);
     @ini_set('max_execution_time', '300');
@@ -190,7 +197,20 @@ if ($action === 'sync') {
     $returnCode = 0;
     exec($cmd . ' 2>&1', $output, $returnCode);
 
-    // Re-read materials.json after scraper finishes
+    $debugFile = __DIR__ . DIRECTORY_SEPARATOR . 'sync-debug.log';
+    file_put_contents(
+        $debugFile,
+        "\n====================================================\n" .
+        "SYNC: " . date('Y-m-d H:i:s') . "\n" .
+        "TARGET: " . ($targetId ?: 'ALL') . "\n" .
+        "RETURN CODE: " . $returnCode . "\n" .
+        "COMMAND: " . $cmd . "\n" .
+        "====================================================\n" .
+        implode("\n", $output) .
+        "\n\n",
+        FILE_APPEND
+    );
+
     $rawUpdated = file_get_contents($dataFile);
     $updatedMaterials = json_decode($rawUpdated, true) ?: [];
 
@@ -200,9 +220,12 @@ if ($action === 'sync') {
 
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
-        'success'   => ($returnCode === 0),
-        'output'    => utf8_encode(implode("\n", $output)),
-        'materials' => array_values($updatedMaterials)
+        'success'     => ($returnCode === 0),
+        'output'      => implode("\n", $output),
+        'return_code' => $returnCode,
+        'server_time' => date('Y-m-d H:i:s'),
+        'timezone'    => date_default_timezone_get(),
+        'materials'   => array_values($updatedMaterials)
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
@@ -258,7 +281,11 @@ if ($action === 'save_settings') {
         $settings['sync_day'] = $p['sync_day'] === 'sunday' ? 'sunday' : 'monday';
     }
     if (isset($p['sync_time'])) {
-        $settings['sync_time'] = preg_match('/^\d{2}:\d{2}$/', $p['sync_time']) ? $p['sync_time'] : '06:00';
+        if (preg_match('/^\d{2}:\d{2}$/', $p['sync_time'])) {
+            $settings['sync_time'] = $p['sync_time'];
+        } else {
+            $settings['sync_time'] = '06:00';
+        }
     }
 
     file_put_contents($settingsFile, json_encode($settings, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));

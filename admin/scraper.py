@@ -1,7 +1,7 @@
 """
 admin/scraper.py
-Home Depot Canada Automated Price Sync (Store Vaudreuil - H9R 1E9)
-Uses Chrome TLS impersonation to bypass anti-bot 403 blocks.
+Home Depot Canada Automated Price Sync (Store Vaudreuil - #7187)
+Queries Home Depot's pricing API directly to ensure store-accurate pricing.
 """
 
 import json
@@ -18,79 +18,64 @@ except ImportError:
     sys.exit(1)
 
 DATA_FILE = os.path.join(os.path.dirname(__file__), 'data', 'materials.json')
-# Vaudreuil store ID on homedepot.ca is 7080
-STORE_ID = '7080'
 
-COOKIES = {
-    'THD_LOCALSTORE': STORE_ID,
-    'hd_store': STORE_ID,
-    'hd_store_id': STORE_ID,
-    'THD_STORE': STORE_ID,
-    'THD_POSTAL_CODE': 'H9R1E9'
-}
+# Vaudreuil store ID on homedepot.ca is 7187
+STORE_ID = '7187'
 
 HEADERS = {
+    'Accept': 'application/json, text/plain, */*',
     'Accept-Language': 'fr-CA,fr;q=0.9,en-US;q=0.8,en;q=0.7',
     'Sec-Ch-Ua': '"Google Chrome";v="129", "Not=A?Brand";v="8", "Chromium";v="129"',
     'Sec-Ch-Ua-Mobile': '?0',
     'Sec-Ch-Ua-Platform': '"Windows"',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36'
 }
 
-def extract_price(html_text):
-    # 1. Check for localized price tied directly to store 7080 or 7242 in page JSON
-    store_m = re.findall(r'"(?:7080|7242|7033)"\s*:\s*\{[^}]*"(?:price|specialPrice|storePrice)"\s*:\s*([0-9]+\.[0-9]{2})', html_text)
-    if store_m:
-        try:
-            return float(store_m[0]), None
-        except ValueError:
-            pass
+def extract_sku_from_url(url):
+    # Extracts the 9 or 10-digit SKU from homedepot.ca URLs (e.g. /1000788662)
+    m = re.search(r'/([0-9]{8,10})(?:\?|$|/)', url)
+    if m:
+        return m.group(1)
+    
+    # Fallback search for any 8-10 digit sequence in URL
+    m2 = re.search(r'([0-9]{8,10})', url)
+    if m2:
+        return m2.group(1)
+        
+    return None
 
-    # 2. Check localized unit price pattern in DOM: $26.98 / each or 26,98 $ / chaque
-    clean = html_text.replace('\u00a0', ' ').replace('&nbsp;', ' ')
-    dom_m = re.search(r'(?:\$([0-9]{1,4}\.[0-9]{2})|([0-9]{1,4}),([0-9]{2})\s*\$)\s*(?:\*{1,3})?\s*/\s*(?:each|chaque)', clean, re.IGNORECASE)
-    if dom_m:
-        try:
-            val = dom_m.group(1) if dom_m.group(1) else f"{dom_m.group(2)}.{dom_m.group(3)}"
-            return float(val), None
-        except ValueError:
-            pass
-
-    # 3. Check specialPrice or storePrice (skips originalPrice to avoid the 27.97 fallback)
-    special_matches = re.findall(r'"(?:specialPrice|storePrice|unitPrice|localizedPrice)":\s*"?([0-9]+\.[0-9]{2})"?', html_text)
-    if special_matches:
-        try:
-            return float(special_matches[0]), None
-        except ValueError:
-            pass
-
-    # 4. If 26.98 is present anywhere in the raw text, prioritize it over the 27.97 MSRP
-    if re.search(r'26[\.,]98', clean):
-        return 26.98, None
-
-    # 5. French DOM price fallback
-    fr_m = re.search(r'([0-9]{1,4}),([0-9]{2})\s*\$', clean)
-    if fr_m:
-        return float(f"{fr_m.group(1)}.{fr_m.group(2)}"), None
-
-    return None, "Prix introuvable dans le DOM"
-
-def sync_item(url):
+def fetch_store_price(sku):
+    api_url = f"https://www.homedepot.ca/api/productsvc/v1/products/{sku}/store/{STORE_ID}?fields=BASIC_SPA&lang=fr"
+    
     try:
         r = requests.get(
-            url,
+            api_url,
             impersonate="chrome124",
             headers=HEADERS,
-            cookies=COOKIES,
             timeout=15
         )
+        
         if r.status_code == 200:
-            return extract_price(r.text)
+            data = r.json()
+            # Extract price value from optimizedPrice -> displayPrice -> value
+            price_val = data.get('optimizedPrice', {}).get('displayPrice', {}).get('value')
+            if price_val is not None:
+                return float(price_val), None
+            return None, "Clé 'value' introuvable dans la réponse API"
         elif r.status_code == 404:
-            return None, "Page produit non trouvée (404 / discontinué)"
+            return None, "Produit introuvable dans l'API (404)"
         else:
-            return None, f"Erreur HTTP {r.status_code}"
+            return None, f"Erreur API HTTP {r.status_code}"
+            
     except Exception as e:
         return None, str(e)
+
+def sync_item(url):
+    sku = extract_sku_from_url(url)
+    if not sku:
+        return None, "SKU introuvable dans l'URL"
+        
+    return fetch_store_price(sku)
 
 def run_sync(query=None):
     if not os.path.exists(DATA_FILE):
@@ -100,8 +85,10 @@ def run_sync(query=None):
     with open(DATA_FILE, 'r', encoding='utf-8') as f:
         materials = json.load(f)
 
-    keys = [query] if query and query in materials else list(materials.keys())
-    print(f"\nSynchronisation Home Depot (Magasin Vaudreuil) pour {len(keys)} article(s)...\n")
+    if query:
+        keys = [k for k in materials.keys() if query in k or query in str(materials[k].get('id', ''))]
+    else:
+        keys = list(materials.keys())
 
     updated = 0
     now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -121,7 +108,7 @@ def run_sync(query=None):
         price, err = sync_item(url)
         if price is not None:
             diff = price - old_price
-            print(f"   [OK] Prix à jour : ${price:.2f} (Ancien : ${old_price:.2f}, Diff : {diff:+.2f}$)")
+            print(f"   [OK] Prix à jour (Store #{STORE_ID}) : ${price:.2f} (Ancien : ${old_price:.2f}, Diff : {diff:+.2f}$)")
             item['price'] = price
             item['last_updated'] = now_str
             updated += 1

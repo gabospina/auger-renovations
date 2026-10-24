@@ -187,7 +187,12 @@ function calculateTierLabor(tierKey, roomSqft = 0) {
   });
 }
 
+// Store globally so other functions know what's selected
+window.currentActiveTier = 'budget'; // default
+
 function applyPresetTier(tierKey) {
+  window.currentActiveTier = tierKey; // <--- SAVE IT HERE
+  
   const bathSize = parseFloat(document.getElementById('bath-size')?.value) || 0;
   const computed = calculateTierMaterials(tierKey, bathSize);
   const computedLabor = calculateTierLabor(tierKey, bathSize);

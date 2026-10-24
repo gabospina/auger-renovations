@@ -16,37 +16,10 @@
     <div class="container header-inner">
       <nav class="main-nav" id="mainNav">
         <ul>
-          <!-- Public Showcase Pages -->
-          <li><a href="/accueil.html">PAGE D'ACCUEIL</a></li>
-          <li><a href="/services.html">NOS SERVICES</a></li>
-          <li><a href="/realisations.html">RÉALISATIONS</a></li>
-          <li><a href="/salle_de_bains.html">PROJETS SDB</a></li>
-
-          <!-- Public Intake & Client Estimator -->
-          <li class="nav-dropdown">
-            <a href="/quote-bathroom.php" class="dropdown-trigger">
-              SOUMISSIONS <i class="fa-solid fa-chevron-down" style="font-size: 11px; margin-left: 3px;"></i>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="/quote-bathroom.php">Salle de bain</a></li>
-              <!-- <li><a href="/contact.html">Demande générale</a></li> -->
-            </ul>
-          </li>
-
-          <!-- Internal Admin & Management Tools (For Client Review) -->
-          <li class="nav-dropdown">
-            <a href="/admin/requests.php" class="dropdown-trigger" style="color: #b45309; font-weight: 700;">
-              <i class="fa-solid fa-screwdriver-wrench" style="font-size: 12px; margin-right: 4px;"></i> ADMIN <i class="fa-solid fa-chevron-down" style="font-size: 11px; margin-left: 2px;"></i>
-            </a>
-            <ul class="dropdown-menu admin-menu">
-              <li><a href="/admin/requests.php"><i class="fa-solid fa-inbox" style="width: 16px;"></i> Demandes reçues</a></li>
-              <li><a href="/admin/materials.html"><i class="fa-solid fa-tags" style="width: 16px;"></i> Catalogue & Prix</a></li>
-              <li><a href="/admin/estimate-bathroom.php"><i class="fa-solid fa-file-invoice-dollar" style="width: 16px;"></i> Devis & Soumissions</a></li>
-              <li><a href="/admin/settings.html"><i class="fa-solid fa-sliders" style="width: 16px;"></i> Paramètres & Marge</a></li>
-            </ul>
-          </li>
-
-          <li><a href="/contact.html">CONTACTEZ-NOUS</a></li>
+          <li><a href="accueil.html">PAGE D'ACCUEIL</a></li>
+          <li><a href="services.html">NOS SERVICES</a></li>
+          <li><a href="realisations.html">PROJET REALISE</a></li>
+          <li><a href="contact.html">CONTACTEZ-NOUS</a></li>
           <li class="rbq-nav">RBQ : 58392747-01</li>
         </ul>
       </nav>
@@ -114,8 +87,28 @@
 
       <div>
         <p>&copy; <span id="year"></span> Habitations A Inc. / Auger Rénovation. Tous droits réservés.</p>
-        <p>RBQ : 58392747-01 | Vaudreuil-Dorion, QC, Canada</p>
-      </div>
+        <!-- Le texte RBQ cliquable (la porte secrète) -->
+        <span onclick="document.getElementById('secret-login-modal').style.display='flex'" style="cursor: pointer; color: inherit;">
+          RBQ: 58392747-01
+        </span>
+
+        <!-- La boîte de connexion cachée -->
+        <div id="secret-login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; font-family: sans-serif;">
+          <div style="background: #fff; padding: 30px; border-radius: 8px; width: 320px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <h3 style="margin-top: 0; color: #333; font-size: 18px;">Accès Administrateur</h3>
+            <form action="admin/admin.php" method="POST">
+              
+              <!-- REMOVED THE HIDDEN REDIRECT FIELD HERE -->
+              
+              <input type="password" name="password" placeholder="Mot de passe..." required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+              
+              <div style="display: flex; justify-content: space-between;">
+                <button type="button" onclick="document.getElementById('secret-login-modal').style.display='none'" style="background: #f1f1f1; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; color: #333;">Annuler</button>
+                <button type="submit" style="background: #d1b06a; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; color: #fff; font-weight: bold;">Entrer</button>
+              </div>
+            </form>
+          </div>
+        </div></div>
 
       <div class="footer-links">
         <a href="accueil.html">Accueil</a>

@@ -1,0 +1,42 @@
+{
+  "CIOT-CALACATTA-2448": {
+    "id": "CIOT-CALACATTA-2448",
+    "name": "Porcelaine rectifiée Calacatta Gold 24x48 (boîte 16 pi²)",
+    "supplier": "Ciot",
+    "category": "Céramique & Carrelage",
+    "unit": "boîte",
+    "price": 118,
+    "url": "",
+    "last_updated": "2026-10-12 17:00:00"
+  },
+  "CENTURA-KERDI-KIT": {
+    "id": "CENTURA-KERDI-KIT",
+    "name": "Ensemble complet douche étanche Schluter-Kerdi 38x60",
+    "supplier": "Centura",
+    "category": "Salle de bain & Douche",
+    "unit": "ensemble",
+    "price": 685,
+    "url": "",
+    "last_updated": "2026-10-12 17:00:00"
+  },
+  "CANAC-VANITY-36": {
+    "id": "CANAC-VANITY-36",
+    "name": "Meuble-vanité 36 po chêne naturel avec comptoir quartz",
+    "supplier": "Depot",
+    "category": "Meubles & Vanités",
+    "unit": "unité",
+    "price": 829,
+    "url": "",
+    "last_updated": "2026-10-13 12:52:13"
+  },
+  "CUSTOM-VANITY-60": {
+    "id": "CUSTOM-VANITY-60",
+    "name": "Vanité suspendue sur mesure 60 po double vasque en noyer véritable",
+    "supplier": "Ébénisterie sur mesure",
+    "category": "Meubles & Vanités",
+    "unit": "unité",
+    "price": 2450,
+    "url": "",
+    "last_updated": "2026-10-12 17:00:00"
+  }
+}

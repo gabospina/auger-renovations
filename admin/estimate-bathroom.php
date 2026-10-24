@@ -3,16 +3,11 @@
 $requestId = $_GET['request_id'] ?? null;
 $requestData = null;
 
-$dataFile = __DIR__ . '/data/requests.json';
-if (file_exists($dataFile)) {
-    $allRequests = json_decode(file_get_contents($dataFile), true) ?: [];
-    
-    if ($requestId && isset($allRequests[$requestId])) {
-        $requestData = $allRequests[$requestId];
-    } elseif (!$requestId && !empty($allRequests)) {
-        // Fallback: pick the first/latest request if no ID was provided in the navbar link
-        $requestData = reset($allRequests);
-        $requestId = key($allRequests);
+if ($requestId) {
+    $dataFile = __DIR__ . '/data/requests.json';
+    if (file_exists($dataFile)) {
+        $allRequests = json_decode(file_get_contents($dataFile), true) ?: [];
+        $requestData = $allRequests[$requestId] ?? null;
     }
 }
 
@@ -25,7 +20,7 @@ $project = $requestData['project'] ?? [];
 $photos = $requestData['photos'] ?? ['current' => [], 'desired' => []];
 
 /* =====================================================
-   MATERIAL SUGGESTIONS BY KEYWORD & SKU LOOKUP
+   SMART TIERED MATERIAL SUGGESTIONS BY PRICE BRACKET
 ===================================================== */
 $materialsFile = __DIR__ . '/data/materials.json';
 $materials = [];
@@ -36,11 +31,14 @@ if (file_exists($materialsFile)) {
 $suggestedMaterials = [];
 
 /**
- * Searches the catalog by keywords or exact SKU/ID
+ * Finds matching catalog items for a category, sorts them by price, 
+ * and selects one based on the tier index (0 = budget, middle = standard, last = premium).
  */
-function findCatalogItem($keywordsOrSku, $materials) {
-    $terms = is_array($keywordsOrSku) ? $keywordsOrSku : [$keywordsOrSku];
-    
+function findTieredCatalogItem($keywords, $materials, $targetTier = 'standard') {
+    $terms = is_array($keywords) ? $keywords : [$keywords];
+    $matchedItems = [];
+
+    // 1. Gather all items matching the keyword
     foreach ($materials as $key => $mat) {
         $id = strtolower((string)($mat['id'] ?? $key));
         $name = strtolower((string)($mat['name'] ?? ''));
@@ -56,32 +54,48 @@ function findCatalogItem($keywordsOrSku, $materials) {
         }
 
         if ($matched) {
-            return [
-                'id'   => $mat['id'] ?? (string)$key,
+            $price = floatval($mat['price'] ?? 0);
+            $matchedItems[] = [
+                'id' => $mat['id'] ?? (string)$key,
+                'price' => $price,
                 'data' => $mat
             ];
         }
     }
-    return null;
+
+    if (empty($matchedItems)) return null;
+
+    // 2. Sort items by price (lowest to highest)
+    usort($matchedItems, function($a, $b) {
+        return $a['price'] <=> $b['price'];
+    });
+
+    $count = count($matchedItems);
+
+    // 3. Select item index based on the requested tier
+    // Economy -> cheapest item (index 0)
+    // Standard -> median item
+    // Premium -> most expensive item (last index)
+    $index = 0;
+    if ($targetTier === 'standard') {
+        $index = (int)floor($count / 2);
+    } elseif ($targetTier === 'premium' || $targetTier === 'haut_de_gamme') {
+        $index = $count - 1;
+    }
+
+    return $matchedItems[$index];
 }
 
-// Maps client form options to search keywords matching actual catalog items
+// Map client selection categories to search terms in your catalog
 $keywordMappings = [
-    // Shower
     'waterproof_membrane'     => ['kerdi'],
     'replace_standard_shower' => ['kerdi'],
-    'glass_shower'            => ['kerdi'],
+    'glass_shower'            => ['verre'],
     'rain_shower'             => ['douche'],
-
-    // Flooring
-    'ceramic'                 => ['porcelaine'],
-    'porcelain'               => ['calacatta'],
-
-    // Countertop & Vanity
-    'granite'                 => ['vanité'],
-    'quartz'                  => ['vanité'],
-
-    // Electrical & Plumbing
+    'ceramic'                 => ['tuile', 'céramique', 'porcelaine'],
+    'porcelain'               => ['porcelaine', 'calacatta'],
+    'granite'                 => ['vanité', 'comptoir'],
+    'quartz'                  => ['vanité', 'quartz'],
     'heated_floor'            => ['chauffant'],
     'replace_toilet'          => ['toilette'],
     'replace_tub'             => ['bain'],
@@ -90,7 +104,9 @@ $keywordMappings = [
     'move_plumbing'           => ['pex']
 ];
 
-// Aggregate all client selections across project categories
+// Determine active tier (default to budget if not specified via GET/Session)
+$activeTier = $_GET['tier'] ?? 'budget';
+
 $allClientSelections = array_merge(
     $project['shower'] ?? [],
     $project['floor'] ?? [],
@@ -100,10 +116,10 @@ $allClientSelections = array_merge(
     !empty($project['vanity']) ? (array)$project['vanity'] : []
 );
 
-// Collect suggestions dynamically without duplicates
+// Collect suggestions filtered by price bracket / tier
 foreach ($allClientSelections as $selection) {
     if (isset($keywordMappings[$selection])) {
-        $found = findCatalogItem($keywordMappings[$selection], $materials);
+        $found = findTieredCatalogItem($keywordMappings[$selection], $materials, $activeTier);
         if ($found && !isset($suggestedMaterials[$found['id']])) {
             $suggestedMaterials[$found['id']] = $found['data'];
         }
@@ -445,12 +461,21 @@ foreach ($allClientSelections as $selection) {
       </article>
 
       <article class="card quote-card">
+        
         <div style="background: #f8fafc; padding: 14px 18px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 22px;">
           <strong style="font-size: 13px; color: #334155; display: block; margin-bottom: 10px; text-transform: uppercase;">Sélectionnez le niveau de finition :</strong>
+          <!-- Voice Assistant Widget -->
+          <div style="background: #fdf8f6; border: 1px solid #f97316; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <strong style="color: #c2410c; display: block; font-size: 14px;">Assistant Vocal Intelligent (Mode Chantier)</strong>
+              <span id="voice-status" style="font-size: 12px; color: #4b5563;">Cliquez sur le micro et décrivez le projet (ex: "Client Marc Leblanc, salle de bain 8 par 10 pieds, douche et toilette").</span>
+            </div>
+            
+          </div>
           <div style="display: flex; gap: 12px;">
-            <button type="button" class="btn btn-tier active" onclick="applyPresetTier('budget')" id="tier-btn-budget" style="flex: 1;"><i class="fa-solid fa-coins"></i> Économique</button>
-            <button type="button" class="btn btn-tier" onclick="applyPresetTier('standard')" id="tier-btn-standard" style="flex: 1;"><i class="fa-solid fa-star"></i> Standard</button>
-            <button type="button" class="btn btn-tier" onclick="applyPresetTier('premium')" id="tier-btn-premium" style="flex: 1;"><i class="fa-solid fa-gem"></i> Haut de gamme</button>
+            <button type="button" class="btn btn-tier <?= ($activeTier === 'budget') ? 'active' : '' ?>" data-tier="budget" id="tier-btn-budget" style="flex: 1;"><i class="fa-solid fa-coins"></i> Économique</button>
+            <button type="button" class="btn btn-tier <?= ($activeTier === 'standard') ? 'active' : '' ?>" data-tier="standard" id="tier-btn-standard" style="flex: 1;"><i class="fa-solid fa-star"></i> Standard</button>
+            <button type="button" class="btn btn-tier <?= ($activeTier === 'premium') ? 'active' : '' ?>" data-tier="premium" id="tier-btn-premium" style="flex: 1;"><i class="fa-solid fa-gem"></i> Haut de gamme</button>
           </div>
         </div>
 

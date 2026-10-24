@@ -191,7 +191,7 @@ function calculateTierLabor(tierKey, roomSqft = 0) {
 window.currentActiveTier = 'budget'; // default
 
 function applyPresetTier(tierKey) {
-  window.currentActiveTier = tierKey; // <--- SAVE IT HERE
+  window.currentActiveTier = tierKey;
   
   const bathSize = parseFloat(document.getElementById('bath-size')?.value) || 0;
   const computed = calculateTierMaterials(tierKey, bathSize);

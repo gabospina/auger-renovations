@@ -1,0 +1,2689 @@
+
+====================================================
+SYNC: 2026-10-22 21:21:45
+TARGET: 1000788662
+RETURN CODE: 1
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000788662"
+====================================================
+
+Synchronisation Home Depot (Magasin Vaudreuil) pour 50 article(s)...
+
+URL RAW: 'https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392'
+TYPE: <class 'str'>
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+Traceback (most recent call last):
+  File "C:\xampp\htdocs\auger-renovations\admin\scraper.py", line 211, in <module>
+    run_sync(search_arg)
+    ~~~~~~~~^^^^^^^^^^^^
+  File "C:\xampp\htdocs\auger-renovations\admin\scraper.py", line 191, in run_sync
+    price, err = sync_item(url)
+                 ~~~~~~~~~^^^^^
+  File "C:\xampp\htdocs\auger-renovations\admin\scraper.py", line 135, in sync_item
+    print("HTTP STATUS:", r.status_code)
+                          ^
+UnboundLocalError: cannot access local variable 'r' where it is not associated with a value
+
+
+====================================================
+SYNC: 2026-10-22 21:22:09
+TARGET: 1000788662
+RETURN CODE: 1
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000788662"
+====================================================
+
+Synchronisation Home Depot (Magasin Vaudreuil) pour 50 article(s)...
+
+URL RAW: 'https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392'
+TYPE: <class 'str'>
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+Traceback (most recent call last):
+  File "C:\xampp\htdocs\auger-renovations\admin\scraper.py", line 211, in <module>
+    run_sync(search_arg)
+    ~~~~~~~~^^^^^^^^^^^^
+  File "C:\xampp\htdocs\auger-renovations\admin\scraper.py", line 191, in run_sync
+    price, err = sync_item(url)
+                 ~~~~~~~~~^^^^^
+  File "C:\xampp\htdocs\auger-renovations\admin\scraper.py", line 135, in sync_item
+    print("HTTP STATUS:", r.status_code)
+                          ^
+UnboundLocalError: cannot access local variable 'r' where it is not associated with a value
+
+
+====================================================
+SYNC: 2026-10-22 21:29:09
+TARGET: 1000788662
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000788662"
+====================================================
+
+Synchronisation Home Depot (Magasin Vaudreuil) pour 50 article(s)...
+
+url = clean_url(item.get('url', ''))
+URL CLEAN: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+url = clean_url(item.get('url', ''))
+URL CLEAN: https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+url = clean_url(item.get('url', ''))
+URL CLEAN: https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN: https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-DRYWALL-GREEN-BOARD] Moisture Resistant Drywall (Green Board)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+[DEBUG] Found text '270,00' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN:
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+url = clean_url(item.get('url', ''))
+URL CLEAN: https://www.homedepot.ca/produit/1000112108
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/1000112108
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+url = clean_url(item.get('url', ''))
+URL CLEAN: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+[DEBUG] Found text '270,00' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+Terminé : 0/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-22 21:32:14
+TARGET: 1000788662
+RETURN CODE: 1
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000788662"
+====================================================
+
+Synchronisation Home Depot (Magasin Vaudreuil) pour 50 article(s)...
+
+Traceback (most recent call last):
+  File "C:\xampp\htdocs\auger-renovations\admin\scraper.py", line 216, in <module>
+    run_sync(search_arg)
+    ~~~~~~~~^^^^^^^^^^^^
+  File "C:\xampp\htdocs\auger-renovations\admin\scraper.py", line 183, in run_sync
+    url = clean_url(item.get('url', ''))
+          ^^^^^^^^^
+NameError: name 'clean_url' is not defined
+
+
+====================================================
+SYNC: 2026-10-22 21:35:22
+TARGET: 1000788662
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000788662"
+====================================================
+
+Synchronisation Home Depot (Magasin Vaudreuil) pour 50 article(s)...
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [SKU-DRYWALL-GREEN-BOARD] Moisture Resistant Drywall (Green Board)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+[DEBUG] Found text '270,00' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/1000112108
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/1000112108
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+[DEBUG] Found text '270,00' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+Terminé : 0/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-22 21:36:10
+TARGET: 1000788662
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000788662"
+====================================================
+
+Synchronisation Home Depot (Magasin Vaudreuil) pour 50 article(s)...
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [SKU-DRYWALL-GREEN-BOARD] Moisture Resistant Drywall (Green Board)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+[DEBUG] Found text '270,00' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/1000112108
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/1000112108
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+[DEBUG] Found text '270,00' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+Terminé : 0/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-22 21:37:54
+TARGET: 1000788662
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000788662"
+====================================================
+
+Synchronisation Home Depot (Magasin Vaudreuil) pour 50 article(s)...
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [SKU-DRYWALL-GREEN-BOARD] Moisture Resistant Drywall (Green Board)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+[DEBUG] Found text '270,00' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN:
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN:
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+URL CLEAN: https://www.homedepot.ca/produit/1000112108
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/1000112108
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+URL CLEAN: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+
+==============================
+REQUEST INFORMATION
+==============================
+URL: https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662
+HTTP STATUS: 200
+[DEBUG] HTML saved to debug_page.html
+
+==============================
+STARTING PRICE EXTRACTION
+==============================
+
+[NO PRICE FOUND]
+Prix introuvable dans le DOM
+[DEBUG] Found text '239' somewhere in the page
+[DEBUG] Found text '270' somewhere in the page
+[DEBUG] Found text '270,00' somewhere in the page
+PRICE: None
+ERROR: Prix introuvable dans le DOM
+   [ECHEC] Prix introuvable dans le DOM
+
+Terminé : 0/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 14:39:33
+TARGET: 1000788662
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000788662"
+====================================================
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $270.00, Diff : -31.00$)
+
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $270.00, Diff : -31.00$)
+
+Terminé : 2/2 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 14:41:10
+TARGET: ALL
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py"
+====================================================
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $27.97, Diff : -0.99$)
+
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+   [OK] Prix à jour (Store #7187) : $37.31 (Ancien : $37.31, Diff : +0.00$)
+
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.97, Diff : +0.00$)
+
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $17.98 (Ancien : $16.52, Diff : +1.46$)
+
+-> [SKU-DRYWALL-GREEN-BOARD] Moisture Resistant Drywall (Green Board)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+   [OK] Prix à jour (Store #7187) : $4.14 (Ancien : $6.58, Diff : -2.44$)
+
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+Terminé : 7/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 14:55:01
+TARGET: ALL
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py"
+====================================================
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $26.98, Diff : +0.00$)
+
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+   [OK] Prix à jour (Store #7187) : $37.31 (Ancien : $37.31, Diff : +0.00$)
+
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.97, Diff : +0.00$)
+
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $17.98 (Ancien : $17.98, Diff : +0.00$)
+
+-> [SKU-DRYWALL-GREEN-BOARD] Moisture Resistant Drywall (Green Board)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+   [OK] Prix à jour (Store #7187) : $4.14 (Ancien : $4.14, Diff : +0.00$)
+
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+Terminé : 7/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 14:55:32
+TARGET: ALL
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py"
+====================================================
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $26.98, Diff : +0.00$)
+
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+   [OK] Prix à jour (Store #7187) : $37.31 (Ancien : $37.31, Diff : +0.00$)
+
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.97, Diff : +0.00$)
+
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $17.98 (Ancien : $17.98, Diff : +0.00$)
+
+-> [SKU-DRYWALL-GREEN-BOARD] Moisture Resistant Drywall (Green Board)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+   [OK] Prix à jour (Store #7187) : $4.14 (Ancien : $4.14, Diff : +0.00$)
+
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+Terminé : 7/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 15:06:02
+TARGET: 1000152285
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000152285"
+====================================================
+-> [SKU-1000152285] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $29.98 (Ancien : $21.50, Diff : +8.48$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 15:06:26
+TARGET: ALL
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py"
+====================================================
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $26.98, Diff : +0.00$)
+
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+   [OK] Prix à jour (Store #7187) : $37.31 (Ancien : $37.31, Diff : +0.00$)
+
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.97, Diff : +0.00$)
+
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $17.98 (Ancien : $17.98, Diff : +0.00$)
+
+-> [SKU-1000152285] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $29.98 (Ancien : $29.98, Diff : +0.00$)
+
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+   [OK] Prix à jour (Store #7187) : $4.14 (Ancien : $4.14, Diff : +0.00$)
+
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+Terminé : 8/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 15:06:59
+TARGET: ALL
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py"
+====================================================
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $26.98, Diff : +0.00$)
+
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+   [OK] Prix à jour (Store #7187) : $37.31 (Ancien : $37.31, Diff : +0.00$)
+
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.97, Diff : +0.00$)
+
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $17.98 (Ancien : $17.98, Diff : +0.00$)
+
+-> [SKU-1000152285] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $29.98 (Ancien : $29.98, Diff : +0.00$)
+
+-> [SKU-CEMENT-BOARD] Cement Board 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-DRYWALL-SCREW] Drywall Screws 1-1/4 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-3] Construction Screws 3 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-SCREW-2-5] Construction Screws 2-1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FRAMING-NAILS] 16D Framing Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FINISH-NAILS] 18 Gauge Finish Nails...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PLYWOOD-3-4] 3/4 in Plywood...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CONSTRUCTION-ADHESIVE] PL Premium Construction Adhesive...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-PIPE] PEX Pipe 1/2 in...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-ELBOW] PEX Elbow...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PEX-TEE] PEX Tee...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SHUTOFF-VALVE] PEX Shutoff Valve...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-ABS-PIPE] ABS Drain Pipe...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET-FLANGE] Toilet Flange...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WAX-RING] Wax Ring...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WATER-SUPPLY-LINE] Braided Water Supply Line...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PTRAP] P-Trap Kit...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TEFLON-TAPE] Teflon Thread Tape...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-SILICONE-WHITE] Bathroom Silicone Sealant White...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+-> [SKU-GFCI-OUTLET] GFCI Receptacle...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LIGHT-SWITCH] Light Switch...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WIRE-NUT] Wire Connectors (Marrettes)...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-LED-VANITY-LIGHT] LED Vanity Light...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATH-FAN] Bathroom Exhaust Fan...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-REDGARD] RedGard Waterproofing Membrane...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-THINSET] Modified Thinset Mortar...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-GROUT] Tile Grout...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TILE-SPACERS] Tile Spacers...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FLOOR-TILE] Porcelain Floor Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-WALL-TILE] Ceramic Wall Tile...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-TOILET] Elongated Toilet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-VANITY] Bathroom Vanity...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-FAUCET] Bathroom Faucet...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-MIRROR] Bathroom Mirror...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-PRIMER] Primer...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BATHROOM-PAINT] Bathroom Paint...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-BASEBOARD] MDF Baseboard...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-CAULKING] Painter Caulking...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+   [OK] Prix à jour (Store #7187) : $4.14 (Ancien : $4.14, Diff : +0.00$)
+
+-> [MAT-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+Terminé : 8/50 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 15:07:08
+TARGET: 1000152285
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000152285"
+====================================================
+-> [SKU-1000152285] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $29.98 (Ancien : $29.98, Diff : +0.00$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 15:18:29
+TARGET: 1000174528
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000174528"
+====================================================
+-> [SKU-1000174528] Paulin Vis de construction à tête plate carré...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $19.99, Diff : +6.99$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 15:20:37
+TARGET: 1000179913
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000179913"
+====================================================
+-> [SKU-1000179913] Paulin #6 x 1-1/4 po à tête plate Phillips Dr...
+   [OK] Prix à jour (Store #7187) : $16.28 (Ancien : $14.99, Diff : +1.29$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 15:35:30
+TARGET: 1000401027
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000401027"
+====================================================
+-> [SKU-1000401027] 3/4 4x8 Standard contreplaqué Spruce...
+   [OK] Prix à jour (Store #7187) : $59.98 (Ancien : $59.90, Diff : +0.08$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 15:38:43
+TARGET: 1000174529
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000174529"
+====================================================
+-> [SKU-1000174529] Paulin Vis de construction à tête plate carré...
+   [OK] Prix à jour (Store #7187) : $30.88 (Ancien : $18.50, Diff : +12.38$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 16:49:55
+TARGET: ALL
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py"
+====================================================
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $26.98, Diff : +0.00$)
+
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+   [OK] Prix à jour (Store #7187) : $37.31 (Ancien : $37.31, Diff : +0.00$)
+
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.97, Diff : +0.00$)
+
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $17.98 (Ancien : $17.98, Diff : +0.00$)
+
+-> [SKU-1000152285] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $29.98 (Ancien : $29.90, Diff : +0.08$)
+
+-> [SKU-1000179913] Paulin #6 x 1-1/4 po à tête plate Phillips Dr...
+   [OK] Prix à jour (Store #7187) : $16.28 (Ancien : $16.20, Diff : +0.08$)
+
+-> [SKU-1000174528] Paulin Vis de construction à tête plate carré...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $26.90, Diff : +0.08$)
+
+-> [SKU-1000174529] Paulin Vis de construction à tête plate carré...
+   [OK] Prix à jour (Store #7187) : $30.88 (Ancien : $30.80, Diff : +0.08$)
+
+-> [SKU-1000683339] Paulin Clous pour charpente en spirale de 3-1...
+   [OK] Prix à jour (Store #7187) : $27.18 (Ancien : $27.10, Diff : +0.08$)
+
+-> [SKU-1001631455] STANLEY 16 Gauge 2-1/2-inch 20-Degree Angled ...
+   [OK] Prix à jour (Store #7187) : $41.98 (Ancien : $41.90, Diff : +0.08$)
+
+-> [SKU-1000401027] 3/4 4x8 Standard contreplaqué Spruce...
+   [OK] Prix à jour (Store #7187) : $59.98 (Ancien : $59.90, Diff : +0.08$)
+
+-> [SKU-1000403473] LePage PL Premium Adhésif de construction en ...
+   [OK] Prix à jour (Store #7187) : $7.97 (Ancien : $7.87, Diff : +0.10$)
+
+-> [SKU-1000848589] APOLLO Tuyau PEX-B blanc de 1/2 po x 10 pi...
+   [OK] Prix à jour (Store #7187) : $6.98 (Ancien : $6.90, Diff : +0.08$)
+
+-> [SKU-1001623564] SharkBite Robinet d arret droit a compression...
+   [OK] Prix à jour (Store #7187) : $14.98 (Ancien : $14.90, Diff : +0.08$)
+
+-> [SKU-1000116247] LESSO Bride de toilette en plastique ABS, 4 x...
+   [OK] Prix à jour (Store #7187) : $8.47 (Ancien : $8.40, Diff : +0.07$)
+
+-> [SKU-1000430244] Oatey Joint De Cire Pour Toilette Avec Mancho...
+   [OK] Prix à jour (Store #7187) : $12.98 (Ancien : $12.90, Diff : +0.08$)
+
+-> [SKU-1001530545] CB Performance Advantage Kit de raccordement ...
+   [OK] Prix à jour (Store #7187) : $19.54 (Ancien : $19.50, Diff : +0.04$)
+
+-> [SKU-1000841553] Husky Ruban d'étanchéité pour filets, 1/2 po ...
+   [OK] Prix à jour (Store #7187) : $1.48 (Ancien : $1.40, Diff : +0.08$)
+
+-> [SKU-1001001926] MONO Silicone PRO - K&B de 290 mL, blanc...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.90, Diff : +0.07$)
+
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+-> [SKU-1000723588] Leviton Decora 15A125V prise inviolable à DDF...
+   [OK] Prix à jour (Store #7187) : $23.87 (Ancien : $23.80, Diff : +0.07$)
+
+-> [SKU-1000105689] Leviton Interrupteur unipolaire Decora(md) , ...
+   [OK] Prix à jour (Store #7187) : $2.41 (Ancien : $2.40, Diff : +0.01$)
+
+-> [SKU-1000148262] Marrette Connecteur de fils ACS pour conducte...
+   [OK] Prix à jour (Store #7187) : $12.87 (Ancien : $12.80, Diff : +0.07$)
+
+-> [SKU-1001978790] Artika Ewen 27 po à 1 lumière 15 W noir à DEL...
+   [OK] Prix à jour (Store #7187) : $69.99 (Ancien : $69.90, Diff : +0.09$)
+
+-> [SKU-1000107097] Broan-NuTone Ventilateur 50 pi³/min de la sér...
+   [OK] Prix à jour (Store #7187) : $34.98 (Ancien : $34.90, Diff : +0.08$)
+
+-> [SKU-1000150306] Custom Building Products RedGard 3.78 L 100 p...
+   [OK] Prix à jour (Store #7187) : $105.00 (Ancien : $105.10, Diff : -0.10$)
+
+-> [SKU-1000668022] Custom Building Products SimpleGrout #165 Del...
+   [OK] Prix à jour (Store #7187) : $25.28 (Ancien : $25.20, Diff : +0.08$)
+
+-> [SKU-1000164407] QEP Entretoises flexibles de 1/4 po pour l'in...
+   [OK] Prix à jour (Store #7187) : $6.88 (Ancien : $6.80, Diff : +0.08$)
+
+-> [SKU-1001924601] Ivy Hill Tile Carreau pour planchers et murs ...
+   [OK] Prix à jour (Store #7187) : $218.06 (Ancien : $18.70, Diff : +199.36$)
+
+-> [SKU-1001690476] Merola Tile Carreau mural et de sol Amberes A...
+   [OK] Prix à jour (Store #7187) : $168.04 (Ancien : $10.70, Diff : +157.34$)
+
+-> [SKU-1001877076] American Standard Toilette allongée deux pièc...
+   [OK] Prix à jour (Store #7187) : $176.00 (Ancien : $176.90, Diff : -0.90$)
+
+-> [SKU-1000822618] Glacier Bay Delchester 24 po W x 32,7 po H x ...
+   [OK] Prix à jour (Store #7187) : $198.00 (Ancien : $198.90, Diff : -0.90$)
+
+-> [SKU-1001662833] Glacier Bay Irena Kit de vidange escamotable ...
+   [OK] Prix à jour (Store #7187) : $69.00 (Ancien : $69.00, Diff : +0.00$)
+
+-> [SKU-1000658028] BEHR ULTRA Peinture et apprêt très durable po...
+   [OK] Prix à jour (Store #7187) : $63.57 (Ancien : $63.50, Diff : +0.07$)
+
+-> [SKU-1001903172] Alexandria Moulding Plinthe MDF 1/2 x 5.1/2 x...
+   [OK] Prix à jour (Store #7187) : $86.98 (Ancien : $1.40, Diff : +85.58$)
+
+-> [SKU-1000830884] DAP ALEX Calfeutrant au Latex Acrylique Blanc...
+   [OK] Prix à jour (Store #7187) : $20.97 (Ancien : $20.97, Diff : +0.00$)
+
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+   [OK] Prix à jour (Store #7187) : $4.14 (Ancien : $4.10, Diff : +0.04$)
+
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+Terminé : 37/41 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 16:55:10
+TARGET: ALL
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py"
+====================================================
+-> [SKU-1000113392] CGC Durock Panneau de ciment avec EdgeGuard 1...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $26.98, Diff : +0.00$)
+
+-> [SKU-1001728974] composé à joints tout usage cgc sheetrock (se...
+   [OK] Prix à jour (Store #7187) : $37.31 (Ancien : $37.31, Diff : +0.00$)
+
+-> [SKU-1000738382] Pintar Couverture de rouleau en Mousse 240mm ...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.97, Diff : +0.00$)
+
+-> [SKU-1000686028] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $17.98 (Ancien : $17.98, Diff : +0.00$)
+
+-> [SKU-1000152285] CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau ...
+   [OK] Prix à jour (Store #7187) : $29.98 (Ancien : $29.98, Diff : +0.00$)
+
+-> [SKU-1000179913] Paulin #6 x 1-1/4 po à tête plate Phillips Dr...
+   [OK] Prix à jour (Store #7187) : $16.28 (Ancien : $16.28, Diff : +0.00$)
+
+-> [SKU-1000174528] Paulin Vis de construction à tête plate carré...
+   [OK] Prix à jour (Store #7187) : $26.98 (Ancien : $26.98, Diff : +0.00$)
+
+-> [SKU-1000174529] Paulin Vis de construction à tête plate carré...
+   [OK] Prix à jour (Store #7187) : $30.88 (Ancien : $30.88, Diff : +0.00$)
+
+-> [SKU-1000683339] Paulin Clous pour charpente en spirale de 3-1...
+   [OK] Prix à jour (Store #7187) : $27.18 (Ancien : $27.18, Diff : +0.00$)
+
+-> [SKU-1001631455] STANLEY 16 Gauge 2-1/2-inch 20-Degree Angled ...
+   [OK] Prix à jour (Store #7187) : $41.98 (Ancien : $41.98, Diff : +0.00$)
+
+-> [SKU-1000401027] 3/4 4x8 Standard contreplaqué Spruce...
+   [OK] Prix à jour (Store #7187) : $59.98 (Ancien : $59.98, Diff : +0.00$)
+
+-> [SKU-1000403473] LePage PL Premium Adhésif de construction en ...
+   [OK] Prix à jour (Store #7187) : $7.97 (Ancien : $7.97, Diff : +0.00$)
+
+-> [SKU-1000848589] APOLLO Tuyau PEX-B blanc de 1/2 po x 10 pi...
+   [OK] Prix à jour (Store #7187) : $6.98 (Ancien : $6.98, Diff : +0.00$)
+
+-> [SKU-1001623564] SharkBite Robinet d arret droit a compression...
+   [OK] Prix à jour (Store #7187) : $14.98 (Ancien : $14.98, Diff : +0.00$)
+
+-> [SKU-1000116247] LESSO Bride de toilette en plastique ABS, 4 x...
+   [OK] Prix à jour (Store #7187) : $8.47 (Ancien : $8.47, Diff : +0.00$)
+
+-> [SKU-1000430244] Oatey Joint De Cire Pour Toilette Avec Mancho...
+   [OK] Prix à jour (Store #7187) : $12.98 (Ancien : $12.98, Diff : +0.00$)
+
+-> [SKU-1001530545] CB Performance Advantage Kit de raccordement ...
+   [OK] Prix à jour (Store #7187) : $19.54 (Ancien : $19.54, Diff : +0.00$)
+
+-> [SKU-1000841553] Husky Ruban d'étanchéité pour filets, 1/2 po ...
+   [OK] Prix à jour (Store #7187) : $1.48 (Ancien : $1.48, Diff : +0.00$)
+
+-> [SKU-1001001926] MONO Silicone PRO - K&B de 290 mL, blanc...
+   [OK] Prix à jour (Store #7187) : $9.97 (Ancien : $9.97, Diff : +0.00$)
+
+-> [SKU-1000788662] Southwire 14/2 NMD90 150M Romex SIMpull Fil é...
+   [OK] Prix à jour (Store #7187) : $239.00 (Ancien : $239.00, Diff : +0.00$)
+
+-> [SKU-1000723588] Leviton Decora 15A125V prise inviolable à DDF...
+   [OK] Prix à jour (Store #7187) : $23.87 (Ancien : $23.87, Diff : +0.00$)
+
+-> [SKU-1000105689] Leviton Interrupteur unipolaire Decora(md) , ...
+   [OK] Prix à jour (Store #7187) : $2.41 (Ancien : $2.41, Diff : +0.00$)
+
+-> [SKU-1000148262] Marrette Connecteur de fils ACS pour conducte...
+   [OK] Prix à jour (Store #7187) : $12.87 (Ancien : $12.87, Diff : +0.00$)
+
+-> [SKU-1001978790] Artika Ewen 27 po à 1 lumière 15 W noir à DEL...
+   [OK] Prix à jour (Store #7187) : $69.99 (Ancien : $69.99, Diff : +0.00$)
+
+-> [SKU-1000107097] Broan-NuTone Ventilateur 50 pi³/min de la sér...
+   [OK] Prix à jour (Store #7187) : $34.98 (Ancien : $34.98, Diff : +0.00$)
+
+-> [SKU-1000150306] Custom Building Products RedGard 3.78 L 100 p...
+   [OK] Prix à jour (Store #7187) : $105.00 (Ancien : $105.00, Diff : +0.00$)
+
+-> [SKU-1000668022] Custom Building Products SimpleGrout #165 Del...
+   [OK] Prix à jour (Store #7187) : $25.28 (Ancien : $25.28, Diff : +0.00$)
+
+-> [SKU-1000164407] QEP Entretoises flexibles de 1/4 po pour l'in...
+   [OK] Prix à jour (Store #7187) : $6.88 (Ancien : $6.88, Diff : +0.00$)
+
+-> [SKU-1001924601] Ivy Hill Tile Carreau pour planchers et murs ...
+   [OK] Prix à jour (Store #7187) : $218.06 (Ancien : $218.06, Diff : +0.00$)
+
+-> [SKU-1001690476] Merola Tile Carreau mural et de sol Amberes A...
+   [OK] Prix à jour (Store #7187) : $168.04 (Ancien : $168.04, Diff : +0.00$)
+
+-> [SKU-1001877076] American Standard Toilette allongée deux pièc...
+   [OK] Prix à jour (Store #7187) : $176.00 (Ancien : $176.00, Diff : +0.00$)
+
+-> [SKU-1000822618] Glacier Bay Delchester 24 po W x 32,7 po H x ...
+   [OK] Prix à jour (Store #7187) : $198.00 (Ancien : $198.00, Diff : +0.00$)
+
+-> [SKU-1001662833] Glacier Bay Irena Kit de vidange escamotable ...
+   [OK] Prix à jour (Store #7187) : $69.00 (Ancien : $69.00, Diff : +0.00$)
+
+-> [SKU-1000658028] BEHR ULTRA Peinture et apprêt très durable po...
+   [OK] Prix à jour (Store #7187) : $63.57 (Ancien : $63.57, Diff : +0.00$)
+
+-> [SKU-1001903172] Alexandria Moulding Plinthe MDF 1/2 x 5.1/2 x...
+   [OK] Prix à jour (Store #7187) : $86.98 (Ancien : $86.98, Diff : +0.00$)
+
+-> [SKU-1000830884] DAP ALEX Calfeutrant au Latex Acrylique Blanc...
+   [OK] Prix à jour (Store #7187) : $20.97 (Ancien : $20.97, Diff : +0.00$)
+
+-> [SKU-1000112108] Bois d'uvre de classe Select Structural, 2 po...
+   [OK] Prix à jour (Store #7187) : $4.14 (Ancien : $4.14, Diff : +0.00$)
+
+-> [CIOT-CALACATTA-2448] Porcelaine rectifiée Calacatta Gold 24x48 (bo...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CENTURA-KERDI-KIT] Ensemble complet douche étanche Schluter-Kerd...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CANAC-VANITY-36] Meuble-vanité 36 po chêne naturel avec compto...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+-> [CUSTOM-VANITY-60] Vanité suspendue sur mesure 60 po double vasq...
+   [IGNORE] URL Home Depot invalide ou absente.
+
+Terminé : 37/41 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 16:56:10
+TARGET: 1000148262
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000148262"
+====================================================
+-> [SKU-1000148262] Marrette Connecteur de fils ACS pour conducte...
+   [OK] Prix à jour (Store #7187) : $12.87 (Ancien : $12.87, Diff : +0.00$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 16:59:13
+TARGET: 1000105689
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000105689"
+====================================================
+-> [SKU-1000105689] Leviton Interrupteur unipolaire Decora(md) , ...
+   [OK] Prix à jour (Store #7187) : $2.41 (Ancien : $4.41, Diff : -2.00$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 17:15:26
+TARGET: 1000105689
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000105689"
+====================================================
+-> [SKU-1000105689] Leviton Interrupteur unipolaire Decora(md) , ...
+   [OK] Prix à jour (Store #7187) : $2.41 (Ancien : $4.41, Diff : -2.00$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+
+
+====================================================
+SYNC: 2026-10-23 17:15:35
+TARGET: 1000105689
+RETURN CODE: 0
+COMMAND: "C:\Python314\python.exe" "C:\xampp\htdocs\auger-renovations\admin\scraper.py" "1000105689"
+====================================================
+-> [SKU-1000105689] Leviton Interrupteur unipolaire Decora(md) , ...
+   [OK] Prix à jour (Store #7187) : $2.41 (Ancien : $2.41, Diff : +0.00$)
+
+Terminé : 1/1 article(s) mis à jour dans materials.json.
+
+

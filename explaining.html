@@ -1,56 +1,52 @@
 
-=========
-
-WEBSITE STEPS:
-
-With the catalog architecture set up to support trade suppliers and our pricing database operational,
-here is the roadmap for what comes next in the **Auger Rénovation** pipeline:
-
-### Step 2: Restructure `tier-presets.json` (Dynamic Material Binding)
-
-* **Goal:** Eliminate hardcoded material prices inside tier presets (Économique, Standard, Haut de gamme).
-* **Work to do:**
-* Map every material line item in your preset packages directly to its catalog key (`materialId`: `SKU-1001728974`,
- `CANAC-VANITY-36`, `CIOT-CALACATTA-2448`).
-* Define quantity rules (fixed units vs. per square foot of room area).
-* Ensure tier costs dynamically recalculate whenever a material price changes in `materials.json`.
-
-### Step 3: Global Markup Integration in Quotes
-
-* **Goal:** Apply the 15% administrative markup setting seamlessly across cost estimates.
-* **Work to do:**
-* Connect `admin/data/settings.json` (`markup_rate: 0.15`) to the calculation engine.
-* Clearly distinguish between contractor internal cost and client billed price in quote summaries.
-
-### Step 4: Submission & Quote Generator UI (`request.php` & Admin Quotes)
-
-* **Goal:** Connect client quote requests directly to preset tiers and live catalog items.
-* **Work to do:**
-* Automatically generate itemized quotes when a client selects a tier for their room dimensions.
-* Provide an itemized breakdown (materials from Home Depot / Canac / Ciot + labor hours + markup).
-* Allow line-item adjustments before exporting or sending the final quote PDF to the client.
-
-### Step 5: Automated Scheduling & Background Cron Sync
-
-* **Goal:** Enable the automated weekly price sync configured in `materials.html` (Mondays at 6:00 AM).
-* **Work to do:**
-* Set up a Windows Task Scheduler job or lightweight Node/PHP background task to trigger `api-materials.php?action=sync` on schedule.
-* Log sync history and last-updated timestamps to `settings.json`.
-
-Would you like to proceed with **Step 2 (Structuring `tier-presets.json` with dynamic catalog bindings)** next?
-
-=========
-
-Step 5: Registering the Task in Windows Task Scheduler
-Run PowerShell as Administrator to schedule the task to check once every Sunday and Monday at 06:00 AM:
-
-$action = New-ScheduledTaskAction -Execute "C:\Python314\python.exe" -Argument "C:\xampp\htdocs\auger-renovations\admin\auto-sync.py" -WorkingDirectory "C:\xampp\htdocs\auger-renovations\admin"
-$triggerSunday = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At 06:00am
-$triggerMonday = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 06:00am
-Register-ScheduledTask -TaskName "Auger_Materials_AutoSync" -Action $action -Trigger @($triggerSunday, $triggerMonday) -Description "Synchronisation hebdomadaire automatique du catalogue Home Depot"
-
 
 ==============
+
+admin/quote-bathroom :
+
+The dropdown under **"Charger un estimé sauvegardé"** is not a list of blank templates (like a blank kitchen or a blank floor).
+Instead, it is a history of **previously saved client quotes**.
+
+It only says `-- Nouvelle Soumission --` (New Quote) because the system is brand new and you haven't saved any client estimates
+to the database yet.
+
+Here is how the workflow operates:
+
+1. **Start Fresh:** You leave the dropdown on `-- Nouvelle Soumission --` to start with a blank slate.
+2. **Change the Project Type:** On the right panel, you will see a box called **"Projet / Titre"** (Project Title)
+ which defaults to "Rénovation Salle de Bain". The manager can delete that text and type anything they want, such as
+ *"Rénovation Cuisine"* or *"Finition de Plancher"*.
+3. **Build the Quote:** The manager adds the materials, hours, and the client's name (e.g., "Luc Tremblay").
+4. **Save It:** The manager clicks the **Sauvegarder l'estimé actuel** (Save) button.
+
+**What happens next:**
+The next time the manager opens this page and clicks that dropdown, they will now see:
+`Luc Tremblay - Rénovation Cuisine (2026-10-23)`
+
+### Pro-Tip: How to create "Templates" using this system
+
+If you want your managers to have pre-built starting points for different rooms, you can easily create templates right now using that exact same save feature:
+
+1. Start a `-- Nouvelle Soumission --`.
+2. For the Client Name, type **"MODÈLE"** (Template).
+3. For the Project Title, type **"Cuisine Standard"**.
+4. Add the typical materials and hours a kitchen usually takes.
+5. Click Save.
+
+Do this for a bathroom and a floor as well. Now, whenever a manager opens the page, that dropdown will permanently contain:
+
+* `MODÈLE - Cuisine Standard`
+* `MODÈLE - Salle de Bain`
+* `MODÈLE - Plancher`
+
+The manager can simply select one of those templates, change the client name to the real customer, adjust the quantities, and print it!
+
+
+Simon needs a Core Structural Recipe—the foundational, hidden materials required for every bathroom renovation regardless of style.
+This covers the behind-the-wall and under-the-floor essentials that never change, while leaving the design-sensitive items (vanity,
+toilet, tiles, faucets, shower units) completely open for Simon to select based on the customer's specific choices.
+
+================
 
 ### 1. How to Add a New Product from Home Depot into `materials.json`
 
@@ -62,7 +58,8 @@ There are two ways to add a product: via the **Admin Interface** (`materials.htm
 
 * Go to [Home Depot Canada](https://www.homedepot.ca).
 * Note: As seen on your current tab, make sure the item is not discontinued or a dead URL. Pick an active product page.
-* Copy the product URL from your browser's address bar (e.g. `[https://www.homedepot.ca/produit/.../1000xxxxxx](https://www.homedepot.ca/produit/.../1000xxxxxx)`).
+* Copy the product URL from your browser's address bar:
+(e.g. `[https://www.homedepot.ca/produit/.../1000xxxxxx](https://www.homedepot.ca/produit/.../1000xxxxxx)`).
 
 2. **Open your catalog manager:**
 * Navigate to `http://localhost/auger-renovations/admin/materials.html`.
@@ -78,6 +75,14 @@ There are two ways to add a product: via the **Admin Interface** (`materials.htm
 
 4. **Save:**
 * Click **Enregistrer**. The backend `api-materials.php` will write this new record directly into `admin/data/materials.json`.
+
+Step 5: Registering the Task in Windows Task Scheduler
+Run PowerShell as Administrator to schedule the task to check once every Sunday and Monday at 06:00 AM:
+
+$action = New-ScheduledTaskAction -Execute "C:\Python314\python.exe" -Argument "C:\xampp\htdocs\auger-renovations\admin\auto-sync.py" -WorkingDirectory "C:\xampp\htdocs\auger-renovations\admin"
+$triggerSunday = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At 06:00am
+$triggerMonday = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 06:00am
+Register-ScheduledTask -TaskName "Auger_Materials_AutoSync" -Action $action -Trigger @($triggerSunday, $triggerMonday) -Description "Synchronisation hebdomadaire automatique du catalogue Home Depot"
 
 ---
 
@@ -143,6 +148,45 @@ COMO SE ACTUALIZA EL PRECIO DE UN PRODUCTO:
 4. I clicked on "Ajouter a Auger"
 5. The price is update in my matrials.json file.
 6. I refresh the materials.html page on the broswer, the price is updated correctly.
+
+=========
+
+WEBSITE STEPS:
+
+With the catalog architecture set up to support trade suppliers and our pricing database operational,
+here is the roadmap for what comes next in the **Auger Rénovation** pipeline:
+
+### Step 2: Restructure `tier-presets.json` (Dynamic Material Binding)
+
+* **Goal:** Eliminate hardcoded material prices inside tier presets (Économique, Standard, Haut de gamme).
+* **Work to do:**
+* Map every material line item in your preset packages directly to its catalog key (`materialId`: `SKU-1001728974`,
+ `CANAC-VANITY-36`, `CIOT-CALACATTA-2448`).
+* Define quantity rules (fixed units vs. per square foot of room area).
+* Ensure tier costs dynamically recalculate whenever a material price changes in `materials.json`.
+
+### Step 3: Global Markup Integration in Quotes
+
+* **Goal:** Apply the 15% administrative markup setting seamlessly across cost estimates.
+* **Work to do:**
+* Connect `admin/data/settings.json` (`markup_rate: 0.15`) to the calculation engine.
+* Clearly distinguish between contractor internal cost and client billed price in quote summaries.
+
+### Step 4: Submission & Quote Generator UI (`request.php` & Admin Quotes)
+
+* **Goal:** Connect client quote requests directly to preset tiers and live catalog items.
+* **Work to do:**
+* Automatically generate itemized quotes when a client selects a tier for their room dimensions.
+* Provide an itemized breakdown (materials from Home Depot / Canac / Ciot + labor hours + markup).
+* Allow line-item adjustments before exporting or sending the final quote PDF to the client.
+
+### Step 5: Automated Scheduling & Background Cron Sync
+
+* **Goal:** Enable the automated weekly price sync configured in `materials.html` (Mondays at 6:00 AM).
+* **Work to do:**
+* Set up a Windows Task Scheduler job or lightweight Node/PHP background task to trigger `api-materials.php?action=sync` on schedule.
+* Log sync history and last-updated timestamps to `settings.json`.
+
 
 =============
 

@@ -1,0 +1,26 @@
+{
+    "id": "quote_6add32b139065",
+    "client_name": "Simon",
+    "project_title": "Salle de Bain",
+    "items": [
+        {
+            "id": 1792881279811,
+            "desc": "CGC Durock Panneau de ciment avec EdgeGuard 1\/2 pouce. x 3 pieds x 5",
+            "qty": 1,
+            "unitPrice": 31.027
+        },
+        {
+            "id": 1792881297379,
+            "desc": "3\/4 4x8 Standard contreplaqué Spruce",
+            "qty": 1,
+            "unitPrice": 68.977
+        },
+        {
+            "id": 1792881326410,
+            "desc": "Electrician",
+            "qty": 10,
+            "unitPrice": 70
+        }
+    ],
+    "saved_at": "2026-10-25 00:35:29"
+}

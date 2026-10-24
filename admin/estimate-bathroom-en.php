@@ -3,16 +3,11 @@
 $requestId = $_GET['request_id'] ?? null;
 $requestData = null;
 
-$dataFile = __DIR__ . '/data/requests.json';
-if (file_exists($dataFile)) {
-    $allRequests = json_decode(file_get_contents($dataFile), true) ?: [];
-    
-    if ($requestId && isset($allRequests[$requestId])) {
-        $requestData = $allRequests[$requestId];
-    } elseif (!$requestId && !empty($allRequests)) {
-        // Fallback: pick the first/latest request if no ID was provided in the navbar link
-        $requestData = reset($allRequests);
-        $requestId = key($allRequests);
+if ($requestId) {
+    $dataFile = __DIR__ . '/data/requests.json';
+    if (file_exists($dataFile)) {
+        $allRequests = json_decode(file_get_contents($dataFile), true) ?: [];
+        $requestData = $allRequests[$requestId] ?? null;
     }
 }
 

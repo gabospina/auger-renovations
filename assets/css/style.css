@@ -442,17 +442,6 @@ body.contact-page {
   text-decoration: none;
 }
 
-/* Project card title default color */
-.project-card h3 {
-  color: #000;              /* black title */
-  transition: color 0.2s ease;
-}
-
-/* Hover effect when user hovers the card link */
-.project-card:hover h3 {
-  color: var(--primary);    /* your link color */
-}
-
 /* ========COLOR LINK VISITED APGE =============== */
 
 /* Default header link color */
@@ -598,21 +587,6 @@ body.contact-page {
 
 .overlay-socials a:hover {
   color: var(--primary);
-}
-
-/* services.html - Services de rénovation */
-.hero-small {
-  position: relative;
-  padding: 1px 0;
-  background-color: #1a1a1a;
-  color: #ffffff;
-  text-align: center;
-}
-
-.hero-small .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;   /* centers hero-content horizontally */
 }
 
 /* Reduce spacing between hero title and subtitle */
@@ -774,21 +748,90 @@ body.contact-page {
   padding-top: 5px;      /* reduce space above CTA */
 }
 
-/* ===== Bathrooms ======== */
-.project-card img {
-  width: 100%;
-  height: auto;        /* ensures full photo is visible */
-  object-fit: contain; /* prevents cropping */
-  max-height: 480px;   /* increase this number to make photos bigger */
-  border-radius: 8px;
+/* services.html & gallery pages - Banner */
+.hero-small {
+  position: relative;
+  padding: 12px 0;                /* Compact vertical height inside the dark banner */
+  margin-bottom: 20px !important; /* Reduced space between the dark banner and the photos */
+  background-color: #1a1a1a;
+  color: #ffffff;
+  text-align: center;
 }
 
+.hero-small .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Smaller font & tighter space between "Projets de salles..." and "Quelques exemples..." */
+.hero-small h1 {
+  font-size: 17px;       /* Smaller main title font */
+  margin: 0 0 4px 0;     /* Pulls the subtitle right up under the main title */
+}
+
+.hero-small p {
+  font-size: 14px;       /* Smaller subtitle font */
+  margin: 0;             /* Removes extra bottom gap */
+  opacity: 0.9;
+}
+
+/* Controls the exact space above the photo grid */
+.hero-small + .section,
+.section {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* ===== Uniform Project Cards & Photos ======== */
+
+/* Makes every card a flex container with a fixed minimum height */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;          /* Fills the grid row height evenly */
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Forces ALL photos to be the exact same height and width */
 .project-card img {
   width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 12px !important; /* ensures round corners everywhere */
+  height: 240px;         /* Change this fixed height if you want them taller or shorter (e.g., 260px) */
+  object-fit: cover;     /* Crops images cleanly so they never stretch or distort */
+  border-radius: 0 !important; /* Reset border radius to fit flush inside the top of the card */
   display: block;
+}
+
+/* Forces the text content area to fill the remaining space */
+.project-card .gallery-info,
+.project-card h3,
+.project-card p {
+  box-sizing: border-box;
+}
+
+/* Card Title */
+.project-card h3 {
+  color: #000;
+  font-size: 16px;
+  margin: 12px 15px 4px 15px;
+  transition: color 0.2s ease;
+}
+
+/* Card Description */
+.project-card p {
+  font-size: 13.5px;     
+  line-height: 1.2;     
+  margin: 0 15px 15px 15px;   /* Consistent inner padding for text */
+  padding: 0;
+  white-space: pre-line;
+  flex-grow: 1;               /* Pushes bottom edges aligned if cards stretch */
+}
+
+/* Hover effect */
+.project-card:hover h3 {
+  color: var(--primary);
 }
 
 
@@ -962,3 +1005,5 @@ border: 1px solid #c3e6cb;
 }
 
 }
+
+

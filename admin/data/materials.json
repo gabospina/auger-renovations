@@ -5,9 +5,9 @@
     "supplier": "Home Depot",
     "category": "Salle de bain & Douche",
     "unit": "feuille",
-    "price": 27.97,
+    "price": 26.98,
     "url": "https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392",
-    "last_updated": "2026-10-13 06:52:20"
+    "last_updated": "2026-10-23 16:54:24"
   },
   "SKU-1001728974": {
     "id": "1001728974",
@@ -17,7 +17,7 @@
     "unit": "unité",
     "price": 37.31,
     "url": "https://www.homedepot.ca/produit/cgc-sheetrock-compose-tout-usage-pour-cloisons-seches-pret-a-l-emploi-seau-de-17-litres/1001728974",
-    "last_updated": "2026-10-13 06:52:20"
+    "last_updated": "2026-10-23 16:54:24"
   },
   "SKU-1000738382": {
     "id": "1000738382",
@@ -27,46 +27,347 @@
     "unit": "unité",
     "price": 9.97,
     "url": "https://www.homedepot.ca/produit/pintar-couverture-de-rouleau-en-mousse-240mm-x-10mm/1000738382",
-    "last_updated": "2026-10-13 06:52:20"
+    "last_updated": "2026-10-23 16:54:24"
   },
-  "CIOT-CALACATTA-2448": {
-    "id": "CIOT-CALACATTA-2448",
-    "name": "Porcelaine rectifiée Calacatta Gold 24x48 (boîte 16 pi²)",
-    "supplier": "Ciot",
-    "category": "Céramique & Carrelage",
-    "unit": "boîte",
-    "price": 118,
-    "url": "",
-    "last_updated": "2026-10-12 17:00:00"
-  },
-  "CENTURA-KERDI-KIT": {
-    "id": "CENTURA-KERDI-KIT",
-    "name": "Ensemble complet douche étanche Schluter-Kerdi 38x60",
-    "supplier": "Centura",
-    "category": "Salle de bain & Douche",
-    "unit": "ensemble",
-    "price": 685,
-    "url": "",
-    "last_updated": "2026-10-12 17:00:00"
-  },
-  "CANAC-VANITY-36": {
-    "id": "CANAC-VANITY-36",
-    "name": "Meuble-vanité 36 po chêne naturel avec comptoir quartz",
+  "SKU-1000686028": {
+    "id": "1000686028",
+    "name": "CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger",
     "supplier": "Home Depot",
-    "category": "Meubles & Vanités",
-    "unit": "unité",
-    "price": 829,
-    "url": "",
-    "last_updated": "2026-10-13 12:52:13"
+    "category": "Drywall",
+    "unit": "sheet",
+    "price": 17.98,
+    "url": "https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger/1000686028",
+    "last_updated": "2026-10-23 16:54:24"
   },
-  "CUSTOM-VANITY-60": {
-    "id": "CUSTOM-VANITY-60",
-    "name": "Vanité suspendue sur mesure 60 po double vasque en noyer véritable",
-    "supplier": "Ébénisterie sur mesure",
-    "category": "Meubles & Vanités",
-    "unit": "unité",
-    "price": 2450,
-    "url": "",
-    "last_updated": "2026-10-12 17:00:00"
+  "SKU-1000152285": {
+    "id": "1000152285",
+    "name": "CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger résistant à la moisissure",
+    "supplier": "Home Depot",
+    "category": "Drywall",
+    "unit": "sheet",
+    "price": 29.98,
+    "url": "https://www.homedepot.ca/produit/cgc-sheetrock-1-2-po-x-4-pi-x-8-pi-panneau-de-gypse-ultraleger-resistant-a-la-moisissure/1000152285",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000179913": {
+    "id": "1000179913",
+    "name": "Paulin #6 x 1-1/4 po à tête plate Phillips Drive à filetage grossier Vis pour cloison sèche - 500 pièces",
+    "supplier": "Home Depot",
+    "category": "Fasteners",
+    "unit": "box",
+    "price": 16.28,
+    "url": "https://www.homedepot.ca/produit/paulin-6-x-1-1-4-po-a-tete-plate-phillips-drive-a-filetage-grossier-vis-pour-cloison-seche-500-pieces/1000179913",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000174528": {
+    "id": "1000174528",
+    "name": "Paulin Vis de construction à tête plate carrée #8 x 3 pouces en zinc jaune - 250pcs",
+    "supplier": "Home Depot",
+    "category": "Fasteners",
+    "unit": "box",
+    "price": 26.98,
+    "url": "https://www.homedepot.ca/produit/paulin-vis-de-construction-a-tete-plate-carree-8-x-3-pouces-en-zinc-jaune-250pcs/1000174528",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000174529": {
+    "id": "1000174529",
+    "name": "Paulin Vis de construction à tête plate carrée #8 x 2-1/2 en zinc jaune - 350pcs",
+    "supplier": "Home Depot",
+    "category": "Fasteners",
+    "unit": "box",
+    "price": 30.88,
+    "url": "https://www.homedepot.ca/produit/paulin-vis-de-construction-a-tete-plate-carree-8-x-2-1-2-en-zinc-jaune-350pcs/1000174529",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000683339": {
+    "id": "1000683339",
+    "name": "Paulin Clous pour charpente en spirale de 3-1/2 pouces (16d) galvanisés à chaud - 1,5 kg (environ 178 pièces par paquet)",
+    "supplier": "Home Depot",
+    "category": "Fasteners",
+    "unit": "box",
+    "price": 27.18,
+    "url": "https://www.homedepot.ca/produit/paulin-clous-pour-charpente-en-spirale-de-3-1-2-pouces-16d-galvanises-a-chaud-1-5-kg-environ-178-pieces-par-paquet/1000683339",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001631455": {
+    "id": "1001631455",
+    "name": "STANLEY 16 Gauge 2-1/2-inch 20-Degree Angled Finish Nails (2500 pro Box)",
+    "supplier": "Home Depot",
+    "category": "Fasteners",
+    "unit": "box",
+    "price": 41.98,
+    "url": "https://www.homedepot.ca/produit/stanley-16-gauge-2-1-2-inch-20-degree-angled-finish-nails-2500-pro-box/1001631455",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000401027": {
+    "id": "1000401027",
+    "name": "3/4 4x8 Standard contreplaqué Spruce",
+    "supplier": "Home Depot",
+    "category": "Framing",
+    "unit": "sheet",
+    "price": 59.98,
+    "url": "https://www.homedepot.ca/produit/1000401027",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000403473": {
+    "id": "1000403473",
+    "name": "LePage PL Premium Adhésif de construction en polyuréthane, Intérieur/Extérieur, étanche, 295 ml",
+    "supplier": "Home Depot",
+    "category": "Adhesives",
+    "unit": "tube",
+    "price": 7.97,
+    "url": "https://www.homedepot.ca/produit/lepage-pl-premium-adhesif-de-construction-en-polyurethane-interieur-exterieur-etanche-295-ml/1000403473",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000848589": {
+    "id": "1000848589",
+    "name": "APOLLO Tuyau PEX-B blanc de 1/2 po x 10 pi",
+    "supplier": "Home Depot",
+    "category": "Plumbing",
+    "unit": "roll",
+    "price": 6.98,
+    "url": "https://www.homedepot.ca/produit/apollo-tuyau-pex-b-blanc-de-1-2-po-x-10-pi/1000848589",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001623564": {
+    "id": "1001623564",
+    "name": "SharkBite Robinet d arret droit a compression pour PEX-A, dilatation 1/2 po x 3/8 po",
+    "supplier": "Home Depot",
+    "category": "Plumbing",
+    "unit": "piece",
+    "price": 14.98,
+    "url": "https://www.homedepot.ca/produit/sharkbite-robinet-d-arret-droit-a-compression-pour-pex-a-dilatation-1-2-po-x-3-8-po/1001623564",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000116247": {
+    "id": "1000116247",
+    "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+    "supplier": "Home Depot",
+    "category": "Plumbing",
+    "unit": "piece",
+    "price": 8.47,
+    "url": "https://www.homedepot.ca/produit/lesso-bride-de-toilette-en-plastique-abs-4-x-3-po-femelle/1000116247",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000430244": {
+    "id": "1000430244",
+    "name": "Oatey Joint De Cire Pour Toilette Avec Manchon Et Boulons 2 1/4 Po En Laiton",
+    "supplier": "Home Depot",
+    "category": "Plumbing",
+    "unit": "piece",
+    "price": 12.98,
+    "url": "https://www.homedepot.ca/produit/oatey-joint-de-cire-pour-toilette-avec-manchon-et-boulons-2-1-4-po-en-laiton/1000430244",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001530545": {
+    "id": "1001530545",
+    "name": "CB Performance Advantage Kit de raccordement de la conduite d'alimentation en eau du lave-vaisselle",
+    "supplier": "Home Depot",
+    "category": "Plumbing",
+    "unit": "piece",
+    "price": 19.54,
+    "url": "https://www.homedepot.ca/produit/cb-performance-advantage-kit-de-raccordement-de-la-conduite-d-alimentation-en-eau-du-lave-vaisselle/1001530545",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000841553": {
+    "id": "1000841553",
+    "name": "Husky Ruban d'étanchéité pour filets, 1/2 po x 260 po (6,6 m)",
+    "supplier": "Home Depot",
+    "category": "Plumbing Supplies",
+    "unit": "roll",
+    "price": 1.48,
+    "url": "https://www.homedepot.ca/produit/husky-ruban-d-etancheite-pour-filets-1-2-po-x-260-po-6-6-m/1000841553",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001001926": {
+    "id": "1001001926",
+    "name": "MONO Silicone PRO - K&B de 290 mL, blanc",
+    "supplier": "Home Depot",
+    "category": "Sealants",
+    "unit": "tube",
+    "price": 9.97,
+    "url": "https://www.homedepot.ca/produit/mono-silicone-pro-k-b-de-290-ml-blanc/1001001926",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000788662": {
+    "id": "1000788662",
+    "name": "Southwire 14/2 NMD90 150M Romex SIMpull Fil électrique - Blanc",
+    "supplier": "Home Depot",
+    "category": "Electrical",
+    "unit": "roll",
+    "price": 239,
+    "url": "https://www.homedepot.ca/produit/southwire-14-2-nmd90-150m-romex-simpull-fil-electrique-blanc/1000788662",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000723588": {
+    "id": "1000723588",
+    "name": "Leviton Decora 15A125V prise inviolable à DDFT Blanc",
+    "supplier": "Home Depot",
+    "category": "Electrical",
+    "unit": "piece",
+    "price": 23.87,
+    "url": "https://www.homedepot.ca/produit/leviton-decora-15a125v-prise-inviolable-a-ddft-blanc/1000723588",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000105689": {
+    "id": "1000105689",
+    "name": "Leviton Interrupteur unipolaire Decora(md) , blanc",
+    "supplier": "Home Depot",
+    "category": "Electrical",
+    "unit": "piece",
+    "price": 2.41,
+    "url": "https://www.homedepot.ca/produit/leviton-interrupteur-unipolaire-decora-md-blanc/1000105689",
+    "last_updated": "2026-10-23 17:15:34"
+  },
+  "SKU-1000148262": {
+    "id": "1000148262",
+    "name": "Marrette Connecteur de fils ACS pour conducteur en aluminium et/ou cuivre-brun (Emb de 25 unités)",
+    "supplier": "Home Depot",
+    "category": "Electrical",
+    "unit": "box",
+    "price": 12.87,
+    "url": "https://www.homedepot.ca/produit/marrette-connecteur-de-fils-acs-pour-conducteur-en-aluminium-et-ou-cuivre-brun-emb-de-25-unites/1000148262",
+    "last_updated": "2026-10-23 16:56:09"
+  },
+  "SKU-1001978790": {
+    "id": "1001978790",
+    "name": "Artika Ewen 27 po à 1 lumière 15 W noir à DEL intégrée à blanc sélectionnable et intensité variable 5CCT luminaire de vanité",
+    "supplier": "Home Depot",
+    "category": "Lighting",
+    "unit": "piece",
+    "price": 69.99,
+    "url": "https://www.homedepot.ca/produit/artika-ewen-27-po-a-1-lumiere-15-w-noir-a-del-integree-a-blanc-selectionnable-et-intensite-variable-5cct-luminaire-de-vanite/1001978790",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000107097": {
+    "id": "1000107097",
+    "name": "Broan-NuTone Ventilateur 50 pi³/min de la série Économique de Broan-Nutone®, 2,0 sones - ENERGY STAR®",
+    "supplier": "Home Depot",
+    "category": "Ventilation",
+    "unit": "piece",
+    "price": 34.98,
+    "url": "https://www.homedepot.ca/produit/broan-nutone-ventilateur-50-pi-min-de-la-serie-economique-de-broan-nutone-2-0-sones-energy-star/1000107097",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000150306": {
+    "id": "1000150306",
+    "name": "Custom Building Products RedGard 3.78 L 100 pi² Membrane d’imperméabilisation et de fissuration prête à l’emploi pour carreaux et pierre",
+    "supplier": "Home Depot",
+    "category": "Waterproofing",
+    "unit": "pail",
+    "price": 105,
+    "url": "https://www.homedepot.ca/produit/custom-building-products-redgard-3-78-l-100-pi-membrane-d-impermeabilisation-et-de-fissuration-prete-a-l-emploi-pour-carreaux-et-pierre/1000150306",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000668022": {
+    "id": "1000668022",
+    "name": "Custom Building Products SimpleGrout #165 Delorean Gray 1 Qt. Coulis pré-mélangé",
+    "supplier": "Home Depot",
+    "category": "Tile Installation",
+    "unit": "bag",
+    "price": 25.28,
+    "url": "https://www.homedepot.ca/produit/custom-building-products-simplegrout-165-delorean-gray-1-qt-coulis-pre-melange/1000668022",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000164407": {
+    "id": "1000164407",
+    "name": "QEP Entretoises flexibles de 1/4 po pour l'installation de carreaux de sol et de mur (paquet de 200)",
+    "supplier": "Home Depot",
+    "category": "Tile Installation",
+    "unit": "bag",
+    "price": 6.88,
+    "url": "https://www.homedepot.ca/produit/qep-entretoises-flexibles-de-1-4-po-pour-l-installation-de-carreaux-de-sol-et-de-mur-paquet-de-200/1000164407",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001924601": {
+    "id": "1001924601",
+    "name": "Ivy Hill Tile Carreau pour planchers et murs Granada, 24 x 24 po, porcelaine, Olimpia, naturel, 11,62 pi²/bte",
+    "supplier": "Home Depot",
+    "category": "Flooring",
+    "unit": "sqft",
+    "price": 218.06,
+    "url": "https://www.homedepot.ca/produit/ivy-hill-tile-carreau-pour-planchers-et-murs-granada-24-x-24-po-porcelaine-olimpia-naturel-11-62-pi-bte/1001924601",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001690476": {
+    "id": "1001690476",
+    "name": "Merola Tile Carreau mural et de sol Amberes Azul II, 13 po x 13 po, céramique, 15,85 pi2/bte",
+    "supplier": "Home Depot",
+    "category": "Salle de bain & Douche",
+    "unit": "sqft",
+    "price": 168.04,
+    "url": "https://www.homedepot.ca/produit/merola-tile-carreau-mural-et-de-sol-amberes-azul-ii-13-po-x-13-po-ceramique-15-85-pi2-bte/1001690476",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001877076": {
+    "id": "1001877076",
+    "name": "American Standard Toilette allongée deux pièces Mainstream, 4,8 L p.c., hauteur standard, à chasse simple, blanc",
+    "supplier": "Home Depot",
+    "category": "Bathroom Fixtures",
+    "unit": "piece",
+    "price": 176,
+    "url": "https://www.homedepot.ca/produit/american-standard-toilette-allongee-deux-pieces-mainstream-4-8-l-p-c-hauteur-standard-a-chasse-simple-blanc/1001877076",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000822618": {
+    "id": "1000822618",
+    "name": "Glacier Bay Delchester 24 po W x 32,7 po H x 18,7 po D Vanité de Salle de Bain en Bois Blanc avec Dessus en Céramique pour Évier Central Unique Intégré",
+    "supplier": "Home Depot",
+    "category": "Bathroom Fixtures",
+    "unit": "piece",
+    "price": 198,
+    "url": "https://www.homedepot.ca/produit/glacier-bay-delchester-24-po-w-x-32-7-po-h-x-18-7-po-d-vanite-de-salle-de-bain-en-bois-blanc-avec-dessus-en-ceramique-pour-evier-central-unique-integre/1000822618",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001662833": {
+    "id": "1001662833",
+    "name": "Glacier Bay Irena Kit de vidange escamotable pour robinet de salle de bains à 2 poignées centrales de 4 pouces en chrome",
+    "supplier": "Home Depot",
+    "category": "Bathroom Fixtures",
+    "unit": "piece",
+    "price": 69,
+    "url": "https://www.homedepot.ca/produit/glacier-bay-irena-kit-de-vidange-escamotable-pour-robinet-de-salle-de-bains-a-2-poignees-centrales-de-4-pouces-en-chrome/1001662833",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000658028": {
+    "id": "1000658028",
+    "name": "BEHR ULTRA Peinture et apprêt très durable pour l’intérieur, émail coquille d’œuf en Blanc ultra pur, 3,79 L",
+    "supplier": "Home Depot",
+    "category": "Paint",
+    "unit": "gallon",
+    "price": 63.57,
+    "url": "https://www.homedepot.ca/produit/behr-ultra-peinture-et-appret-tres-durable-pour-l-interieur-email-coquille-d-oeuf-en-blanc-ultra-pur-3-79-l/1000658028",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1001903172": {
+    "id": "1001903172",
+    "name": "Alexandria Moulding Plinthe MDF 1/2 x 5.1/2 x 12' ( 5 morceaux par paquet)",
+    "supplier": "Home Depot",
+    "category": "Trim",
+    "unit": "piece",
+    "price": 86.98,
+    "url": "https://www.homedepot.ca/produit/alexandria-moulding-plinthe-mdf-1-2-x-5-1-2-x-12-5-morceaux-par-paquet/1001903172",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000830884": {
+    "id": "1000830884",
+    "name": "DAP ALEX Calfeutrant au Latex Acrylique Blanc Pour Peintres - Pour Entrepreneur (12-300ml Cartouches)",
+    "supplier": "Home Depot",
+    "category": "Trim",
+    "unit": "tube",
+    "price": 20.97,
+    "url": "https://www.homedepot.ca/produit/dap-alex-calfeutrant-au-latex-acrylique-blanc-pour-peintres-pour-entrepreneur-12-300ml-cartouches/1000830884",
+    "last_updated": "2026-10-23 16:54:24"
+  },
+  "SKU-1000112108": {
+    "id": "1000112108",
+    "name": "Bois d'uvre de classe Select Structural, 2 po x 4 po x 8 pi, EPS",
+    "supplier": "Home Depot",
+    "category": "Framing",
+    "unit": "piece",
+    "price": 4.14,
+    "url": "https://www.homedepot.ca/produit/1000112108",
+    "last_updated": "2026-10-23 16:54:24"
   }
+  
 }
