@@ -1,12 +1,21 @@
 [
     {
-        "id": "img_6adcaa23b8c25",
+        "id": "img_6ade6d6c678ac",
         "category": "salle_de_bains",
-        "title": "Testing fonts and spaces between lines",
-        "description": "The remodedadvcv  dffdfff dsfdsfdsfdfd ldsfdfdf dsfdfdfaf dfdsfdf ddfdsfdfdfdfdfdfdffdfffdsfdsfdfdfdfdfdffdfddffdsfdsfd\r\n\r\ndfafdfdf\r\ndfdfdfdsf\r\ndfdsfdsfds",
-        "path": "assets/images/salle_de_bains/1792846371_5122.jpg",
-        "timestamp": 1792846371,
-        "date_added": "2026-10-24 14:52:51"
+        "title": "Simon, This is how you upload photos from your PHONE",
+        "description": "From anywhere and at anytime from you phone or desktop.\r\n\r\nWix is a pain in the neck. My solution for you to update your site is friendly and it is right at your website.\r\n\r\nLet me know if you have any suggesteion to make your site more efficient.",
+        "path": "assets/images/salle_de_bains/1792961900_4116.jpg",
+        "timestamp": 1792961900,
+        "date_added": "2026-10-25 21:58:20"
+    },
+    {
+        "id": "img_6ade6cf1db59d",
+        "category": "salle_de_bains",
+        "title": "Remodeled bathroom exceeded all expectations.",
+        "description": "The renovation transformed an outdated space into a modern and elegant retreat featuring a spacious walk-in shower, stylish ceramic tiles, a custom vanity, and improved lighting throughout. \r\nThe quality of workmanship was exceptional, attention to detail was evident in every aspect of the project, and the team maintained a clean and professional work environment from start to finish.",
+        "path": "assets/images/salle_de_bains/1792961777_6596.jpeg",
+        "timestamp": 1792961777,
+        "date_added": "2026-10-25 21:56:17"
     },
     {
         "id": "img_6adc8e9f64eab",

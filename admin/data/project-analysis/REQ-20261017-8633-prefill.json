@@ -1,0 +1,83 @@
+{
+    "request_id": "REQ-20261017-8633",
+    "prefilled_at": "2026-10-25 22:00:57",
+    "client": {
+        "name": "Simon Auger",
+        "address": "Valley Field",
+        "email": "simon@gmail.com",
+        "phone": "514-234-5678"
+    },
+    "dimensions": {
+        "length": 14,
+        "width": 10,
+        "ceiling_height": 8
+    },
+    "surfaces": {
+        "floor_area": 140,
+        "wall_area": 384,
+        "ceiling_area": 140
+    },
+    "tier": "premium",
+    "complexity": "high",
+    "items": [
+        {
+            "sku": "SKU-TILE-FLR-01",
+            "name": "Céramique / Porcelaine de plancher (avec 10% de pertes)",
+            "quantity": 11,
+            "unit": "boîtes (~15 pi²/boîte)",
+            "estimated_unit_price": 45,
+            "total": 495
+        },
+        {
+            "sku": "SKU-THINSET-01",
+            "name": "Colle à céramique (Thinset)",
+            "quantity": 3,
+            "unit": "sacs (20kg)",
+            "estimated_unit_price": 28.5,
+            "total": 85.5
+        },
+        {
+            "sku": "SKU-GROUT-01",
+            "name": "Coulis pré-mélangé",
+            "quantity": 2,
+            "unit": "contenants",
+            "estimated_unit_price": 34,
+            "total": 68
+        },
+        {
+            "sku": "SKU-DRYWALL-WP",
+            "name": "Panneaux résistants à l'humidité (Durock / Gypse hydrofuge)",
+            "quantity": 12,
+            "unit": "panneaux (4x8)",
+            "estimated_unit_price": 22,
+            "total": 264
+        },
+        {
+            "sku": "SKU-VANITY-36",
+            "name": "Vanité de salle de bain 36 pouces avec comptoir",
+            "quantity": 1,
+            "unit": "unité",
+            "estimated_unit_price": 450,
+            "total": 450
+        },
+        {
+            "sku": "SKU-TOILET-STD",
+            "name": "Toilette allongée haute efficacité",
+            "quantity": 1,
+            "unit": "unité",
+            "estimated_unit_price": 275,
+            "total": 275
+        }
+    ],
+    "financials": {
+        "materials_total": 1637.5,
+        "estimated_hours": 40,
+        "hourly_rate": 75,
+        "labor_total": 3000,
+        "subtotal": 4637.5,
+        "gst": 231.88,
+        "qst": 462.59,
+        "grand_total": 5331.97
+    },
+    "notes": "I need this remodelation to be finsh in four weeks. Let me know if it is possible."
+}

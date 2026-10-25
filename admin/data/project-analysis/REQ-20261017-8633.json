@@ -1,0 +1,41 @@
+{
+    "request_id": "REQ-20261017-8633",
+    "analysis_date": "2026-10-25 22:01:34",
+    "room_type": "bathroom",
+    "complexity": "high",
+    "risk_level": "high",
+    "recommended_tier": "premium",
+    "estimated_hours": 40,
+    "dimensions": {
+        "length": 14,
+        "width": 10,
+        "ceiling_height": 8
+    },
+    "surfaces": {
+        "floor_area": 140,
+        "wall_area": 384,
+        "ceiling_area": 140
+    },
+    "detected_items": [
+        "Bain-douche encastré",
+        "Toilette standard",
+        "Vanité simple (36\")",
+        "Plancher en Ceramic"
+    ],
+    "recommendations": {
+        "replace_tub": true,
+        "replace_toilet": true,
+        "replace_vanity": true,
+        "replace_flooring": true,
+        "water_damage_inspection": true,
+        "mold_remediation": true,
+        "heated_floor_installation": true,
+        "plumbing_relocation": true
+    },
+    "matching_portfolio_photos": [
+        "assets/images/salle_de_bains/1792961900_4116.jpg",
+        "assets/images/salle_de_bains/Bathroom-5.png",
+        "assets/images/salle_de_bains/ARenovation-BathroomShowerBalckWhite-3.jpeg"
+    ],
+    "confidence": 0.93
+}

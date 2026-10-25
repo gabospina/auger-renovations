@@ -7,6 +7,19 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: admin.php");
     exit;
 }
+
+// ==========================================
+// AI PREFILL DATA LOADER
+// ==========================================
+$reqId = $_GET['req_id'] ?? '';
+$aiPrefillData = null;
+
+if (!empty($reqId)) {
+    $prefillCacheFile = __DIR__ . '/data/project-analysis/' . $reqId . '-prefill.json';
+    if (file_exists($prefillCacheFile)) {
+        $aiPrefillData = json_decode(file_get_contents($prefillCacheFile), true);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -87,7 +100,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         <h2 style="border-bottom: 1px solid #d1b06a; margin-top:0; font-size: 16px;"><i class="fa-solid fa-folder-open"></i> Sauvegardes</h2>
         <div class="form-group" style="margin-bottom: 0;">
           <label>Charger un estimé sauvegardé :</label>
-          <!-- Reduced icon button widths to 34px so the dropdown gets maximum space -->
           <div style="display: flex; gap: 6px;">
             <select id="saved-quotes-select" style="flex: 1; min-width: 0;">
               <option value="">-- Nouvelle Soumission --</option>
@@ -97,6 +109,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
           </div>
         </div>
       </div>
+
       <!-- Voice Assistant Widget -->
       <div style="background: #fdf8f6; border: 1px solid #f97316; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
@@ -108,9 +121,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
             🎤
           </button>
         </div>
-        <!-- Fallback text input for desktop without a microphone -->
         <div style="display: flex; gap: 8px; margin-top: 6px;">
-          <input type="text" id="voice-text-fallback" placeholder="Ou tapez votre commande ici (ex: Paul Morin, 10x12, douche, toilette)..." style="flex: 1; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
+          <input type="text" id="voice-text-fallback" placeholder="Ou tapez votre commande ici..." style="flex: 1; padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 12px;">
           <button type="button" id="btn-text-submit" style="background: #4b5563; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">Exécuter</button>
         </div>
       </div>
@@ -225,11 +237,44 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     let quoteItems = [];
     let currentQuoteId = null;
 
+    // AI Prefill Data injected from PHP if available
+    const aiPrefillData = <?= json_encode($aiPrefillData); ?>;
+
     document.getElementById('quote-date').textContent = new Date().toLocaleDateString('fr-CA');
 
     async function initialize() {
       await loadCatalog();
       await loadSavedQuotesList();
+
+      // If AI Prefill data is present, populate form automatically!
+      if (aiPrefillData && aiPrefillData.client) {
+        document.getElementById('client-name').value = aiPrefillData.client.name || '';
+        document.getElementById('project-title').value = `Rénovation Salle de Bain (${aiPrefillData.tier.toUpperCase()}) - Dossier ${aiPrefillData.request_id}`;
+        currentQuoteId = aiPrefillData.request_id;
+
+        // Load mapped materials into quote items
+        if (Array.isArray(aiPrefillData.items)) {
+          aiPrefillData.items.forEach(mat => {
+            quoteItems.push({
+              id: Date.now() + Math.random(),
+              desc: mat.name,
+              qty: mat.quantity,
+              unitPrice: mat.estimated_unit_price
+            });
+          });
+        }
+
+        // Add Labor row if financial data exists
+        if (aiPrefillData.financials && aiPrefillData.financials.labor_total > 0) {
+          quoteItems.push({
+            id: Date.now() + Math.random(),
+            desc: `Main d'œuvre spécialisée (${aiPrefillData.financials.estimated_hours} heures @ $${aiPrefillData.financials.hourly_rate}/hr)`,
+            qty: 1,
+            unitPrice: aiPrefillData.financials.labor_total
+          });
+        }
+      }
+
       renderQuote();
     }
 
@@ -268,15 +313,11 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         const res = await fetch('api-quotes.php?action=list');
         let data = await res.json();
         
-        // Ensure 'quotes' is a clean array
         const quotes = Array.isArray(data) ? data : (data.quotes || data.data || Object.values(data || {}));
-        
         const select = document.getElementById('saved-quotes-select');
         if (!select) return;
         
         select.innerHTML = '<option value="">-- Nouvelle Soumission --</option>';
-        
-        // Track unique IDs to prevent duplicate rendering
         const seenIds = new Set();
 
         quotes.forEach(q => {
@@ -288,7 +329,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
           const clientName = (q.client_name || (q.client && q.client.name) || '').trim();
           const projectTitle = (q.project_title || '').trim();
           
-          // Skip completely empty placeholder records if any exist
           if (!clientName && !projectTitle) return;
 
           const opt = document.createElement('option');
@@ -350,12 +390,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
       if (!selectedId) {
         currentQuoteId = null;
-        const clientInput = document.getElementById('client-name');
-        if (clientInput) clientInput.value = '';
-        const titleInput = document.getElementById('project-title');
-        if (titleInput) titleInput.value = 'Rénovation Salle de Bain';
+        document.getElementById('client-name').value = '';
+        document.getElementById('project-title').value = 'Rénovation Salle de Bain';
         quoteItems = [];
-        if (typeof quoteLabor !== 'undefined') quoteLabor = [];
         renderQuote();
         return;
       }
@@ -363,50 +400,27 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       try {
         const res = await fetch('api-quotes.php?action=list');
         let data = await res.json();
-        
-        // Ensure quotes is treated as an array whether returned flat or wrapped
         const quotes = Array.isArray(data) ? data : (data.quotes || data.data || Object.values(data || {}));
-        
         const quoteToLoad = quotes.find(q => q && (q.id === selectedId || q.quote_id === selectedId));
 
         if (quoteToLoad) {
           currentQuoteId = quoteToLoad.id || quoteToLoad.quote_id;
-          
-          const clientNameField = document.getElementById('client-name');
-          if (clientNameField) {
-            clientNameField.value = quoteToLoad.client_name || (quoteToLoad.client && quoteToLoad.client.name) || '';
-          }
-
-          const projectTitleField = document.getElementById('project-title');
-          if (projectTitleField) {
-            projectTitleField.value = quoteToLoad.project_title || '';
-          }
-
-          // Safely extract items supporting both 'items' and 'materials' keys
+          document.getElementById('client-name').value = quoteToLoad.client_name || (quoteToLoad.client && quoteToLoad.client.name) || '';
+          document.getElementById('project-title').value = quoteToLoad.project_title || '';
           quoteItems = Array.isArray(quoteToLoad.items) ? quoteToLoad.items : (quoteToLoad.materials || []);
-
-          // Safely extract labor if saved
-          if (Array.isArray(quoteToLoad.labor) && typeof quoteLabor !== 'undefined') {
-            quoteLabor = quoteToLoad.labor;
-          }
-
           renderQuote();
-        } else {
-          console.warn("Quote ID not found in saved list:", selectedId);
         }
       } catch (e) {
         console.error("Erreur lors du chargement de la soumission:", e);
-        alert("Impossible de charger la soumission.");
       }
     }
 
     async function deleteQuote() {
       const select = document.getElementById('saved-quotes-select');
       const selectedId = select.value;
-
       if (!selectedId) return;
 
-      if (!confirm("Voulez-vous vraiment supprimer cette sauvegarde ? Cette action est irréversible.")) return;
+      if (!confirm("Voulez-vous vraiment supprimer cette sauvegarde ?")) return;
 
       try {
         const res = await fetch('api-quotes.php?action=delete', {
@@ -415,7 +429,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
           body: JSON.stringify({ id: selectedId })
         });
         const result = await res.json();
-        
         if (result.success) {
           currentQuoteId = null;
           document.getElementById('client-name').value = '';
@@ -527,7 +540,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     // VOICE-TO-ESTIMATE ASSISTANT (CHANTIER)
     // ==========================================
 
-    /* admin/quote-bathroom.php - Voice & Command Assistant Script */
     let recognitionInstance = null;
     let isVoiceActive = false;
 
@@ -538,12 +550,10 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       const textInput = document.getElementById('voice-text-fallback');
       const submitBtn = document.getElementById('btn-text-submit');
 
-      // Bind microphone button click
       if (btn) {
         btn.onclick = toggleVoiceRecording;
       }
 
-      // Bind text fallback submit (great for desktops without a microphone)
       if (submitBtn && textInput) {
         submitBtn.onclick = () => {
           const val = textInput.value.trim();
@@ -567,7 +577,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       }
 
       recognitionInstance = new SpeechRecognition();
-      recognitionInstance.lang = 'fr-CA'; // French (Canada)
+      recognitionInstance.lang = 'fr-CA';
       recognitionInstance.interimResults = false;
       recognitionInstance.maxAlternatives = 1;
 
@@ -586,7 +596,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       recognitionInstance.onerror = function(event) {
         console.error("Erreur de reconnaissance vocale :", event.error);
         let msg = "Microphone introuvable ou accès refusé.";
-        if (statusEl) statusEl.textContent = `⚠️ ${msg} Utilisez la boîte de texte ci-dessous pour tester.`;
+        if (statusEl) statusEl.textContent = `⚠️ ${msg} Utilisez la boîte de texte ci-dessous.`;
         stopVoiceAssistantUI();
       };
 
@@ -598,14 +608,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     async function toggleVoiceRecording() {
       const statusEl = document.getElementById('voice-status');
 
-      // Check if mediaDevices and input devices exist before prompting
       try {
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
           const devices = await navigator.mediaDevices.enumerateDevices();
           const hasMic = devices.some(device => device.kind === 'audioinput');
           if (!hasMic) {
-            if (statusEl) statusEl.textContent = "⚠️ Aucun microphone détecté sur cet ordinateur. Utilisez la boîte de texte ci-dessous.";
-            alert("Aucun microphone n'a été détecté sur cet appareil. Vous pouvez utiliser la boîte de saisie textuelle juste en dessous pour simuler une commande vocale.");
+            if (statusEl) statusEl.textContent = "⚠️ Aucun microphone détecté. Utilisez la boîte de texte ci-dessous.";
+            alert("Aucun microphone n'a été détecté. Vous pouvez utiliser la boîte de saisie textuelle.");
             return;
           }
         }
@@ -613,13 +622,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         console.warn("Impossible de lister les périphériques audio:", e);
       }
 
-      // Check explicit permission
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         stream.getTracks().forEach(track => track.stop());
       } catch (err) {
-        if (statusEl) statusEl.textContent = "⚠️ Accès au microphone refusé ou absent. Utilisez la boîte de texte ci-dessous.";
-        alert("Aucun microphone actif ou autorisé n'a été trouvé. Veuillez utiliser la boîte de texte de commande rapide juste en dessous.");
+        if (statusEl) statusEl.textContent = "⚠️ Accès au microphone refusé ou absent.";
+        alert("Aucun microphone actif ou autorisé trouvé.");
         return;
       }
 
@@ -647,11 +655,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
       if (btn) btn.classList.remove('recording-active');
     }
 
-    // Intelligent Parser tied directly to Simon's form inputs
     function processVoiceCommandText(text) {
       const lower = text.toLowerCase();
 
-      // 1. Client Name Extraction
       const clientMatch = lower.match(/(?:client|pour|nom)\s+([a-zà-ÿ\s]+)(?:\.|,|\s+salle|\s+dimension|\s+avec|$)/i);
       if (clientMatch && clientMatch[1]) {
         const rawName = clientMatch[1].trim();
@@ -662,7 +668,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         }
       }
 
-      // 2. Room Dimensions Extraction (e.g., "8 par 10" or "8 x 10")
       const dimMatch = lower.match(/(\d+)\s*(?:par|x)\s*(\d+)/i);
       if (dimMatch) {
         const length = dimMatch[1];
@@ -676,38 +681,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         if (widthField) widthField.value = width;
         if (sqftField) {
           sqftField.value = parseInt(length) * parseInt(width);
-          sqftField.dispatchEvent(new Event('input'));
         }
-      }
-
-      // 3. Keyword Detection & Form Checkboxes / Work items
-      const spokenWords = lower;
-      
-      if (window.CURRENT_PROJECT_SPEC) {
-        if (!window.CURRENT_PROJECT_SPEC.workItems) window.CURRENT_PROJECT_SPEC.workItems = [];
-        
-        if (spokenWords.includes('douche') && !window.CURRENT_PROJECT_SPEC.workItems.includes('douche')) {
-          window.CURRENT_PROJECT_SPEC.workItems.push('douche');
-        }
-        if (spokenWords.includes('toilette')) {
-          if(!window.CURRENT_PROJECT_SPEC.plumbing) window.CURRENT_PROJECT_SPEC.plumbing = [];
-          if(!window.CURRENT_PROJECT_SPEC.plumbing.includes('replace_toilet')) {
-            window.CURRENT_PROJECT_SPEC.plumbing.push('replace_toilet');
-          }
-        }
-        if (spokenWords.includes('vanité') || spokenWords.includes('lavabo')) {
-          if(!window.CURRENT_PROJECT_SPEC.plumbing) window.CURRENT_PROJECT_SPEC.plumbing = [];
-          if(!window.CURRENT_PROJECT_SPEC.plumbing.includes('replace_vanity')) {
-            window.CURRENT_PROJECT_SPEC.plumbing.push('replace_vanity');
-          }
-        }
-      }
-
-      // Automatically trigger calculation/prefill engine
-      if (typeof prefillFromClientRequest === 'function') {
-        prefillFromClientRequest();
-      } else if (typeof updateCalculations === 'function') {
-        updateCalculations();
       }
     }
 

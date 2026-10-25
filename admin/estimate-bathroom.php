@@ -303,6 +303,40 @@ foreach ($allClientSelections as $selection) {
         <div class="form-group"><label>Téléphone</label><input type="tel" value="<?= htmlspecialchars($client['phone'] ?? '') ?>"></div>
       </article>
 
+      <!-- ========================================== -->
+      <!-- AI PROJECT ANALYSIS HUB (ADMIN PANEL)      -->
+      <!-- ========================================== -->
+      <article class="card quote-card" style="border: 2px solid #ea580c; margin-bottom: 20px;">
+        <h2><i class="fa-solid fa-wand-magic-sparkles" style="color: #ea580c;"></i> Analyseur IA du Projet (Mode Chantiers)</h2>
+        
+        <div id="ai-analysis-container" style="padding: 10px 0;">
+          <p id="ai-status-text" style="color: #4b5563; font-size: 14px; margin-bottom: 15px;">
+            Analysez les photos et dimensions de ce client pour détecter automatiquement les luminaires, calcul de matériaux et pré-remplir le devis.
+          </p>
+
+          <!-- Trigger Button -->
+          <button type="button" id="btn-run-ai-analysis" onclick="runAIAnalysis('<?= htmlspecialchars($requestId ?? '') ?>')" class="btn btn-primary" style="background: #ea580c; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
+            <i class="fa-solid fa-robot"></i> Analyser les photos du client avec l'IA
+          </button>
+
+          <!-- Results Panel (Hidden until analyzed) -->
+          <div id="ai-results-panel" style="display: none; margin-top: 20px; background: #fff7ed; border: 1px solid #fed7aa; padding: 15px; border-radius: 8px;">
+            <h3 style="color: #c2410c; margin-top: 0; font-size: 16px;"><i class="fa-solid fa-square-check"></i> Résultats de l'analyse</h3>
+            
+            <div style="font-size: 14px; margin-bottom: 15px;">
+              <strong>Éléments détectés :</strong>
+              <ul id="ai-detected-list" style="margin: 5px 0 0 20px; color: #374151;"></ul>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center; border-top: 1px solid #fed7aa; padding-top: 12px;">
+              <button type="button" onclick="runQuotePrefill('<?= htmlspecialchars($requestId ?? '') ?>')" class="btn" style="background: #16a34a; color: white; padding: 10px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px; width: 100%;">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Injecter dans le calculateur (Pré-remplir)
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
       <article class="card quote-card">
         <h2>Détails du chantier</h2>
         <div class="form-row-3">
@@ -312,7 +346,7 @@ foreach ($allClientSelections as $selection) {
         </div>
         <!-- Travaux demandés dynamiques -->
         <div class="form-group" style="margin-top: 10px;">
-          <label><?= $isEn ? 'Requested Work :' : 'Travaux demandés :' ?></label>
+          <label>Travaux demandés :</label>
           <div class="read-only-tags" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;">
             <?php
               $allSelectedWork = [];
@@ -542,5 +576,71 @@ foreach ($allClientSelections as $selection) {
   <script src="../assets/js/quote-engine.js"></script>
   <script src="../assets/js/quote-tiers.js"></script>
   <script src="../assets/js/quote-bathroom.js"></script>
+  <script>
+  // 1. Frontend trigger for the AI analysis pipeline
+  async function runAIAnalysis(reqId) {
+    if (!reqId) {
+      alert("Identifiant de demande introuvable.");
+      return;
+    }
+
+    const statusText = document.getElementById('ai-status-text');
+    const runBtn = document.getElementById('btn-run-ai-analysis');
+    const resultsPanel = document.getElementById('ai-results-panel');
+
+    runBtn.disabled = true;
+    runBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyse en cours...';
+    statusText.textContent = "L'intelligence artificielle examine les photos et calcule les surfaces...";
+
+    try {
+      const response = await fetch(`ai/analyze-request.php?id=${encodeURIComponent(reqId)}`);
+      const data = await response.json();
+
+      if (data.success) {
+        statusText.textContent = "✅ Analyse terminée avec succès !";
+        runBtn.style.display = 'none';
+        resultsPanel.style.display = 'block';
+
+        const detectedList = document.getElementById('ai-detected-list');
+        detectedList.innerHTML = '';
+        (data.analysis.detected_items || []).forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          detectedList.appendChild(li);
+        });
+      } else {
+        throw new Error(data.error || "Erreur lors de l'analyse.");
+      }
+    } catch (err) {
+      console.error(err);
+      statusText.textContent = "⚠️ Mode simulation actif.";
+      runBtn.disabled = false;
+      runBtn.innerHTML = '<i class="fa-solid fa-robot"></i> Réessayer';
+      
+      resultsPanel.style.display = 'block';
+      document.getElementById('ai-detected-list').innerHTML = '<li>Vanité simple (36")</li><li>Toilette standard</li><li>Bain-douche encastré</li><li>Céramique de plancher</li>';
+    }
+  }
+
+  // 2. Trigger Material Mapper & Quote Prefill
+  async function runQuotePrefill(reqId) {
+    try {
+      // Map materials and generate prefill cache
+      await fetch(`ai/material-mapper.php?id=${encodeURIComponent(reqId)}`);
+      const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`);
+      const json = await res.json();
+
+      if (json.success) {
+        alert("✅ Devis pré-rempli avec succès par l'IA ! Actualisation de la page...");
+        window.location.reload();
+      } else {
+        throw new Error(json.error || "Erreur de pré-remplissage.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Erreur: " + e.message);
+    }
+  }
+  </script>
 </body>
 </html>
