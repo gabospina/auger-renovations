@@ -94,6 +94,11 @@
       border-radius: 4px;
       margin-top: 4px;
     }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f6f8fa; margin: 0; color: #24292e; }
+    .topbar { background: #24292e; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .topbar a { color: #fff; text-decoration: none; font-weight: bold; background: #444; padding: 8px 12px; border-radius: 4px; }
+    .topbar a:hover { background: #d1b06a; }
+  
   </style>
 </head>
 <body class="admin-estimator-body">
@@ -103,9 +108,12 @@
       <div class="admin-title">
         <strong>Auger Rénovation</strong> — Portail Administratif
       </div>
-      <div>
-        <a href="requests.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none;">
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <a href="requests.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px;">
           <i class="fa-solid fa-list-check"></i> Demandes de soumission
+        </a>
+        <a href="admin.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px; background: #444;">
+          <i class="fa-solid fa-arrow-left"></i> Retour au Tableau de bord
         </a>
       </div>
     </div>

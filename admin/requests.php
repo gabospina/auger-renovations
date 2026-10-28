@@ -256,6 +256,32 @@ function formatRenovationType($project)
       margin-bottom: 18px;
       font-size: 14px;
     }
+    /* Expand the outer page wrapper to use full width */
+    main, .container, .admin-container {
+      max-width: 98% !important;
+      width: 100% !important;
+      margin: 20px auto;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+
+    /* Make table container fluid */
+    .table-container {
+      background: #ffffff;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      overflow-x: auto; /* Fallback for very small screens */
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      width: 100%;
+    }
+
+    /* Distribute table spacing nicely */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      table-layout: auto;
+    }
   </style>
 </head>
 <body class="admin-estimator-body">
@@ -265,12 +291,15 @@ function formatRenovationType($project)
       <div class="admin-title">
         <strong>Auger Rénovation</strong> — Portail Administratif
       </div>
-      <div style="display: flex; gap: 8px;">
+      <div style="display: flex; gap: 8px; align-items: center;">
         <a href="materials.html" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px;">
           <i class="fa-solid fa-boxes-stacked"></i> Catalogue Matériaux
         </a>
         <a href="admin-12345.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px;">
           <i class="fa-solid fa-gear"></i> Paramètres
+        </a>
+        <a href="admin.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px; background: #444;">
+          <i class="fa-solid fa-arrow-left"></i> Retour au Tableau de bord
         </a>
       </div>
     </div>

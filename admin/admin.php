@@ -13,7 +13,22 @@ if (!file_exists($passwordsFile)) { file_put_contents($passwordsFile, json_encod
 
 $managerPasswords = json_decode(file_get_contents($passwordsFile), true) ?: [];
 
-// 3. LOGIN HANDLING
+// 3. LOGOUT HANDLING
+if (isset($_GET['logout'])) {
+    $_SESSION = [];
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+            $params["path"], $params["domain"],
+            $params["secure"], $params["httponly"]
+        );
+    }
+    session_destroy();
+    header("Location: ../index.html");
+    exit;
+}
+
+// 4. LOGIN HANDLING
 if (isset($_POST['password'])) {
     $inputPass = $_POST['password'];
     $isAuthenticated = false;
@@ -105,7 +120,10 @@ $data = json_decode(file_get_contents($siteTextFile), true);
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body { font-family: system-ui, sans-serif; background: #f6f8fa; margin: 0; color: #24292e; }
-    .header { background: #24292e; color: #fff; padding: 20px; text-align: center; }
+    .header { background: #24292e; color: #fff; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .header h1 { margin: 0; font-size: 22px; }
+    .btn-logout { background: #d9534f; color: #fff; padding: 8px 14px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s; }
+    .btn-logout:hover { background: #c9302c; }
     .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px; }
     .card { background: #fff; border: 1px solid #d0d7de; border-radius: 8px; padding: 25px; text-align: center; text-decoration: none; color: #24292e; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: transform 0.2s, box-shadow 0.2s; }
@@ -126,7 +144,8 @@ $data = json_decode(file_get_contents($siteTextFile), true);
 <body>
 
   <div class="header">
-    <h1 style="margin:0;">Auger Rénovation - Administration</h1>
+    <h1>Auger Rénovation - Administration</h1>
+    <a href="admin.php?logout=1" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Fermer la session</a>
   </div>
 
   <div class="container">

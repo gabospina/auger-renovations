@@ -140,7 +140,7 @@ if (isset($_GET['msg']) && $_GET['msg'] === 'deleted') {
     <div style="font-size: 18px;"><strong>Auger Rénovation</strong> — Portfolio Manager</div>
     <div style="display: flex; gap: 10px;">
       <a href="../salle_de_bains.html" target="_blank" style="background: #d1b06a;"><i class="fa-solid fa-eye"></i> View Public Page</a>
-      <a href="admin.php"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+      <a href="admin.php"><i class="fa-solid fa-arrow-left"></i> Retour au Tableau de bord</a>
     </div>
   </div>
 

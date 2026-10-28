@@ -92,23 +92,28 @@
           RBQ: 58392747-01
         </span>
 
-        <!-- La boîte de connexion cachée -->
-        <div id="secret-login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; font-family: sans-serif;">
-          <div style="background: #fff; padding: 30px; border-radius: 8px; width: 320px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-            <h3 style="margin-top: 0; color: #333; font-size: 18px;">Accès Administrateur</h3>
-            <form action="admin/admin.php" method="POST">
+      <!-- La boîte de connexion cachée -->
+      <div id="secret-login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; font-family: sans-serif;">
+        <div style="background: #fff; padding: 30px; border-radius: 8px; width: 320px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+          <h3 style="margin-top: 0; color: #333; font-size: 18px;">Accès Administrateur</h3>
+          <form action="admin/admin.php" method="POST">
+            
+            <!-- Password Input Container with Eye Icon -->
+            <div style="position: relative; margin-bottom: 15px;">
+              <input type="password" id="secret-login-password" name="password" placeholder="Mot de passe..." required style="width: 100%; padding: 10px 40px 10px 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
               
-              <!-- REMOVED THE HIDDEN REDIRECT FIELD HERE -->
-              
-              <input type="password" name="password" placeholder="Mot de passe..." required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
-              
-              <div style="display: flex; justify-content: space-between;">
-                <button type="button" onclick="document.getElementById('secret-login-modal').style.display='none'" style="background: #f1f1f1; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; color: #333;">Annuler</button>
-                <button type="submit" style="background: #d1b06a; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; color: #fff; font-weight: bold;">Entrer</button>
-              </div>
-            </form>
-          </div>
-        </div></div>
+              <button type="button" id="toggle-password-btn" onclick="togglePasswordVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #666; padding: 0; font-size: 16px;">
+                <i id="eye-icon" class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between;">
+              <button type="button" onclick="document.getElementById('secret-login-modal').style.display='none'" style="background: #f1f1f1; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; color: #333;">Annuler</button>
+              <button type="submit" style="background: #d1b06a; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; color: #fff; font-weight: bold;">Entrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <div class="footer-links">
         <a href="accueil.html">Accueil</a>
@@ -127,6 +132,20 @@
   </footer>
 
   <script src="assets/js/main.js"></script>
-
+  <!-- JavaScript to handle showing/hiding the password -->
+  <script>
+  function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('secret-login-password');
+    const eyeIcon = document.getElementById('eye-icon');
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeIcon.className = 'fa-solid fa-eye-slash';
+    } else {
+      passwordInput.type = 'password';
+      eyeIcon.className = 'fa-solid fa-eye';
+    }
+  }
+  </script>
 </body>
 </html>
