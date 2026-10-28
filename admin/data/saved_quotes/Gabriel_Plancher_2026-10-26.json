@@ -1,0 +1,20 @@
+{
+    "id": "quote_6adfc6346b314",
+    "client_name": "Gabriel",
+    "project_title": "Plancher",
+    "items": [
+        {
+            "id": 1793050152006,
+            "desc": "Oatey Joint De Cire Pour Toilette Avec Manchon Et Boulons 2 1\/4 Po En Laiton",
+            "qty": 1,
+            "unitPrice": 14.927
+        },
+        {
+            "id": 1793050158862,
+            "desc": "LePage PL Premium Adhésif de construction en polyuréthane, Intérieur\/Extérieur, étanche, 295 ml",
+            "qty": 2,
+            "unitPrice": 9.1655
+        }
+    ],
+    "saved_at": "2026-10-26 22:29:24"
+}

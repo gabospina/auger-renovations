@@ -1,6 +1,6 @@
 {
     "request_id": "REQ-20261017-8633",
-    "prefilled_at": "2026-10-25 22:00:57",
+    "prefilled_at": "2026-10-28 18:39:44",
     "client": {
         "name": "Simon Auger",
         "address": "Valley Field",
@@ -21,63 +21,127 @@
     "complexity": "high",
     "items": [
         {
-            "sku": "SKU-TILE-FLR-01",
-            "name": "Céramique / Porcelaine de plancher (avec 10% de pertes)",
+            "sku": "SKU-1001690476",
+            "name": "Merola Tile Carreau mural et de sol Amberes Azul II, 13 po x 13 po, céramique, 15,85 pi2/bte",
             "quantity": 11,
-            "unit": "boîtes (~15 pi²/boîte)",
-            "estimated_unit_price": 45,
-            "total": 495
+            "unit": "sqft",
+            "estimated_unit_price": 168.04,
+            "total": 1848.44
         },
         {
-            "sku": "SKU-THINSET-01",
-            "name": "Colle à céramique (Thinset)",
-            "quantity": 3,
-            "unit": "sacs (20kg)",
-            "estimated_unit_price": 28.5,
-            "total": 85.5
-        },
-        {
-            "sku": "SKU-GROUT-01",
-            "name": "Coulis pré-mélangé",
+            "sku": "SKU-1000668022",
+            "name": "Custom Building Products SimpleGrout #165 Delorean Gray 1 Qt. Coulis pré-mélangé",
             "quantity": 2,
-            "unit": "contenants",
-            "estimated_unit_price": 34,
-            "total": 68
+            "unit": "bag",
+            "estimated_unit_price": 25.28,
+            "total": 50.56
         },
         {
-            "sku": "SKU-DRYWALL-WP",
-            "name": "Panneaux résistants à l'humidité (Durock / Gypse hydrofuge)",
+            "sku": "SKU-1000150306",
+            "name": "Custom Building Products RedGard 3.78 L 100 pi² Membrane d’imperméabilisation et de fissuration prête à l’emploi pour carreaux et pierre",
+            "quantity": 2,
+            "unit": "pail",
+            "estimated_unit_price": 105,
+            "total": 210
+        },
+        {
+            "sku": "SKU-1000113392",
+            "name": "CGC Durock Panneau de ciment avec EdgeGuard 1/2 pouce. x 3 pieds x 5",
             "quantity": 12,
-            "unit": "panneaux (4x8)",
-            "estimated_unit_price": 22,
-            "total": 264
+            "unit": "feuille",
+            "estimated_unit_price": 26.98,
+            "total": 323.76
         },
         {
-            "sku": "SKU-VANITY-36",
-            "name": "Vanité de salle de bain 36 pouces avec comptoir",
-            "quantity": 1,
-            "unit": "unité",
-            "estimated_unit_price": 450,
-            "total": 450
+            "sku": "SKU-1000152285",
+            "name": "CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger résistant à la moisissure",
+            "quantity": 12,
+            "unit": "sheet",
+            "estimated_unit_price": 29.98,
+            "total": 359.76
         },
         {
-            "sku": "SKU-TOILET-STD",
-            "name": "Toilette allongée haute efficacité",
+            "sku": "SKU-1000822618",
+            "name": "Glacier Bay Delchester 24 po W x 32,7 po H x 18,7 po D Vanité de Salle de Bain en Bois Blanc avec Dessus en Céramique pour Évier Central Unique Intégré",
             "quantity": 1,
-            "unit": "unité",
-            "estimated_unit_price": 275,
-            "total": 275
+            "unit": "piece",
+            "estimated_unit_price": 198,
+            "total": 198
+        },
+        {
+            "sku": "SKU-1001877076",
+            "name": "American Standard Toilette allongée deux pièces Mainstream, 4,8 L p.c., hauteur standard, à chasse simple, blanc",
+            "quantity": 1,
+            "unit": "piece",
+            "estimated_unit_price": 176,
+            "total": 176
+        },
+        {
+            "sku": "SKU-1000723588",
+            "name": "Leviton Decora 15A125V prise inviolable à DDFT Blanc",
+            "quantity": 1,
+            "unit": "piece",
+            "estimated_unit_price": 23.87,
+            "total": 23.87
+        },
+        {
+            "sku": "SKU-1001978790",
+            "name": "Artika Ewen 27 po à 1 lumière 15 W noir à DEL intégrée à blanc sélectionnable et intensité variable 5CCT luminaire de vanité",
+            "quantity": 1,
+            "unit": "piece",
+            "estimated_unit_price": 69.99,
+            "total": 69.99
+        },
+        {
+            "sku": "SKU-1000848589",
+            "name": "APOLLO Tuyau PEX-B blanc de 1/2 po x 10 pi",
+            "quantity": 4,
+            "unit": "roll",
+            "estimated_unit_price": 6.98,
+            "total": 27.92
+        }
+    ],
+    "labor_breakdown": [
+        {
+            "desc": "Démolition complète salle de bain",
+            "hours": 8,
+            "rate": 55
+        },
+        {
+            "desc": "Travaux de plomberie",
+            "hours": 8,
+            "rate": 95
+        },
+        {
+            "desc": "Travaux électriques",
+            "hours": 6,
+            "rate": 105
+        },
+        {
+            "desc": "Pose de céramique",
+            "hours": 10,
+            "rate": 75
+        },
+        {
+            "desc": "Peinture et finition",
+            "hours": 4,
+            "rate": 60
+        },
+        {
+            "desc": "Installation vanité et finition",
+            "hours": 4,
+            "rate": 75
         }
     ],
     "financials": {
-        "materials_total": 1637.5,
+        "materials_total": 3288.3,
         "estimated_hours": 40,
         "hourly_rate": 75,
-        "labor_total": 3000,
-        "subtotal": 4637.5,
-        "gst": 231.88,
-        "qst": 462.59,
-        "grand_total": 5331.97
+        "labor_total": 3120,
+        "subtotal": 6408.3,
+        "gst": 320.42,
+        "qst": 639.23,
+        "grand_total": 7367.94
     },
     "notes": "I need this remodelation to be finsh in four weeks. Let me know if it is possible."
 }

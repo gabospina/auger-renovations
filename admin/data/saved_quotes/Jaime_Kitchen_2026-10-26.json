@@ -1,0 +1,20 @@
+{
+    "id": "quote_6adfd32d85a89",
+    "client_name": "Jaime",
+    "project_title": "Kitchen",
+    "items": [
+        {
+            "id": 1793053460692,
+            "desc": "MONO Silicone PRO - K&B de 290 mL, blanc",
+            "qty": 10,
+            "unitPrice": 11.4655
+        },
+        {
+            "id": 1793053472724,
+            "desc": "Oatey Joint De Cire Pour Toilette Avec Manchon Et Boulons 2 1\/4 Po En Laiton",
+            "qty": 2,
+            "unitPrice": 14.927
+        }
+    ],
+    "saved_at": "2026-10-26 23:24:45"
+}

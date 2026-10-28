@@ -1,0 +1,77 @@
+{
+    "id": "tpl_6ae1f8219ace5",
+    "client_name": "Simon",
+    "project_title": "Template Salle de Bain",
+    "name": "Template Salle de Bain",
+    "folder": "Simon",
+    "price_per_sqft": 0,
+    "items": [
+        {
+            "id": 1793193836115,
+            "desc": "CGC Durock Panneau de ciment avec EdgeGuard 1\/2 pouce. x 3 pieds x 5",
+            "qty": 0,
+            "unitPrice": 31.03
+        },
+        {
+            "id": 1793193843380,
+            "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
+            "qty": 0,
+            "unitPrice": 42.91
+        },
+        {
+            "id": 1793193856307,
+            "desc": "CGC Sheetrock 1\/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger résistant à la moisissure",
+            "qty": 0,
+            "unitPrice": 34.48
+        },
+        {
+            "id": 1793193864051,
+            "desc": "CGC Sheetrock 1\/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger",
+            "qty": 0,
+            "unitPrice": 20.68
+        },
+        {
+            "id": 1793193887971,
+            "desc": "LePage PL Premium Adhésif de construction en polyuréthane, Intérieur\/Extérieur, étanche, 295 ml",
+            "qty": 0,
+            "unitPrice": 9.17
+        },
+        {
+            "id": 1793193917315,
+            "desc": "Custom Building Products RedGard 3.78 L 100 pi² Membrane d’imperméabilisation et de fissuration prête à l’emploi pour carreaux et pierre",
+            "qty": 0,
+            "unitPrice": 120.75
+        },
+        {
+            "id": 1793193947900,
+            "desc": "Southwire 14\/2 NMD90 150M Romex SIMpull Fil électrique - Blanc",
+            "qty": 0,
+            "unitPrice": 274.85
+        },
+        {
+            "id": 1793193955883,
+            "desc": "Broan-NuTone Ventilateur 50 pi³\/min de la série Économique de Broan-Nutone®, 2,0 sones - ENERGY STAR®",
+            "qty": 0,
+            "unitPrice": 40.23
+        },
+        {
+            "id": 1793193965796,
+            "desc": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+            "qty": 0,
+            "unitPrice": 9.74
+        },
+        {
+            "id": 1793193982716,
+            "desc": "Ivy Hill Tile Carreau pour planchers et murs Granada, 24 x 24 po, porcelaine, Olimpia, naturel, 11,62 pi²\/bte",
+            "qty": 0,
+            "unitPrice": 250.77
+        },
+        {
+            "id": 1793193995612,
+            "desc": "BEHR ULTRA Peinture et apprêt très durable pour l’intérieur, émail coquille d’œuf en Blanc ultra pur, 3,79 L",
+            "qty": 0,
+            "unitPrice": 73.11
+        }
+    ],
+    "updated_at": "2026-10-28 14:26:57"
+}

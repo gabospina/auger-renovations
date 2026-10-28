@@ -61,10 +61,12 @@ if ($action === 'save') {
     $payload['id'] = $quoteId;
     $payload['saved_at'] = date('Y-m-d H:i:s');
 
-    // Create a clean filename based on client name and project title
-    $clientSlug = preg_replace('/[^a-zA-Z0-9_-]/', '_', $payload['client_name'] ?? 'Client');
-    $projectSlug = preg_replace('/[^a-zA-Z0-9_-]/', '_', $payload['project_title'] ?? 'Projet');
-    $fileName = 'quote_' . $clientSlug . '_' . $projectSlug . '_' . substr($quoteId, -6) . '.json';
+    // Generate clean filename: ClientName_ProjectTitle_YYYY-MM-DD.json
+    $clientSlug = preg_replace('/[^a-zA-Z0-9_-]/', '_', trim($payload['client_name'] ?? 'Client'));
+    $projectSlug = preg_replace('/[^a-zA-Z0-9_-]/', '_', trim($payload['project_title'] ?? 'Projet'));
+    $dateStr = date('Y-m-d');
+    
+    $fileName = $clientSlug . '_' . $projectSlug . '_' . $dateStr . '.json';
     
     // If updating an existing quote, try to find its old file name to replace it
     $files = glob($individualQuotesDir . '/*.json');

@@ -1,0 +1,29 @@
+{
+    "id": "tpl_6adfe97bc1546",
+    "client_name": "Rafael",
+    "project_title": "Template Pave",
+    "name": "Template Pave",
+    "folder": "Rafael",
+    "price_per_sqft": 0,
+    "items": [
+        {
+            "id": 1793059173882,
+            "desc": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+            "qty": 0,
+            "unitPrice": 9.74
+        },
+        {
+            "id": 1793059177608,
+            "desc": "STANLEY 16 Gauge 2-1\/2-inch 20-Degree Angled Finish Nails (2500 pro Box)",
+            "qty": 0,
+            "unitPrice": 48.28
+        },
+        {
+            "id": 1793059185010,
+            "desc": "3\/4 4x8 Standard contreplaqué Spruce",
+            "qty": 0,
+            "unitPrice": 68.98
+        }
+    ],
+    "updated_at": "2026-10-27 00:59:55"
+}

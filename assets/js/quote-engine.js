@@ -303,12 +303,13 @@ function addLaborRow(desc = '', hours = 0, rate = 0) {
   const container = document.getElementById('labor-list');
   if (!container) return;
 
+  const numHours = parseFloat(hours) || 0;
+  // Use the exact rate passed from the backend, or 0.00 if manually added
+  const numRate = parseFloat(rate) || 0.00;
+  const lineTotal = formatMoney(numHours * numRate);
+
   const row = document.createElement('div');
   row.className = 'quote-row calc-grid';
-
-  const numHours = parseFloat(hours) || 0;
-  const numRate = parseFloat(rate) || 0;
-  const lineTotal = formatMoney(numHours * numRate);
 
   row.innerHTML = `
     <input type="text"

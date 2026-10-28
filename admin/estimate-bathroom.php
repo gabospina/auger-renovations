@@ -20,6 +20,29 @@ $project = $requestData['project'] ?? [];
 $photos = $requestData['photos'] ?? ['current' => [], 'desired' => []];
 
 /* =====================================================
+   AI PREFILL CACHE
+===================================================== */
+
+$prefillData = null;
+
+if (!empty($_GET['prefill'])) {
+
+    $prefillFile =
+        __DIR__ .
+        '/data/project-analysis/' .
+        $requestId .
+        '-prefill.json';
+
+    if (file_exists($prefillFile)) {
+
+        $prefillData = json_decode(
+            file_get_contents($prefillFile),
+            true
+        );
+    }
+}
+
+/* =====================================================
    SMART TIERED MATERIAL SUGGESTIONS BY PRICE BRACKET
 ===================================================== */
 $materialsFile = __DIR__ . '/data/materials.json';
@@ -171,6 +194,16 @@ foreach ($allClientSelections as $selection) {
     window.SUGGESTED_MATERIALS = <?= json_encode(array_values($suggestedMaterials ?? []), JSON_UNESCAPED_UNICODE) ?>;
   })();
 </script>
+<?php if ($prefillData): ?>
+  <script>
+  window.PREFILL_DATA =
+  <?= json_encode(
+      $prefillData,
+      JSON_UNESCAPED_UNICODE |
+      JSON_UNESCAPED_SLASHES
+  ); ?>;
+  </script>
+<?php endif; ?>
   <style>
     .invoice-container { background-color: #ffffff; padding: 30px; border: 1px solid #e1e4e8; border-radius: 8px; }
     .invoice-content { position: relative; z-index: 1; }
@@ -512,12 +545,50 @@ foreach ($allClientSelections as $selection) {
             <button type="button" class="btn btn-tier <?= ($activeTier === 'premium') ? 'active' : '' ?>" data-tier="premium" id="tier-btn-premium" style="flex: 1;"><i class="fa-solid fa-gem"></i> Haut de gamme</button>
           </div>
         </div>
+        
+        <!-- TEMPLATE & FOLDER SELECTOR FOR SIMON -->
+        <div style="background: #fdfaf3; border: 1px solid #d1b06a; padding: 14px 18px; border-radius: 8px; margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #8c733e; font-size: 14px;"><i class="fa-solid fa-folder-tree"></i> Charger un modèle ou dossier de prix ($/pi²)</strong>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <select id="custom-template-select" style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">
+              <option value="">-- Sélectionnez un modèle ou dossier enregistré --</option>
+            </select>
+            <button type="button" class="btn btn-secondary" onclick="applyCustomTemplate()" style="padding: 8px 16px; font-size: 13px;">Appliquer</button>
+          </div>
+        </div>
 
         <div class="card-header-flex">
           <h2>1. Matériaux</h2>
+
           <div class="materials-buttons">
-            <button type="button" class="btn btn-sm btn-outline" id="add-material">+ Ajouter une ligne</button>
-            <button type="button" class="btn btn-outline" id="btn-prefill-quote"><i class="fa-solid fa-wand-magic-sparkles"></i> Pré-remplir</button>
+
+            <button
+              type="button"
+              class="btn btn-sm btn-outline"
+              id="add-material">
+              + Ajouter une ligne
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-outline"
+              id="btn-prefill-quote">
+              <i class="fa-solid fa-calculator"></i>
+              Pré-remplir (Estimateur Classique)
+            </button>
+
+            <button
+                type="button"
+                class="btn"
+                id="btn-ai-prefill"
+                style="background:#16a34a;color:#fff;">
+                <i class="fa-solid fa-robot"></i>
+                Recalculer le devis IA
+            </button>
+
+
           </div>
         </div>
         <datalist id="catalog-materials"></datalist>
@@ -630,9 +701,8 @@ foreach ($allClientSelections as $selection) {
       const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`);
       const json = await res.json();
 
-      if (json.success) {
-        alert("✅ Devis pré-rempli avec succès par l'IA ! Actualisation de la page...");
-        window.location.reload();
+      if (json.success && json.redirect_url) {
+          window.location.href = json.redirect_url;
       } else {
         throw new Error(json.error || "Erreur de pré-remplissage.");
       }
@@ -641,6 +711,268 @@ foreach ($allClientSelections as $selection) {
       alert("Erreur: " + e.message);
     }
   }
-  </script>
+
+  // Load master material templates into the dropdown displaying the filename base
+  async function loadSimonTemplates() {
+    try {
+      const res = await fetch('api-templates.php?action=list');
+      const data = await res.json();
+      if (data.success && Array.isArray(data.templates)) {
+        const select = document.getElementById('custom-template-select');
+        const priceSelect = document.getElementById('price-template-select');
+        select.innerHTML = '<option value="">-- Sélectionnez un modèle ou dossier enregistré --</option>';
+        
+        data.templates.forEach(tpl => {
+          const opt = document.createElement('option');
+          opt.value = tpl.id || tpl.template_id;
+          
+          // Construct the exact filename display: Client_Project_Date
+          const client = (tpl.client_name || tpl.folder || 'Modele').replace(/[^a-zA-Z0-9_-]/g, '_');
+          const project = (tpl.project_title || tpl.name || 'Projet').replace(/[^a-zA-Z0-9_-]/g, '_');
+          const dateStr = tpl.updated_at ? tpl.updated_at.split(' ')[0] : new Date().toISOString().split('T')[0];
+          
+          const fileNameDisplay = `${client}_${project}_${dateStr}`;
+          
+          opt.textContent = fileNameDisplay;
+          opt.dataset.template = JSON.stringify(tpl);
+          select.appendChild(opt);
+          if (priceSelect) {
+
+          const priceOpt =
+              document.createElement('option');
+
+            priceOpt.value =
+                tpl.id || tpl.template_id;
+
+            priceOpt.textContent =
+                fileNameDisplay;
+
+            priceSelect.appendChild(priceOpt);
+        }
+        });
+      }
+      // ==========================================
+    // AI PREFILL INTEGRATION
+    // ==========================================
+
+    if (
+        window.PREFILL_DATA &&
+        window.PREFILL_DATA.client
+    ) {
+
+        const client =
+            window.PREFILL_DATA.client;
+
+        const nameField =
+            document.getElementById('client-name');
+
+        const emailField =
+            document.getElementById('client-email');
+
+        const phoneField =
+            document.getElementById('client-phone');
+
+        const addressField =
+            document.getElementById('client-address');
+
+        if (nameField)
+            nameField.value = client.name || '';
+
+        if (emailField)
+            emailField.value = client.email || '';
+
+        if (phoneField)
+            phoneField.value = client.phone || '';
+
+        if (addressField)
+            addressField.value = client.address || '';
+    }
+    } catch (e) {
+      console.error("Erreur de chargement des modèles maîtres", e);
+    }
+  }
+
+  // Apply selected master material template and trigger AI calculation using room square footage
+  // Apply selected master material template and trigger calculation
+  async function applyCustomTemplate() {
+    const select = document.getElementById('custom-template-select');
+    const opt = select.options[select.selectedIndex];
+    if (!opt.value) {
+      alert("Veuillez sélectionner un modèle maître.");
+      return;
+    }
+
+    const tpl = JSON.parse(opt.dataset.template);
+    const roomSqft = window.CURRENT_PROJECT_SPEC?.sqft || 140;
+
+    if (confirm(`Appliquer le modèle maître "${tpl.name}" et fusionner les quantités pour ${roomSqft} pi² ?`)) {
+      try {
+        const reqId = new URLSearchParams(window.location.search).get('request_id');
+        const templateId = select.value;
+        const calcRes = await fetch(`ai/template-calculator.php?id=${encodeURIComponent(reqId)}&template_id=${encodeURIComponent(templateId)}`);
+        const calcData = await calcRes.json();
+
+        if (calcData.success && Array.isArray(calcData.items)) {
+          const materialsList = document.getElementById('materials-list');
+          
+          calcData.items.forEach(item => {
+              mergeMaterialIntoTable(
+                  item.name,
+                  item.quantity,
+                  item.estimated_unit_price
+              );
+          });
+
+          if (typeof calculateTotals === 'function') {
+            calculateTotals();
+          }
+
+          alert(`✅ Modèle appliqué et fusionné avec succès ! Coût total des matériaux : $${calcData.total_materials.toFixed(2)} (${calcData.price_per_sqft} $/pi²)`);
+        } else {
+          throw new Error(calcData.error || "Erreur de calcul par l'agent IA.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Erreur lors de l'application du modèle: " + err.message);
+      }
+    }
+  }
+
+  function addMaterialRowToTable(desc, qty, unitPrice) {
+    const materialsList = document.getElementById('materials-list');
+    const row = document.createElement('div');
+    row.className = 'quote-row calc-grid';
+    row.innerHTML = `
+      <input type="text" class="mat-desc" value="${desc}">
+      <input type="number" class="mat-qty" value="${qty}" step="any">
+      <input type="number" class="mat-unit" value="${unitPrice.toFixed(2)}" step="any">
+      <span class="mat-total line-total">${(qty * unitPrice).toFixed(2)} $</span>
+      <button type="button" class="row-delete delete-material" onclick="this.closest('.quote-row').remove(); if(typeof calculateTotals === 'function') calculateTotals();"><i class="fa-solid fa-trash"></i></button>
+    `;
+    materialsList.appendChild(row);
+  }
+
+  function mergeMaterialIntoTable(desc, qty, unitPrice) {
+    const rows = document.querySelectorAll('#materials-list .quote-row');
+    for (const row of rows) {
+        const descInput = row.querySelector('.mat-desc');
+        if (!descInput) continue;
+        if (
+            descInput.value.trim().toLowerCase() ===
+            desc.trim().toLowerCase()
+        ) {
+            const qtyInput = row.querySelector('.mat-qty');
+            qtyInput.value =
+                parseFloat(qtyInput.value || 0) + parseFloat(qty);
+            if (typeof calculateTotals === 'function') {
+                calculateTotals();
+            }
+            return;
+        }
+    }
+    addMaterialRowToTable(desc, qty, unitPrice);
+    if (typeof calculateTotals === 'function') {
+        calculateTotals();
+    }
+}
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    await loadSimonTemplates();
+
+    // 1. Safely load Material Prefills
+    if (window.PREFILL_DATA && window.PREFILL_DATA.items) {
+        const materialsList = document.getElementById('materials-list');
+        if (materialsList) {
+            materialsList.innerHTML = '';
+        }
+
+        const materials = window.PREFILL_DATA.items || [];
+        materials.forEach(item => {
+            addMaterialRow(
+                item.description || item.desc || item.name || '',
+                item.quantity || item.qty || 1,
+                item.unit_price || item.unit_billed || item.estimated_unit_price || item.unit || 0
+            );
+        });
+    }
+
+    // 2. Safely load Granular Labor Breakdown
+    if (window.PREFILL_DATA && window.PREFILL_DATA.labor_breakdown && Array.isArray(window.PREFILL_DATA.labor_breakdown)) {
+        const laborList = document.getElementById('labor-list');
+        if (laborList) {
+            laborList.innerHTML = '';
+        }
+
+        window.PREFILL_DATA.labor_breakdown.forEach(labor => {
+            // Explicitly resolve rate from multiple possible property names with a safe fallback
+            const resolvedRate = parseFloat(labor.rate || labor.unit_price || labor.hourly_rate) || 0.00;
+
+            addLaborRow(
+                labor.desc || labor.name || 'Travail spécialisé',
+                parseFloat(labor.hours) || parseFloat(labor.qty) || 0,
+                resolvedRate
+            );
+        });
+    } else if (window.PREFILL_DATA && window.PREFILL_DATA.financials && window.PREFILL_DATA.financials.labor_total > 0) {
+        // Fallback if breakdown is absent but financials exist
+        const laborList = document.getElementById('labor-list');
+        if (laborList) {
+            laborList.innerHTML = '';
+        }
+        
+        const fallbackRate = parseFloat(window.PREFILL_DATA.financials.hourly_rate) || 75.00;
+        
+        addLaborRow(
+            `Main d'œuvre spécialisée`,
+            parseFloat(window.PREFILL_DATA.financials.estimated_hours) || 10,
+            fallbackRate
+        );
+    }
+
+    if (typeof updateCalculations === 'function') {
+        updateCalculations();
+    }
+});
+
+    // ==========================================
+    // Return to Materials section after AI Prefill
+    // ==========================================
+    if (
+        sessionStorage.getItem(
+            'scrollToMaterials'
+        ) === 'yes'
+    ) {
+        sessionStorage.removeItem(
+            'scrollToMaterials'
+        );
+        setTimeout(() => {
+            document
+                .getElementById('materials-list')
+                ?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+
+        }, 400);
+    }
+
+  document.getElementById('btn-ai-prefill')
+  ?.addEventListener('click', () => {
+      const reqId =
+          new URLSearchParams(
+              window.location.search
+          ).get('request_id');
+      if (!reqId) {
+          alert('Identifiant de demande introuvable.');
+          return;
+      }
+      sessionStorage.setItem(
+          'scrollToMaterials',
+          'yes'
+      );
+      runQuotePrefill(reqId);
+  });
+</script>
+  
 </body>
 </html>

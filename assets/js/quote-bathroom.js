@@ -144,7 +144,7 @@ function generatePreview() {
 }
 
 // Core automatic estimator based on actual requested scope & room measurements
-function prefillFromClientRequest() {
+function prefillFromClassicEstimator() {
   const spec = window.CURRENT_PROJECT_SPEC || {};
   const length = parseFloat(spec.length) || 0;
   const width = parseFloat(spec.width) || 0;
@@ -408,8 +408,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('.btn-tier').forEach(b => b.classList.remove('active'));
   document.getElementById(`tier-btn-${initialTier}`)?.classList.add('active');
 
-  // 3. Apply the preset tier corresponding to the active bracket
-  applyPresetTier(initialTier);
+  // 3. Only apply tier presets if NO AI prefill exists
+  if (!window.PREFILL_DATA) {
+    applyPresetTier(initialTier);
+    } else {
+        console.log(
+            'AI Prefill detected, skipping tier preset.'
+        );
+
+    }
 
   // ==========================================
   // TIER BUTTONS INTERACTIVE & PRICE BRACKETS

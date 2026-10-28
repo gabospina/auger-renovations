@@ -94,18 +94,30 @@ if (!empty($reqId)) {
     
     <!-- LEFT PANEL: CONTROLS & ADDING ITEMS -->
     <div class="card control-panel">
-      
-      <!-- SAVED QUOTES MANAGEMENT -->
-      <div class="save-panel">
-        <h2 style="border-bottom: 1px solid #d1b06a; margin-top:0; font-size: 16px;"><i class="fa-solid fa-folder-open"></i> Sauvegardes</h2>
+
+      <!-- SAVE & LOAD MODE SELECTOR (Exclusive Mode) -->
+      <div class="save-panel" style="background: #fdfaf3; border: 1px solid #d1b06a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <h2 style="border-bottom: 1px solid #d1b06a; margin-top:0; font-size: 16px;"><i class="fa-solid fa-folder-open"></i> Gestion des Fichiers</h2>
+        
+        <!-- Mode Switcher Checkboxes -->
+        <div style="display: flex; gap: 15px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed #d1b06a;">
+          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: bold; color: #24292e;">
+            <input type="checkbox" id="mode-quote" checked onclick="switchFileMode('quote')" style="width: auto; accent-color: #24292e;"> 
+            📋 Soumissions Clients
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: bold; color: #8c733e;">
+            <input type="checkbox" id="mode-template" onclick="switchFileMode('template')" style="width: auto; accent-color: #d1b06a;"> 
+            ⭐ Modèles Maîtres
+          </label>
+        </div>
+
         <div class="form-group" style="margin-bottom: 0;">
-          <label>Charger un estimé sauvegardé :</label>
+          <label id="dropdown-label">Charger un estimé sauvegardé :</label>
           <div style="display: flex; gap: 6px;">
-            <select id="saved-quotes-select" style="flex: 1; min-width: 0;">
+            <select id="saved-quotes-select" onchange="loadSelectedFile()" style="flex: 1; min-width: 0;">
               <option value="">-- Nouvelle Soumission --</option>
             </select>
-            <button type="button" class="btn btn-secondary" style="width: 34px; padding: 0; flex-shrink: 0;" onclick="loadQuote()" title="Charger"><i class="fa-solid fa-folder-open" style="font-size: 13px;"></i></button>
-            <button type="button" class="btn" style="width: 34px; padding: 0; background: #c92a2a; flex-shrink: 0;" onclick="deleteQuote()" title="Supprimer"><i class="fa-solid fa-trash" style="font-size: 13px;"></i></button>
+            <button type="button" class="btn" style="width: 34px; padding: 0; background: #c92a2a; flex-shrink: 0;" onclick="deleteSelectedFile()" title="Supprimer"><i class="fa-solid fa-trash" style="font-size: 13px;"></i></button>
           </div>
         </div>
       </div>
@@ -139,7 +151,7 @@ if (!empty($reqId)) {
       <div style="display: flex; gap: 8px;">
         <div class="form-group" style="width: 90px;">
           <label>Quantité</label>
-          <input type="number" id="material-qty" value="1" min="1">
+          <input type="number" id="material-qty" value="0" min="0" step="any">
         </div>
         <div class="form-group" style="flex: 1; display: flex; align-items: flex-end;">
           <button type="button" class="btn" onclick="addMaterialToQuote()" style="height: 38px;">Ajouter</button>
@@ -169,7 +181,7 @@ if (!empty($reqId)) {
       </div>
       
       <hr style="border: 0; border-top: 1px solid #eee; margin: 18px 0;">
-      
+
       <button type="button" class="btn" style="margin-bottom: 10px;" onclick="saveQuote()">
         <i class="fa-solid fa-floppy-disk"></i> Sauvegarder l'estimé actuel
       </button>
@@ -231,91 +243,458 @@ if (!empty($reqId)) {
 
   </div>
 
-  <script>
-    let materialsData = {};
-    let globalMarkup = 0.15;
-    let quoteItems = [];
-    let currentQuoteId = null;
+<script>
+  let materialsData = {};
+  let globalMarkup = 0.15;
+  let quoteItems = [];
+  let currentQuoteId = null;
 
-    // AI Prefill Data injected from PHP if available
-    const aiPrefillData = <?= json_encode($aiPrefillData); ?>;
+  // AI Prefill Data injected from PHP if available
+  const aiPrefillData = <?= json_encode($aiPrefillData); ?>;
 
-    document.getElementById('quote-date').textContent = new Date().toLocaleDateString('fr-CA');
+  document.getElementById('quote-date').textContent = new Date().toLocaleDateString('fr-CA');
 
-    async function initialize() {
-      await loadCatalog();
-      await loadSavedQuotesList();
+  async function initialize() {
+    await loadCatalog();
+    await loadSavedQuotesList();
 
-      // If AI Prefill data is present, populate form automatically!
-      if (aiPrefillData && aiPrefillData.client) {
-        document.getElementById('client-name').value = aiPrefillData.client.name || '';
-        document.getElementById('project-title').value = `Rénovation Salle de Bain (${aiPrefillData.tier.toUpperCase()}) - Dossier ${aiPrefillData.request_id}`;
-        currentQuoteId = aiPrefillData.request_id;
+    // If AI Prefill data is present, populate form automatically!
+    if (aiPrefillData && aiPrefillData.client) {
+      document.getElementById('client-name').value = aiPrefillData.client.name || '';
+      document.getElementById('project-title').value = `Rénovation Salle de Bain (${aiPrefillData.tier.toUpperCase()}) - Dossier ${aiPrefillData.request_id}`;
+      currentQuoteId = aiPrefillData.request_id;
 
-        // Load mapped materials into quote items
-        if (Array.isArray(aiPrefillData.items)) {
-          aiPrefillData.items.forEach(mat => {
-            quoteItems.push({
-              id: Date.now() + Math.random(),
-              desc: mat.name,
-              qty: mat.quantity,
-              unitPrice: mat.estimated_unit_price
-            });
-          });
-        }
-
-        // Add Labor row if financial data exists
-        if (aiPrefillData.financials && aiPrefillData.financials.labor_total > 0) {
+      // Load mapped materials into quote items
+      if (Array.isArray(aiPrefillData.items)) {
+        aiPrefillData.items.forEach(mat => {
           quoteItems.push({
             id: Date.now() + Math.random(),
-            desc: `Main d'œuvre spécialisée (${aiPrefillData.financials.estimated_hours} heures @ $${aiPrefillData.financials.hourly_rate}/hr)`,
-            qty: 1,
-            unitPrice: aiPrefillData.financials.labor_total
+            desc: mat.name,
+            qty: mat.quantity,
+            unitPrice: mat.estimated_unit_price
           });
-        }
+        });
       }
 
+      // Add Labor row if financial data exists
+      if (aiPrefillData.financials && aiPrefillData.financials.labor_total > 0) {
+        quoteItems.push({
+          id: Date.now() + Math.random(),
+          desc: `Main d'œuvre spécialisée (${aiPrefillData.financials.estimated_hours} heures @ $${aiPrefillData.financials.hourly_rate}/hr)`,
+          qty: 1,
+          unitPrice: aiPrefillData.financials.labor_total
+        });
+      }
+    }
+
+    renderQuote();
+  }
+
+  async function loadCatalog() {
+    try {
+      const setRes = await fetch('api-materials.php?action=get_settings');
+      const settings = await setRes.json();
+      if (settings && settings.markup_rate !== undefined) {
+        globalMarkup = parseFloat(settings.markup_rate);
+      }
+
+      const matRes = await fetch('api-materials.php?action=list');
+      const materials = await matRes.json();
+      
+      const select = document.getElementById('material-select');
+      select.innerHTML = '<option value="">-- Sélectionnez un matériel --</option>';
+      
+      materials.forEach(m => {
+        materialsData[m.id] = m;
+        const cost = parseFloat(m.price) || 0;
+        const billedPrice = cost + (cost * globalMarkup);
+        
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = `${m.id} - ${m.name} ($${billedPrice.toFixed(2)})`;
+        select.appendChild(opt);
+      });
+
+    } catch (e) {
+      console.error("Erreur de chargement", e);
+    }
+  }
+
+  async function loadQuote() {
+    const select = document.getElementById('saved-quotes-select');
+    const selectedId = select ? select.value : '';
+
+    if (!selectedId) {
+      currentQuoteId = null;
+      document.getElementById('client-name').value = '';
+      document.getElementById('project-title').value = 'Rénovation Salle de Bain';
+      quoteItems = [];
+      renderQuote();
+      return;
+    }
+
+    try {
+      const res = await fetch('api-quotes.php?action=list');
+      let data = await res.json();
+      const quotes = Array.isArray(data) ? data : (data.quotes || data.data || Object.values(data || {}));
+      const quoteToLoad = quotes.find(q => q && (q.id === selectedId || q.quote_id === selectedId));
+
+      if (quoteToLoad) {
+        currentQuoteId = quoteToLoad.id || quoteToLoad.quote_id;
+        document.getElementById('client-name').value = quoteToLoad.client_name || (quoteToLoad.client && quoteToLoad.client.name) || '';
+        document.getElementById('project-title').value = quoteToLoad.project_title || '';
+        quoteItems = Array.isArray(quoteToLoad.items) ? quoteToLoad.items : (quoteToLoad.materials || []);
+        renderQuote();
+      }
+    } catch (e) {
+      console.error("Erreur lors du chargement de la soumission:", e);
+    }
+  }
+
+  async function deleteQuote() {
+    const select = document.getElementById('saved-quotes-select');
+    const selectedId = select.value;
+    if (!selectedId) return;
+
+    if (!confirm("Voulez-vous vraiment supprimer cette sauvegarde ?")) return;
+
+    try {
+      const res = await fetch('api-quotes.php?action=delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: selectedId })
+      });
+      const result = await res.json();
+      if (result.success) {
+        currentQuoteId = null;
+        document.getElementById('client-name').value = '';
+        quoteItems = [];
+        renderQuote();
+        await loadSavedQuotesList();
+      }
+    } catch (e) {
+      alert("Erreur lors de la suppression.");
+    }
+  }
+
+  function addMaterialToQuote() {
+    const select = document.getElementById('material-select');
+    const qtyInput = document.getElementById('material-qty');
+    const id = select.value;
+    const qty = parseFloat(qtyInput.value) || 0;
+
+    if (!id) {
+      alert("Veuillez sélectionner un matériel.");
+      return;
+    }
+
+    const mat = materialsData[id];
+    const cost = parseFloat(mat.price) || 0;
+    const billedPrice = cost + (cost * globalMarkup);
+
+    quoteItems.push({
+      id: Date.now(),
+      desc: mat.name,
+      qty: qty,
+      unitPrice: billedPrice
+    });
+
+    select.value = "";
+    qtyInput.value = "0";
+    renderQuote();
+  }
+
+  function addCustomToQuote() {
+    const descInput = document.getElementById('custom-desc');
+    const qtyInput = document.getElementById('custom-qty');
+    const priceInput = document.getElementById('custom-price');
+    
+    const desc = descInput.value.trim();
+    const qty = parseFloat(qtyInput.value) || 1;
+    const price = parseFloat(priceInput.value) || 0;
+
+    if (!desc || price <= 0 || qty <= 0) {
+      alert("Veuillez entrer une description, des heures et un montant valide.");
+      return;
+    }
+
+    quoteItems.push({
+      id: Date.now(),
+      desc: desc,
+      qty: qty,
+      unitPrice: price
+    });
+
+    descInput.value = "";
+    qtyInput.value = "1";
+    priceInput.value = "";
+    renderQuote();
+  }
+
+  function removeRow(rowId) {
+    quoteItems = quoteItems.filter(item => item.id !== rowId);
+    renderQuote();
+  }
+
+  function renderQuote() {
+    const tbody = document.getElementById('quote-body');
+    tbody.innerHTML = '';
+    let subtotal = 0;
+
+    if (quoteItems.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">Aucun article ajouté.</td></tr>';
+    } else {
+      quoteItems.forEach(item => {
+        const rowTotal = item.qty * item.unitPrice;
+        subtotal += rowTotal;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.desc}</td>
+          <td class="text-right">${item.qty}</td>
+          <td class="text-right">$${item.unitPrice.toFixed(2)}</td>
+          <td class="text-right"><strong>$${rowTotal.toFixed(2)}</strong></td>
+          <td class="text-right">
+            <button class="btn-remove" onclick="removeRow(${item.id})" title="Retirer"><i class="fa-solid fa-xmark"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    const tps = subtotal * 0.05;
+    const tvq = subtotal * 0.09975;
+    const total = subtotal + tps + tvq;
+
+    document.getElementById('summary-subtotal').textContent = '$' + subtotal.toFixed(2);
+    document.getElementById('summary-tps').textContent = '$' + tps.toFixed(2);
+    document.getElementById('summary-tvq').textContent = '$' + tvq.toFixed(2);
+    document.getElementById('summary-total').textContent = '$' + total.toFixed(2);
+  }
+
+  // ==========================================
+  // VOICE-TO-ESTIMATE ASSISTANT (CHANTIER)
+  // ==========================================
+
+  let recognitionInstance = null;
+  let isVoiceActive = false;
+
+  function initVoiceAssistant() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const statusEl = document.getElementById('voice-status');
+    const btn = document.getElementById('btn-voice-rec');
+    const textInput = document.getElementById('voice-text-fallback');
+    const submitBtn = document.getElementById('btn-text-submit');
+
+    if (btn) {
+      btn.onclick = toggleVoiceRecording;
+    }
+
+    if (submitBtn && textInput) {
+      submitBtn.onclick = () => {
+        const val = textInput.value.trim();
+        if (val) {
+          if (statusEl) statusEl.textContent = `✅ Commande textuelle exécutée : "${val}"`;
+          processVoiceCommandText(val);
+          textInput.value = '';
+        }
+      };
+      textInput.onkeypress = (e) => {
+        if (e.key === 'Enter') {
+          submitBtn.click();
+        }
+      };
+    }
+
+    if (!SpeechRecognition) {
+      if (statusEl) statusEl.textContent = "La reconnaissance vocale nécessite Google Chrome. Utilisez la boîte de texte ci-dessous.";
+      if (btn) btn.style.display = 'none';
+      return;
+    }
+
+    recognitionInstance = new SpeechRecognition();
+    recognitionInstance.lang = 'fr-CA';
+    recognitionInstance.interimResults = false;
+    recognitionInstance.maxAlternatives = 1;
+
+    recognitionInstance.onstart = function() {
+      isVoiceActive = true;
+      if (btn) btn.classList.add('recording-active');
+      if (statusEl) statusEl.textContent = "🎙️ Écoute en cours... Décrivez le projet";
+    };
+
+    recognitionInstance.onresult = function(event) {
+      const transcript = event.results[0][0].transcript;
+      if (statusEl) statusEl.textContent = `✅ Capté : "${transcript}"`;
+      processVoiceCommandText(transcript);
+    };
+
+    recognitionInstance.onerror = function(event) {
+      console.error("Erreur de reconnaissance vocale :", event.error);
+      let msg = "Microphone introuvable ou accès refusé.";
+      if (statusEl) statusEl.textContent = `⚠️ ${msg} Utilisez la boîte de texte ci-dessous.`;
+      stopVoiceAssistantUI();
+    };
+
+    recognitionInstance.onend = function() {
+      stopVoiceAssistantUI();
+    };
+  }
+
+  async function toggleVoiceRecording() {
+    const statusEl = document.getElementById('voice-status');
+
+    try {
+      if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const hasMic = devices.some(device => device.kind === 'audioinput');
+        if (!hasMic) {
+          if (statusEl) statusEl.textContent = "⚠️ Aucun microphone détecté. Utilisez la boîte de texte ci-dessous.";
+          alert("Aucun microphone n'a été détecté. Vous pouvez utiliser la boîte de saisie textuelle.");
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn("Impossible de lister les périphériques audio:", e);
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop());
+    } catch (err) {
+      if (statusEl) statusEl.textContent = "⚠️ Accès au microphone refusé ou absent.";
+      alert("Aucun microphone actif ou autorisé trouvé.");
+      return;
+    }
+
+    if (!recognitionInstance) {
+      initVoiceAssistant();
+    }
+
+    if (!recognitionInstance) return;
+
+    if (isVoiceActive) {
+      try { recognitionInstance.stop(); } catch(e) {}
+      stopVoiceAssistantUI();
+    } else {
+      try {
+        recognitionInstance.start();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+
+  function stopVoiceAssistantUI() {
+    isVoiceActive = false;
+    const btn = document.getElementById('btn-voice-rec');
+    if (btn) btn.classList.remove('recording-active');
+  }
+
+  function processVoiceCommandText(text) {
+    const lower = text.toLowerCase();
+
+    const clientMatch = lower.match(/(?:client|pour|nom)\s+([a-zà-ÿ\s]+)(?:\.|,|\s+salle|\s+dimension|\s+avec|$)/i);
+    if (clientMatch && clientMatch[1]) {
+      const rawName = clientMatch[1].trim();
+      const formattedName = rawName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      const clientField = document.getElementById('client-name');
+      if (clientField) {
+        clientField.value = formattedName;
+      }
+    }
+
+    const dimMatch = lower.match(/(\d+)\s*(?:par|x)\s*(\d+)/i);
+    if (dimMatch) {
+      const length = dimMatch[1];
+      const width = dimMatch[2];
+      
+      const lengthField = document.getElementById('bath-length') || document.getElementById('room-length');
+      const widthField = document.getElementById('bath-width') || document.getElementById('room-width');
+      const sqftField = document.getElementById('bath-size');
+
+      if (lengthField) lengthField.value = length;
+      if (widthField) widthField.value = width;
+      if (sqftField) {
+        sqftField.value = parseInt(length) * parseInt(width);
+      }
+    }
+  }
+
+  // Initialize everything safely when the page loads
+  document.addEventListener('DOMContentLoaded', async () => {
+    initVoiceAssistant();
+    await initialize();
+  });
+</script>
+<script>
+  // Ensures only one checkbox is checked at a time
+  function handleSaveDestination(type) {
+    const quoteBox = document.getElementById('save-as-quote');
+    const tplBox = document.getElementById('save-as-template');
+    
+    if (type === 'quote' && quoteBox.checked) {
+      tplBox.checked = false;
+    } else if (type === 'template' && tplBox.checked) {
+      quoteBox.checked = false;
+    }
+    
+    // Prevent both from being unchecked
+    if (!quoteBox.checked && !tplBox.checked) {
+      if (type === 'quote') quoteBox.checked = true;
+      else tplBox.checked = true;
+    }
+  }
+
+    // Tracks current working mode: 'quote' or 'template'
+  let currentFileMode = 'quote';
+
+  function switchFileMode(mode) {
+    const quoteBox = document.getElementById('mode-quote');
+    const tplBox = document.getElementById('mode-template');
+    const labelEl = document.getElementById('dropdown-label');
+
+    // 1. CLEAR FORM AND RESET TO EMPTY STATE
+    currentQuoteId = null;
+    const clientInput = document.getElementById('client-name');
+    const projectInput = document.getElementById('project-title');
+    if (clientInput) clientInput.value = '';
+    if (projectInput) projectInput.value = (mode === 'template') ? 'Modèle Salle de Bain' : 'Rénovation Salle de Bain';
+    quoteItems = [];
+    if (typeof renderQuote === 'function') {
       renderQuote();
     }
 
-    async function loadCatalog() {
-      try {
-        const setRes = await fetch('api-materials.php?action=get_settings');
-        const settings = await setRes.json();
-        if (settings && settings.markup_rate !== undefined) {
-          globalMarkup = parseFloat(settings.markup_rate);
-        }
-
-        const matRes = await fetch('api-materials.php?action=list');
-        const materials = await matRes.json();
-        
-        const select = document.getElementById('material-select');
-        select.innerHTML = '<option value="">-- Sélectionnez un matériel --</option>';
-        
-        materials.forEach(m => {
-          materialsData[m.id] = m;
-          const cost = parseFloat(m.price) || 0;
-          const billedPrice = cost + (cost * globalMarkup);
-          
-          const opt = document.createElement('option');
-          opt.value = m.id;
-          opt.textContent = `${m.id} - ${m.name} ($${billedPrice.toFixed(2)})`;
-          select.appendChild(opt);
-        });
-
-      } catch (e) {
-        console.error("Erreur de chargement", e);
-      }
+    // 2. SWITCH MODES
+    if (mode === 'quote') {
+      if (quoteBox) quoteBox.checked = true;
+      if (tplBox) tplBox.checked = false;
+      currentFileMode = 'quote';
+      if (labelEl) labelEl.textContent = "Charger un estimé sauvegardé :";
+    } else {
+      if (tplBox) tplBox.checked = true;
+      if (quoteBox) quoteBox.checked = false;
+      currentFileMode = 'template';
+      if (labelEl) labelEl.textContent = "Charger un modèle maître :";
     }
 
-    async function loadSavedQuotesList() {
-      try {
+    // 3. RELOAD DROPDOWN LIST
+    loadSavedQuotesList();
+  }
+
+  // Dynamic list loader (reads quotes or templates based on mode)
+  async function loadSavedQuotesList() {
+    const select = document.getElementById('saved-quotes-select');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">-- Chargement... --</option>';
+
+    try {
+      if (currentFileMode === 'quote') {
+        // --- LOAD CLIENT QUOTES ---
         const res = await fetch('api-quotes.php?action=list');
         let data = await res.json();
-        
         const quotes = Array.isArray(data) ? data : (data.quotes || data.data || Object.values(data || {}));
-        const select = document.getElementById('saved-quotes-select');
-        if (!select) return;
         
         select.innerHTML = '<option value="">-- Nouvelle Soumission --</option>';
         const seenIds = new Set();
@@ -328,75 +707,53 @@ if (!empty($reqId)) {
 
           const clientName = (q.client_name || (q.client && q.client.name) || '').trim();
           const projectTitle = (q.project_title || '').trim();
-          
           if (!clientName && !projectTitle) return;
 
           const opt = document.createElement('option');
           opt.value = id;
           const dateStr = q.saved_at ? q.saved_at.split(' ')[0] : (q.created_at ? q.created_at.split(' ')[0] : '');
-          const label = `${clientName || 'Sans Nom'} - ${projectTitle || 'Projet'} ${dateStr ? '(' + dateStr + ')' : ''}`;
-          opt.textContent = label;
+          opt.textContent = `${clientName || 'Sans Nom'} - ${projectTitle || 'Projet'} ${dateStr ? '(' + dateStr + ')' : ''}`;
           select.appendChild(opt);
         });
-      } catch (e) {
-        console.error("Failed to load saved quotes", e);
-      }
-    }
 
-    async function saveQuote() {
-      const clientName = document.getElementById('client-name').value.trim();
-      const projectTitle = document.getElementById('project-title').value.trim();
-
-      if (quoteItems.length === 0) {
-        alert("Vous ne pouvez pas sauvegarder une soumission vide.");
-        return;
-      }
-
-      if (!clientName) {
-        if(!confirm("Aucun nom de client n'a été entré. Sauvegarder quand même ?")) return;
-      }
-
-      const payload = {
-        id: currentQuoteId,
-        client_name: clientName,
-        project_title: projectTitle,
-        items: quoteItems
-      };
-
-      try {
-        const res = await fetch('api-quotes.php?action=save', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
+      } else {
+        // --- LOAD MASTER TEMPLATES ---
+        const res = await fetch('api-templates.php?action=list');
+        const data = await res.json();
         
-        if (result.success) {
-          currentQuoteId = result.id;
-          alert("Soumission sauvegardée avec succès !");
-          await loadSavedQuotesList();
-          document.getElementById('saved-quotes-select').value = currentQuoteId;
-        } else {
-          alert("Erreur lors de la sauvegarde.");
+        select.innerHTML = '<option value="">-- Nouveau Modèle Maître --</option>';
+        
+        if (data.success && Array.isArray(data.templates)) {
+          data.templates.forEach(tpl => {
+            const opt = document.createElement('option');
+            opt.value = tpl.id;
+            opt.textContent = `[${tpl.folder || 'Salle de Bain'}] ${tpl.name} (${tpl.updated_at ? tpl.updated_at.split(' ')[0] : ''})`;
+            opt.dataset.template = JSON.stringify(tpl);
+            select.appendChild(opt);
+          });
         }
-      } catch (e) {
-        alert("Erreur de communication avec le serveur.");
       }
+    } catch (e) {
+      console.error("Failed to load list", e);
+    }
+  }
+
+  // Load selected file into the quote builder
+  async function loadSelectedFile() {
+    const select = document.getElementById('saved-quotes-select');
+    const selectedId = select ? select.value : '';
+
+    if (!selectedId) {
+      currentQuoteId = null;
+      document.getElementById('client-name').value = '';
+      document.getElementById('project-title').value = currentFileMode === 'template' ? 'Nouveau Modèle' : 'Rénovation Salle de Bain';
+      quoteItems = [];
+      renderQuote();
+      return;
     }
 
-    async function loadQuote() {
-      const select = document.getElementById('saved-quotes-select');
-      const selectedId = select ? select.value : '';
-
-      if (!selectedId) {
-        currentQuoteId = null;
-        document.getElementById('client-name').value = '';
-        document.getElementById('project-title').value = 'Rénovation Salle de Bain';
-        quoteItems = [];
-        renderQuote();
-        return;
-      }
-
+    if (currentFileMode === 'quote') {
+      // Load Client Quote
       try {
         const res = await fetch('api-quotes.php?action=list');
         let data = await res.json();
@@ -411,285 +768,93 @@ if (!empty($reqId)) {
           renderQuote();
         }
       } catch (e) {
-        console.error("Erreur lors du chargement de la soumission:", e);
+        console.error("Erreur de chargement de la soumission:", e);
+      }
+    } else {
+      // Load Master Template from dropdown option dataset
+      const opt = select.options[select.selectedIndex];
+      if (opt && opt.dataset.template) {
+        const tpl = JSON.parse(opt.dataset.template);
+        currentQuoteId = tpl.id;
+        document.getElementById('client-name').value = tpl.folder || 'Modèle';
+        document.getElementById('project-title').value = tpl.name || '';
+        quoteItems = Array.isArray(tpl.items) ? tpl.items : [];
+        renderQuote();
       }
     }
+  }
 
-    async function deleteQuote() {
-      const select = document.getElementById('saved-quotes-select');
-      const selectedId = select.value;
-      if (!selectedId) return;
+  // Save handler respecting current mode
+  async function saveQuote() {
+    const clientName = document.getElementById('client-name').value.trim();
+    const projectTitle = document.getElementById('project-title').value.trim();
 
-      if (!confirm("Voulez-vous vraiment supprimer cette sauvegarde ?")) return;
-
-      try {
-        const res = await fetch('api-quotes.php?action=delete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: selectedId })
-        });
-        const result = await res.json();
-        if (result.success) {
-          currentQuoteId = null;
-          document.getElementById('client-name').value = '';
-          quoteItems = [];
-          renderQuote();
-          await loadSavedQuotesList();
-        }
-      } catch (e) {
-        alert("Erreur lors de la suppression.");
-      }
+    if (quoteItems.length === 0) {
+      alert("Vous ne pouvez pas sauvegarder un élément vide.");
+      return;
     }
 
-    function addMaterialToQuote() {
-      const select = document.getElementById('material-select');
-      const qtyInput = document.getElementById('material-qty');
-      const id = select.value;
-      const qty = parseFloat(qtyInput.value) || 1;
+    const payload = {
+      id: currentQuoteId,
+      client_name: clientName,
+      project_title: projectTitle,
+      items: quoteItems
+    };
 
-      if (!id) {
-        alert("Veuillez sélectionner un matériel.");
-        return;
-      }
+    const endpoint = (currentFileMode === 'template') ? 'api-templates.php?action=save' : 'api-quotes.php?action=save';
 
-      const mat = materialsData[id];
-      const cost = parseFloat(mat.price) || 0;
-      const billedPrice = cost + (cost * globalMarkup);
-
-      quoteItems.push({
-        id: Date.now(),
-        desc: mat.name,
-        qty: qty,
-        unitPrice: billedPrice
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
-
-      select.value = "";
-      qtyInput.value = "1";
-      renderQuote();
-    }
-
-    function addCustomToQuote() {
-      const descInput = document.getElementById('custom-desc');
-      const qtyInput = document.getElementById('custom-qty');
-      const priceInput = document.getElementById('custom-price');
+      const result = await res.json();
       
-      const desc = descInput.value.trim();
-      const qty = parseFloat(qtyInput.value) || 1;
-      const price = parseFloat(priceInput.value) || 0;
-
-      if (!desc || price <= 0 || qty <= 0) {
-        alert("Veuillez entrer une description, des heures et un montant valide.");
-        return;
+      if (result.success) {
+        currentQuoteId = result.id;
+        const msg = (currentFileMode === 'template') ? "⭐ Modèle maître enregistré avec succès !" : "📋 Soumission client enregistrée avec succès !";
+        alert(msg);
+        await loadSavedQuotesList();
+        document.getElementById('saved-quotes-select').value = currentQuoteId;
+      } else {
+        alert("Erreur lors de la sauvegarde.");
       }
+    } catch (e) {
+      console.error(e);
+      alert("Erreur de communication avec le serveur.");
+    }
+  }
 
-      quoteItems.push({
-        id: Date.now(),
-        desc: desc,
-        qty: qty,
-        unitPrice: price
+  // Delete handler respecting current mode
+  async function deleteSelectedFile() {
+    const select = document.getElementById('saved-quotes-select');
+    const selectedId = select ? select.value : '';
+    if (!selectedId) return;
+
+    if (!confirm("Voulez-vous vraiment supprimer ce fichier ?")) return;
+
+    const endpoint = (currentFileMode === 'template') ? 'api-templates.php?action=delete' : 'api-quotes.php?action=delete';
+
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: selectedId })
       });
-
-      descInput.value = "";
-      qtyInput.value = "1";
-      priceInput.value = "";
-      renderQuote();
+      const result = await res.json();
+      if (result.success) {
+        currentQuoteId = null;
+        document.getElementById('client-name').value = '';
+        quoteItems = [];
+        renderQuote();
+        await loadSavedQuotesList();
+        alert("🗑️ Fichier supprimé avec succès.");
+      }
+    } catch (e) {
+      alert("Erreur lors de la suppression.");
     }
-
-    function removeRow(rowId) {
-      quoteItems = quoteItems.filter(item => item.id !== rowId);
-      renderQuote();
-    }
-
-    function renderQuote() {
-      const tbody = document.getElementById('quote-body');
-      tbody.innerHTML = '';
-      let subtotal = 0;
-
-      if (quoteItems.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">Aucun article ajouté.</td></tr>';
-      } else {
-        quoteItems.forEach(item => {
-          const rowTotal = item.qty * item.unitPrice;
-          subtotal += rowTotal;
-
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${item.desc}</td>
-            <td class="text-right">${item.qty}</td>
-            <td class="text-right">$${item.unitPrice.toFixed(2)}</td>
-            <td class="text-right"><strong>$${rowTotal.toFixed(2)}</strong></td>
-            <td class="text-right">
-              <button class="btn-remove" onclick="removeRow(${item.id})" title="Retirer"><i class="fa-solid fa-xmark"></i></button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-      }
-
-      const tps = subtotal * 0.05;
-      const tvq = subtotal * 0.09975;
-      const total = subtotal + tps + tvq;
-
-      document.getElementById('summary-subtotal').textContent = '$' + subtotal.toFixed(2);
-      document.getElementById('summary-tps').textContent = '$' + tps.toFixed(2);
-      document.getElementById('summary-tvq').textContent = '$' + tvq.toFixed(2);
-      document.getElementById('summary-total').textContent = '$' + total.toFixed(2);
-    }
-
-    // ==========================================
-    // VOICE-TO-ESTIMATE ASSISTANT (CHANTIER)
-    // ==========================================
-
-    let recognitionInstance = null;
-    let isVoiceActive = false;
-
-    function initVoiceAssistant() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const statusEl = document.getElementById('voice-status');
-      const btn = document.getElementById('btn-voice-rec');
-      const textInput = document.getElementById('voice-text-fallback');
-      const submitBtn = document.getElementById('btn-text-submit');
-
-      if (btn) {
-        btn.onclick = toggleVoiceRecording;
-      }
-
-      if (submitBtn && textInput) {
-        submitBtn.onclick = () => {
-          const val = textInput.value.trim();
-          if (val) {
-            if (statusEl) statusEl.textContent = `✅ Commande textuelle exécutée : "${val}"`;
-            processVoiceCommandText(val);
-            textInput.value = '';
-          }
-        };
-        textInput.onkeypress = (e) => {
-          if (e.key === 'Enter') {
-            submitBtn.click();
-          }
-        };
-      }
-
-      if (!SpeechRecognition) {
-        if (statusEl) statusEl.textContent = "La reconnaissance vocale nécessite Google Chrome. Utilisez la boîte de texte ci-dessous.";
-        if (btn) btn.style.display = 'none';
-        return;
-      }
-
-      recognitionInstance = new SpeechRecognition();
-      recognitionInstance.lang = 'fr-CA';
-      recognitionInstance.interimResults = false;
-      recognitionInstance.maxAlternatives = 1;
-
-      recognitionInstance.onstart = function() {
-        isVoiceActive = true;
-        if (btn) btn.classList.add('recording-active');
-        if (statusEl) statusEl.textContent = "🎙️ Écoute en cours... Décrivez le projet";
-      };
-
-      recognitionInstance.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        if (statusEl) statusEl.textContent = `✅ Capté : "${transcript}"`;
-        processVoiceCommandText(transcript);
-      };
-
-      recognitionInstance.onerror = function(event) {
-        console.error("Erreur de reconnaissance vocale :", event.error);
-        let msg = "Microphone introuvable ou accès refusé.";
-        if (statusEl) statusEl.textContent = `⚠️ ${msg} Utilisez la boîte de texte ci-dessous.`;
-        stopVoiceAssistantUI();
-      };
-
-      recognitionInstance.onend = function() {
-        stopVoiceAssistantUI();
-      };
-    }
-
-    async function toggleVoiceRecording() {
-      const statusEl = document.getElementById('voice-status');
-
-      try {
-        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-          const devices = await navigator.mediaDevices.enumerateDevices();
-          const hasMic = devices.some(device => device.kind === 'audioinput');
-          if (!hasMic) {
-            if (statusEl) statusEl.textContent = "⚠️ Aucun microphone détecté. Utilisez la boîte de texte ci-dessous.";
-            alert("Aucun microphone n'a été détecté. Vous pouvez utiliser la boîte de saisie textuelle.");
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn("Impossible de lister les périphériques audio:", e);
-      }
-
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop());
-      } catch (err) {
-        if (statusEl) statusEl.textContent = "⚠️ Accès au microphone refusé ou absent.";
-        alert("Aucun microphone actif ou autorisé trouvé.");
-        return;
-      }
-
-      if (!recognitionInstance) {
-        initVoiceAssistant();
-      }
-
-      if (!recognitionInstance) return;
-
-      if (isVoiceActive) {
-        try { recognitionInstance.stop(); } catch(e) {}
-        stopVoiceAssistantUI();
-      } else {
-        try {
-          recognitionInstance.start();
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    }
-
-    function stopVoiceAssistantUI() {
-      isVoiceActive = false;
-      const btn = document.getElementById('btn-voice-rec');
-      if (btn) btn.classList.remove('recording-active');
-    }
-
-    function processVoiceCommandText(text) {
-      const lower = text.toLowerCase();
-
-      const clientMatch = lower.match(/(?:client|pour|nom)\s+([a-zà-ÿ\s]+)(?:\.|,|\s+salle|\s+dimension|\s+avec|$)/i);
-      if (clientMatch && clientMatch[1]) {
-        const rawName = clientMatch[1].trim();
-        const formattedName = rawName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-        const clientField = document.getElementById('client-name');
-        if (clientField) {
-          clientField.value = formattedName;
-        }
-      }
-
-      const dimMatch = lower.match(/(\d+)\s*(?:par|x)\s*(\d+)/i);
-      if (dimMatch) {
-        const length = dimMatch[1];
-        const width = dimMatch[2];
-        
-        const lengthField = document.getElementById('bath-length') || document.getElementById('room-length');
-        const widthField = document.getElementById('bath-width') || document.getElementById('room-width');
-        const sqftField = document.getElementById('bath-size');
-
-        if (lengthField) lengthField.value = length;
-        if (widthField) widthField.value = width;
-        if (sqftField) {
-          sqftField.value = parseInt(length) * parseInt(width);
-        }
-      }
-    }
-
-    // Initialize everything safely when the page loads
-    document.addEventListener('DOMContentLoaded', async () => {
-      initVoiceAssistant();
-      await initialize();
-    });
-  </script>
+  }
+</script>
 </body>
 </html>

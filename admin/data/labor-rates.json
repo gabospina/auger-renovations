@@ -1,0 +1,30 @@
+{
+  "demolition": {
+    "label": "Démolition",
+    "hourly_rate": 55.00
+  },
+  "plumbing": {
+    "label": "Plomberie",
+    "hourly_rate": 95.00
+  },
+  "electrical": {
+    "label": "Électricité",
+    "hourly_rate": 105.00
+  },
+  "tiling": {
+    "label": "Carrelage",
+    "hourly_rate": 75.00
+  },
+  "drywall": {
+    "label": "Gypse et joints",
+    "hourly_rate": 70.00
+  },
+  "painting": {
+    "label": "Peinture",
+    "hourly_rate": 60.00
+  },
+  "finish_carpentry": {
+    "label": "Finition",
+    "hourly_rate": 75.00
+  }
+}
