@@ -152,8 +152,48 @@ if (file_exists($requestsFile)) {
 $allRequests[$requestId] = $newRequest;
 file_put_contents($requestsFile, json_encode($allRequests, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 
+// Track the successful quote request (AFTER save)
 require_once __DIR__ . '/admin/lib/tracker.php';
-track_event('quote_request', 'quote-bathroom.php', ['request_id' => $request_id ?? null]);
+track_event('quote_request', 'quote-bathroom.php', ['request_id' => $requestId]);
+
+// Send email notification to admin (non-blocking — never breaks the form)
+try {
+    require_once __DIR__ . '/admin/lib/mailer.php';
+    $cfg = load_mail_config();
+    $adminEmail = $cfg['admin_email'] ?? ($cfg['smtp_user'] ?? '');
+
+    if ($adminEmail && mail_configured()) {
+        $clientName = $newRequest['client']['name'] ?: 'Client';
+        $clientPhone = $newRequest['client']['phone'] ?: '-';
+        $clientEmail = $newRequest['client']['email'] ?: '-';
+        $projectType = $newRequest['project']['type'] ?: 'Projet';
+
+        $subject = "🔔 Nouvelle demande de soumission — {$clientName}";
+        $html = "
+        <div style='font-family:Arial,sans-serif;max-width:600px;margin:0 auto;'>
+            <h2 style='color:#003366;'>Nouvelle demande de soumission</h2>
+            <table style='border-collapse:collapse;width:100%;margin:20px 0;'>
+                <tr><td style='padding:8px;border:1px solid #ddd;background:#f7f9fc;width:140px;'><strong>ID</strong></td><td style='padding:8px;border:1px solid #ddd;'>{$requestId}</td></tr>
+                <tr><td style='padding:8px;border:1px solid #ddd;background:#f7f9fc;'><strong>Client</strong></td><td style='padding:8px;border:1px solid #ddd;'>{$clientName}</td></tr>
+                <tr><td style='padding:8px;border:1px solid #ddd;background:#f7f9fc;'><strong>Téléphone</strong></td><td style='padding:8px;border:1px solid #ddd;'>{$clientPhone}</td></tr>
+                <tr><td style='padding:8px;border:1px solid #ddd;background:#f7f9fc;'><strong>Email</strong></td><td style='padding:8px;border:1px solid #ddd;'>{$clientEmail}</td></tr>
+                <tr><td style='padding:8px;border:1px solid #ddd;background:#f7f9fc;'><strong>Type</strong></td><td style='padding:8px;border:1px solid #ddd;'>{$projectType}</td></tr>
+                <tr><td style='padding:8px;border:1px solid #ddd;background:#f7f9fc;'><strong>Budget</strong></td><td style='padding:8px;border:1px solid #ddd;'>{$newRequest['project']['budget_range']}</td></tr>
+            </table>
+            <p>
+                <a href='" . ($_SERVER['HTTP_HOST'] ?? 'localhost') . "' style='display:inline-block;background:#ff6600;color:#fff;text-decoration:none;padding:12px 24px;border-radius:6px;font-weight:600;'>
+                    Voir la demande dans l'admin →
+                </a>
+            </p>
+            <p style='color:#999;font-size:12px;margin-top:20px;'>Notification automatique d'Auger Renovations</p>
+        </div>
+        ";
+        send_mail($adminEmail, $subject, $html, $clientEmail);
+    }
+} catch (Exception $e) {
+    // Silent — email failure must never break the form
+    error_log('Email notification failed: ' . $e->getMessage());
+}
 
 // Redirect back to confirmation screen
 header('Location: quote-bathroom.php?submitted=1&req=' . urlencode($requestId));

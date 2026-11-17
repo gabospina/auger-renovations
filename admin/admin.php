@@ -175,11 +175,41 @@ $data = json_decode(file_get_contents($siteTextFile), true);
         <p>Créer un estimé général indépendant</p>
       </a>
 
-      <!-- NEW PASSWORD MANAGER CARD -->
       <a href="gestion-passwords.php" class="card">
         <i class="fa-solid fa-key"></i>
         <h3>Mots de passe</h3>
         <p>Gérer les accès des gérants</p>
+      </a>
+
+      <!-- ─── NEW: Marketing & Analytics ─── -->
+      <a href="analytics.php" class="card">
+        <i class="fa-solid fa-chart-line"></i>
+        <h3>Analytics</h3>
+        <p>Voir les visiteurs et clics WhatsApp</p>
+      </a>
+
+      <a href="send-review.php" class="card">
+        <i class="fa-solid fa-star"></i>
+        <h3>Demandes d'avis</h3>
+        <p>Demander des avis Google aux clients</p>
+      </a>
+
+      <a href="settings.php" class="card">
+        <i class="fa-solid fa-cog"></i>
+        <h3>Paramètres</h3>
+        <p>Email SMTP et lien Google Review</p>
+      </a>
+
+      <a href="qr-codes.php" class="card">
+          <i class="fa-solid fa-qrcode"></i>
+          <h3>QR Codes</h3>
+          <p>Créer des QR codes pour camion, cartes, factures</p>
+      </a>
+
+      <a href="gbp-checklist.php" class="card">
+          <i class="fa-solid fa-bullseye"></i>
+          <h3>Google Business</h3>
+          <p>Checklist pour optimiser votre fiche Google</p>
       </a>
     </div>
 

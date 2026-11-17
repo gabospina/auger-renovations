@@ -30,7 +30,7 @@ if ($days !== null) {
 }
 
 // --- Aggregate ---
-$counts = ['page_view' => 0, 'whatsapp_click' => 0, 'phone_click' => 0, 'directions_click' => 0, 'quote_request' => 0, 'contact_form' => 0];
+$counts = ['page_view' => 0, 'whatsapp_click' => 0, 'phone_click' => 0, 'directions_click' => 0, 'quote_request' => 0, 'contact_form' => 0, 'review_request' => 0, 'qr_scan' => 0];
 $pages  = [];
 $uniqueVisitors = [];
 $daily  = [];
@@ -133,6 +133,8 @@ h1 { color: #003366; }
         <div class="metric unique"><div class="metric-label">Visiteurs uniques (approx.)</div><div class="metric-value"><?= fmt(count($uniqueVisitors)) ?></div></div>
         <div class="metric wa"><div class="metric-label">Clics WhatsApp</div><div class="metric-value"><?= fmt($counts['whatsapp_click']) ?></div></div>
         <div class="metric quotes"><div class="metric-label">Demandes de soumission</div><div class="metric-value"><?= fmt($counts['quote_request']) ?></div></div>
+        <div class="metric" style="border-left-color: #f59e0b;"><div class="metric-label">⭐ Demandes d'avis envoyées</div><div class="metric-value"><?= fmt($counts['review_request'] ?? 0) ?></div></div>
+        <div class="metric" style="border-left-color: #8b5cf6;"><div class="metric-label">📱 QR code scans</div><div class="metric-value"><?= fmt($counts['qr_scan'] ?? 0) ?></div></div>
     </div>
 
     <div class="card">
@@ -170,6 +172,8 @@ h1 { color: #003366; }
                 <li><span>📞 Téléphone cliqué</span><span class="top-list-count"><?= fmt($counts['phone_click']) ?></span></li>
                 <li><span>📍 Directions cliquées</span><span class="top-list-count"><?= fmt($counts['directions_click']) ?></span></li>
                 <li><span>📝 Demandes de soumission</span><span class="top-list-count"><?= fmt($counts['quote_request']) ?></span></li>
+                <li><span>⭐ Demandes d'avis envoyées</span><span class="top-list-count"><?= fmt($counts['review_request'] ?? 0) ?></span></li>
+                <li><span>📱 QR code scanné</span><span class="top-list-count"><?= fmt($counts['qr_scan'] ?? 0) ?></span></li>
             </ul>
         </div>
     </div>
