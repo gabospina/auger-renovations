@@ -1,6 +1,6 @@
 {
     "request_id": "REQ-20261017-8633",
-    "analysis_date": "2026-10-25 22:01:34",
+    "analysis_date": "2026-10-30 19:57:40",
     "room_type": "bathroom",
     "complexity": "high",
     "risk_level": "high",
@@ -33,20 +33,20 @@
         "plumbing_relocation": true
     },
     "matching_portfolio_photos": [
-        "assets/images/salle_de_bains/1792961900_4116.jpg",
-        "assets/images/salle_de_bains/Bathroom-5.png",
-        "assets/images/salle_de_bains/ARenovation-BathroomShowerBalckWhite-3.jpeg"
+        "assets/images/salle_de_bains/Bathroom-1.png",
+        "assets/images/salle_de_bains/ARenovation-BathroomWhiteBlackShowerBlack.jpg",
+        "assets/images/salle_de_bains/Bathroom-1.JPG"
     ],
     "confidence": 0.93,
     "mapped_materials": {
         "request_id": "REQ-20261017-8633",
-        "mapped_at": "2026-10-28 18:39:44",
+        "mapped_at": "2026-10-30 19:57:45",
         "materials": [
             {
                 "sku": "SKU-1001690476",
                 "name": "Merola Tile Carreau mural et de sol Amberes Azul II, 13 po x 13 po, céramique, 15,85 pi2/bte",
                 "quantity": 11,
-                "unit": "sqft",
+                "unit": "box",
                 "estimated_unit_price": 168.04,
                 "total": 1848.44
             },
@@ -83,20 +83,28 @@
                 "total": 359.76
             },
             {
-                "sku": "SKU-1000822618",
-                "name": "Glacier Bay Delchester 24 po W x 32,7 po H x 18,7 po D Vanité de Salle de Bain en Bois Blanc avec Dessus en Céramique pour Évier Central Unique Intégré",
+                "sku": "CANAC-VANITY-36",
+                "name": "Meuble-vanité 36 po chêne naturel avec comptoir quartz",
                 "quantity": 1,
-                "unit": "piece",
-                "estimated_unit_price": 198,
-                "total": 198
+                "unit": "unité",
+                "estimated_unit_price": 829,
+                "total": 829
             },
             {
-                "sku": "SKU-1001877076",
-                "name": "American Standard Toilette allongée deux pièces Mainstream, 4,8 L p.c., hauteur standard, à chasse simple, blanc",
+                "sku": "SKU-1000116247",
+                "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
                 "quantity": 1,
                 "unit": "piece",
-                "estimated_unit_price": 176,
-                "total": 176
+                "estimated_unit_price": 8.47,
+                "total": 8.47
+            },
+            {
+                "sku": "SKU-1000116247",
+                "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 8.47,
+                "total": 8.47
             },
             {
                 "sku": "SKU-1000723588",
@@ -123,6 +131,6 @@
                 "total": 27.92
             }
         ],
-        "total_materials_cost": 3288.3
+        "total_materials_cost": 3760.24
     }
 }

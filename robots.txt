@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin/data/
+Disallow: /view-quote.php
+Disallow: /quote-bathroom.php
+Disallow: /save-request.php
+
+Sitemap: https://auger-renovations.onrender.com/sitemap.xml

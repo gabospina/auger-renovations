@@ -400,13 +400,6 @@ $submittedReqId = $_GET['req'] ?? '';
             <input type="file" id="photo-current" name="photo_current[]" multiple accept="image/*">
             <div id="photo-current-grid" class="photo-thumb-grid"></div>
           </div>
-
-          <div class="form-group">
-            <label for="photo-desired">Photos du style désiré</label>
-            <input type="file" id="photo-desired" name="photo_desired[]" multiple accept="image/*">
-            <div id="photo-desired-grid" class="photo-thumb-grid"></div>
-          </div>
-        </div>
       </article>
 
       <!-- Actions -->

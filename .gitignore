@@ -1,0 +1,32 @@
+# Analytics runtime data — NEVER commit
+admin/data/analytics_events.json
+admin/data/rate_*.json
+
+# Existing runtime data (verify these are already ignored)
+admin/data/requests.json
+admin/data/quotes.json
+admin/data/saved_quotes/
+admin/data/project-analysis/
+admin/data/templates/
+admin/data/passwords.json
+admin/data/settings.json
+admin/data/site-text.json
+admin/sync-debug.log
+
+# Uploads (user data)
+uploads/*
+!uploads/.gitkeep
+
+# Backups and copies
+admin/data/copies/
+*[Cc]opy*
+*.bak
+*.old
+
+# Python
+__pycache__/
+*.pyc
+
+# Editor
+.vscode/
+.idea/

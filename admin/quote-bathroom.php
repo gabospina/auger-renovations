@@ -2,15 +2,11 @@
 // admin/quote-bathroom.php
 session_start();
 
-// SECURITY: Redirect to login if not authenticated
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: admin.php");
     exit;
 }
 
-// ==========================================
-// AI PREFILL DATA LOADER
-// ==========================================
 $reqId = $_GET['req_id'] ?? '';
 $aiPrefillData = null;
 
@@ -18,6 +14,43 @@ if (!empty($reqId)) {
     $prefillCacheFile = __DIR__ . '/data/project-analysis/' . $reqId . '-prefill.json';
     if (file_exists($prefillCacheFile)) {
         $aiPrefillData = json_decode(file_get_contents($prefillCacheFile), true);
+    }
+}
+
+// ==========================================
+// MASTER TEMPLATE LOADER
+// Any valid .json with items[] is a candidate.
+// Newest updated_at first, then filemtime as tiebreak.
+// ==========================================
+$templatesDir = __DIR__ . '/data/templates';
+$simonTemplateData = null;
+
+if (is_dir($templatesDir)) {
+
+    $templateFiles = glob($templatesDir . '/*.json') ?: [];
+
+    // Pre-filter to only valid templates so the sort never dereferences invalid JSON
+    $templateFiles = array_values(array_filter($templateFiles, function ($file) {
+        $tpl = json_decode(file_get_contents($file), true);
+        return is_array($tpl) && !empty($tpl['items']);
+    }));
+
+    usort($templateFiles, function ($a, $b) {
+
+        $aData = json_decode(file_get_contents($a), true);
+        $bData = json_decode(file_get_contents($b), true);
+
+        $aDate = is_array($aData) ? ($aData['updated_at'] ?? '') : '';
+        $bDate = is_array($bData) ? ($bData['updated_at'] ?? '') : '';
+
+        if ($aDate !== $bDate) {
+            return strcmp($bDate, $aDate);
+        }
+        return filemtime($b) - filemtime($a);
+    });
+
+    if (!empty($templateFiles)) {
+        $simonTemplateData = json_decode(file_get_contents($templateFiles[0]), true);
     }
 }
 ?>
@@ -95,11 +128,10 @@ if (!empty($reqId)) {
     <!-- LEFT PANEL: CONTROLS & ADDING ITEMS -->
     <div class="card control-panel">
 
-      <!-- SAVE & LOAD MODE SELECTOR (Exclusive Mode) -->
-      <div class="save-panel" style="background: #fdfaf3; border: 1px solid #d1b06a; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+      <!-- SAVE & LOAD MODE SELECTOR -->
+      <div class="save-panel">
         <h2 style="border-bottom: 1px solid #d1b06a; margin-top:0; font-size: 16px;"><i class="fa-solid fa-folder-open"></i> Gestion des Fichiers</h2>
         
-        <!-- Mode Switcher Checkboxes -->
         <div style="display: flex; gap: 15px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed #d1b06a;">
           <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; font-weight: bold; color: #24292e;">
             <input type="checkbox" id="mode-quote" checked onclick="switchFileMode('quote')" style="width: auto; accent-color: #24292e;"> 
@@ -233,9 +265,6 @@ if (!empty($reqId)) {
       </table>
 
       <div class="totals-box">
-        <p>Sous-total: <span id="summary-subtotal">$0.00</span></p>
-        <p>TPS (5%): <span id="summary-tps">$0.00</span></p>
-        <p>TVQ (9.975%): <span id="summary-tvq">$0.00</span></p>
         <h3>Total: <span id="summary-total">$0.00</span></h3>
       </div>
 
@@ -245,12 +274,13 @@ if (!empty($reqId)) {
 
 <script>
   let materialsData = {};
-  let globalMarkup = 0.15;
+  let globalMarkup = 0;
   let quoteItems = [];
   let currentQuoteId = null;
 
-  // AI Prefill Data injected from PHP if available
+  // Injected PHP Data
   const aiPrefillData = <?= json_encode($aiPrefillData); ?>;
+  const simonTemplate = <?= json_encode($simonTemplateData); ?>;
 
   document.getElementById('quote-date').textContent = new Date().toLocaleDateString('fr-CA');
 
@@ -258,33 +288,91 @@ if (!empty($reqId)) {
     await loadCatalog();
     await loadSavedQuotesList();
 
-    // If AI Prefill data is present, populate form automatically!
+    // 1. Set client info if available from prefill
     if (aiPrefillData && aiPrefillData.client) {
       document.getElementById('client-name').value = aiPrefillData.client.name || '';
-      document.getElementById('project-title').value = `Rénovation Salle de Bain (${aiPrefillData.tier.toUpperCase()}) - Dossier ${aiPrefillData.request_id}`;
+      document.getElementById('project-title').value = `Rénovation Salle de Bain (${(aiPrefillData.tier || 'standard').toUpperCase()}) - Dossier ${aiPrefillData.request_id || ''}`;
       currentQuoteId = aiPrefillData.request_id;
+    } else if (simonTemplate) {
+      document.getElementById('client-name').value = simonTemplate.client_name || 'Simon';
+      document.getElementById('project-title').value = simonTemplate.project_title || 'Template Salle de Bain';
+      currentQuoteId = simonTemplate.id;
+    }
 
-      // Load mapped materials into quote items
-      if (Array.isArray(aiPrefillData.items)) {
-        aiPrefillData.items.forEach(mat => {
-          quoteItems.push({
-            id: Date.now() + Math.random(),
-            desc: mat.name,
-            qty: mat.quantity,
-            unitPrice: mat.estimated_unit_price
-          });
+    // Index AI prefilled items by SKU/desc for quick lookup
+    const aiItemsMap = {};
+    if (aiPrefillData && Array.isArray(aiPrefillData.items)) {
+      aiPrefillData.items.forEach(item => {
+        const skuKey = (item.sku || item.material_id || '').trim().toLowerCase();
+        const descKey = (item.name || item.desc || '').trim().toLowerCase();
+        if (skuKey) aiItemsMap[skuKey] = item;
+        if (descKey) aiItemsMap[descKey] = item;
+      });
+    }
+
+    // Use a Map to guarantee zero duplicates based on SKU or description
+    const uniqueItemsMap = new Map();
+
+    // 2. BASELINE: Load Simon's Complete Master Template List
+    if (simonTemplate && Array.isArray(simonTemplate.items)) {
+      simonTemplate.items.forEach((templateItem, index) => {
+        const sku = (templateItem.sku || templateItem.material_id || '').trim();
+        const desc = (templateItem.desc || templateItem.name || '').trim();
+        const basePrice = parseFloat(templateItem.unitPrice || templateItem.price || 0);
+
+        let finalQty = parseFloat(templateItem.qty) || 0;
+        let finalUnitPrice = basePrice;
+
+        // Check if AI prefill has a calculated quantity for this item
+        const matchedAiItem = aiItemsMap[sku.toLowerCase()] || aiItemsMap[desc.toLowerCase()];
+        if (matchedAiItem) {
+          finalQty = parseFloat(matchedAiItem.quantity || matchedAiItem.qty) || finalQty;
+          finalUnitPrice = parseFloat(matchedAiItem.estimated_unit_price || matchedAiItem.unitPrice) || basePrice;
+        }
+
+        const mapKey = sku ? sku.toLowerCase() : desc.toLowerCase();
+        uniqueItemsMap.set(mapKey, {
+          id: Date.now() + index,
+          material_id: sku,
+          desc: desc,
+          qty: finalQty,
+          unitPrice: finalUnitPrice
         });
-      }
+      });
+    }
 
-      // Add Labor row if financial data exists
-      if (aiPrefillData.financials && aiPrefillData.financials.labor_total > 0) {
+    // 3. Fallback if simonTemplate wasn't loaded: load aiPrefillData items directly
+    if (uniqueItemsMap.size === 0 && aiPrefillData && Array.isArray(aiPrefillData.items)) {
+      aiPrefillData.items.forEach((item, index) => {
+        const sku = (item.sku || item.material_id || '').trim();
+        const desc = (item.name || item.desc || '').trim();
+        const mapKey = sku ? sku.toLowerCase() : desc.toLowerCase();
+
+        uniqueItemsMap.set(mapKey, {
+          id: Date.now() + index,
+          material_id: sku,
+          desc: desc,
+          qty: parseFloat(item.quantity || item.qty) || 0,
+          unitPrice: parseFloat(item.estimated_unit_price || item.unitPrice || 0)
+        });
+      });
+    }
+
+    // Convert Map back to quoteItems array
+    quoteItems = Array.from(uniqueItemsMap.values());
+
+    // 4. Include specific AI labor breakdown rows if available
+    if (aiPrefillData && Array.isArray(aiPrefillData.labor_breakdown)) {
+      aiPrefillData.labor_breakdown.forEach((lab, index) => {
+        const totalLaborCost = (parseFloat(lab.hours) || 0) * (parseFloat(lab.rate) || 0);
         quoteItems.push({
-          id: Date.now() + Math.random(),
-          desc: `Main d'œuvre spécialisée (${aiPrefillData.financials.estimated_hours} heures @ $${aiPrefillData.financials.hourly_rate}/hr)`,
+          id: Date.now() + 5000 + index,
+          material_id: 'LABOR',
+          desc: `${lab.desc} (${lab.hours} hrs @ $${lab.rate}/hr)`,
           qty: 1,
-          unitPrice: aiPrefillData.financials.labor_total
+          unitPrice: totalLaborCost
         });
-      }
+      });
     }
 
     renderQuote();
@@ -394,6 +482,7 @@ if (!empty($reqId)) {
 
     quoteItems.push({
       id: Date.now(),
+      material_id: mat.id ? ('SKU-' + mat.id) : id,
       desc: mat.name,
       qty: qty,
       unitPrice: billedPrice
@@ -432,7 +521,7 @@ if (!empty($reqId)) {
   }
 
   function removeRow(rowId) {
-    quoteItems = quoteItems.filter(item => item.id !== rowId);
+    quoteItems = quoteItems.filter(item => (item.id !== rowId && item.sku !== rowId));
     renderQuote();
   }
 
@@ -445,17 +534,19 @@ if (!empty($reqId)) {
       tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">Aucun article ajouté.</td></tr>';
     } else {
       quoteItems.forEach(item => {
-        const rowTotal = item.qty * item.unitPrice;
+        const effectiveQty = (item.qty === 0 || item.qty === undefined || item.qty === null) ? 1 : parseFloat(item.qty);
+        const unitPrice = parseFloat(item.unitPrice) || 0;
+        const rowTotal = effectiveQty * unitPrice;
         subtotal += rowTotal;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${item.desc}</td>
-          <td class="text-right">${item.qty}</td>
-          <td class="text-right">$${item.unitPrice.toFixed(2)}</td>
+          <td>${item.desc || item.name || ''}</td>
+          <td class="text-right">${item.qty !== undefined ? item.qty : 1}</td>
+          <td class="text-right">$${unitPrice.toFixed(2)}</td>
           <td class="text-right"><strong>$${rowTotal.toFixed(2)}</strong></td>
           <td class="text-right">
-            <button class="btn-remove" onclick="removeRow(${item.id})" title="Retirer"><i class="fa-solid fa-xmark"></i></button>
+            <button class="btn-remove" onclick="removeRow(${item.id || item.sku})" title="Retirer"><i class="fa-solid fa-xmark"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -464,12 +555,17 @@ if (!empty($reqId)) {
 
     const tps = subtotal * 0.05;
     const tvq = subtotal * 0.09975;
-    const total = subtotal + tps + tvq;
+    const grandTotal = subtotal + tps + tvq;
 
-    document.getElementById('summary-subtotal').textContent = '$' + subtotal.toFixed(2);
-    document.getElementById('summary-tps').textContent = '$' + tps.toFixed(2);
-    document.getElementById('summary-tvq').textContent = '$' + tvq.toFixed(2);
-    document.getElementById('summary-total').textContent = '$' + total.toFixed(2);
+    const formattedTotal = grandTotal.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    const totalEl = document.getElementById('summary-total');
+    if (totalEl) {
+      totalEl.textContent = formattedTotal + ' $';
+    }
   }
 
   // ==========================================
@@ -621,14 +717,9 @@ if (!empty($reqId)) {
     }
   }
 
-  // Initialize everything safely when the page loads
-  document.addEventListener('DOMContentLoaded', async () => {
-    initVoiceAssistant();
-    await initialize();
-  });
-</script>
-<script>
-  // Ensures only one checkbox is checked at a time
+  // File Management & Mode Switcher
+  let currentFileMode = 'quote';
+
   function handleSaveDestination(type) {
     const quoteBox = document.getElementById('save-as-quote');
     const tplBox = document.getElementById('save-as-template');
@@ -639,22 +730,17 @@ if (!empty($reqId)) {
       quoteBox.checked = false;
     }
     
-    // Prevent both from being unchecked
     if (!quoteBox.checked && !tplBox.checked) {
       if (type === 'quote') quoteBox.checked = true;
       else tplBox.checked = true;
     }
   }
 
-    // Tracks current working mode: 'quote' or 'template'
-  let currentFileMode = 'quote';
-
   function switchFileMode(mode) {
     const quoteBox = document.getElementById('mode-quote');
     const tplBox = document.getElementById('mode-template');
     const labelEl = document.getElementById('dropdown-label');
 
-    // 1. CLEAR FORM AND RESET TO EMPTY STATE
     currentQuoteId = null;
     const clientInput = document.getElementById('client-name');
     const projectInput = document.getElementById('project-title');
@@ -665,7 +751,6 @@ if (!empty($reqId)) {
       renderQuote();
     }
 
-    // 2. SWITCH MODES
     if (mode === 'quote') {
       if (quoteBox) quoteBox.checked = true;
       if (tplBox) tplBox.checked = false;
@@ -678,11 +763,9 @@ if (!empty($reqId)) {
       if (labelEl) labelEl.textContent = "Charger un modèle maître :";
     }
 
-    // 3. RELOAD DROPDOWN LIST
     loadSavedQuotesList();
   }
 
-  // Dynamic list loader (reads quotes or templates based on mode)
   async function loadSavedQuotesList() {
     const select = document.getElementById('saved-quotes-select');
     if (!select) return;
@@ -691,7 +774,6 @@ if (!empty($reqId)) {
 
     try {
       if (currentFileMode === 'quote') {
-        // --- LOAD CLIENT QUOTES ---
         const res = await fetch('api-quotes.php?action=list');
         let data = await res.json();
         const quotes = Array.isArray(data) ? data : (data.quotes || data.data || Object.values(data || {}));
@@ -717,7 +799,6 @@ if (!empty($reqId)) {
         });
 
       } else {
-        // --- LOAD MASTER TEMPLATES ---
         const res = await fetch('api-templates.php?action=list');
         const data = await res.json();
         
@@ -738,7 +819,6 @@ if (!empty($reqId)) {
     }
   }
 
-  // Load selected file into the quote builder
   async function loadSelectedFile() {
     const select = document.getElementById('saved-quotes-select');
     const selectedId = select ? select.value : '';
@@ -753,7 +833,6 @@ if (!empty($reqId)) {
     }
 
     if (currentFileMode === 'quote') {
-      // Load Client Quote
       try {
         const res = await fetch('api-quotes.php?action=list');
         let data = await res.json();
@@ -771,20 +850,21 @@ if (!empty($reqId)) {
         console.error("Erreur de chargement de la soumission:", e);
       }
     } else {
-      // Load Master Template from dropdown option dataset
       const opt = select.options[select.selectedIndex];
       if (opt && opt.dataset.template) {
         const tpl = JSON.parse(opt.dataset.template);
         currentQuoteId = tpl.id;
         document.getElementById('client-name').value = tpl.folder || 'Modèle';
         document.getElementById('project-title').value = tpl.name || '';
-        quoteItems = Array.isArray(tpl.items) ? tpl.items : [];
+        quoteItems = Array.isArray(tpl.items) ? tpl.items.map((item, index) => ({
+          ...item,
+          id: Date.now() + index
+        })) : [];
         renderQuote();
       }
     }
   }
 
-  // Save handler respecting current mode
   async function saveQuote() {
     const clientName = document.getElementById('client-name').value.trim();
     const projectTitle = document.getElementById('project-title').value.trim();
@@ -826,7 +906,6 @@ if (!empty($reqId)) {
     }
   }
 
-  // Delete handler respecting current mode
   async function deleteSelectedFile() {
     const select = document.getElementById('saved-quotes-select');
     const selectedId = select ? select.value : '';
@@ -855,6 +934,12 @@ if (!empty($reqId)) {
       alert("Erreur lors de la suppression.");
     }
   }
+
+  // Initialize everything safely when the page loads
+  document.addEventListener('DOMContentLoaded', async () => {
+    initVoiceAssistant();
+    await initialize();
+  });
 </script>
 </body>
 </html>

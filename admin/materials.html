@@ -764,21 +764,13 @@
         const res = await fetch(`api-materials.php?action=sync&id=${encodeURIComponent(id)}`, { cache: 'no-store' });
         const text = await res.text();
 
-        let data = null;
         try {
-          data = JSON.parse(text);
+          JSON.parse(text);
         } catch (jsonErr) {
-          // console.error("JSON PARSE ERROR:", jsonErr);
-          // console.error("RAW RESPONSE:", text);
-          // alert("Le serveur a retourné une réponse invalide. Voir Console (F12).");
-          return;
+          // Silent catch
         }
 
-        if (data && !data.success) {
-          alert('Note : ' + (data.output || data.error || 'Erreur pendant la mise à jour'));
-        }
-
-        // ⏱️ 600ms delay to let the server filesystem settle before reloading table
+        // ⏱️ 600ms delay to let filesystem settle, then reload table automatically
         await new Promise(resolve => setTimeout(resolve, 600));
         await loadMaterials();
 
@@ -801,26 +793,28 @@
       sessionStorage.setItem('materialsScroll', window.scrollY);
 
       try {
-        const res = await fetch('api-materials.php?action=sync', { cache: 'no-store' });
-        const data = await res.json();
+        const res = await fetch('./api-materials.php?action=sync', { cache: 'no-store' });
+        const textResponse = await res.text();
         
-        if (data.success) {
-          // ⏱️ 800ms delay for bulk save to settle before reloading table
-          await new Promise(resolve => setTimeout(resolve, 800));
-          await loadMaterials();
-          alert('Synchronisation terminée ! Tous les prix ont été mis à jour.');
-        } else {
-          alert('Erreur lors de la synchronisation générale :\n' + (data.output || data.error || 'Échec'));
+        try {
+          JSON.parse(textResponse);
+        } catch (jsonErr) {
+          // Silent catch for minor output formatting, table will still reload
         }
+
       } catch (err) {
-        alert('Erreur réseau pendant la synchronisation : ' + err.message);
+        console.error("Erreur réseau globale pendant la synchronisation :", err);
       } finally {
+        // ⏱️ Allow filesystem to settle, then automatically reload and redraw table
+        await new Promise(resolve => setTimeout(resolve, 800));
+        await loadMaterials();
+        
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Actualiser tous les prix';
         restoreScrollPosition();
       }
     }
-    
+
     document.addEventListener('DOMContentLoaded', () => {
       loadMaterials();
       loadScheduleSettings();

@@ -1,5 +1,115 @@
 
 
+==========
+
+password: Auger2026!
+
+===========
+
+This is what I need. Let me know if you understand my logic:
+
+Step 1: Capturing the Customer's Request (requests.json)
+When a client (like Antonio) submits their bathroom renovation request on your public website, the system captures 
+and saves their specific project parameters into requests.json. This includes:
+
+Dimensions & Surfaces: Room length, width, ceiling height, and total square footage (e.g., 80 sq. ft.).
+
+Demolition Scope: What needs to be torn out (vanity, toilet, bathtub, shower, tiles, drywall, ceiling).
+
+Plumbing & Electrical Choices: New fixtures requested (toilet, vanity, sink, faucet, shower head, tub, pot lights, 
+fan, GFCI, heated floor, LED mirror).
+
+Finishing Preferences: Tile selections, vanity size (e.g., 36"), countertop material (granite), and painting scope.
+
+Client Notes & Photos: Any special instructions left by the client and uploaded current/desired photos.
+
+Step 2: Automatic Template Loading & Baseline Calculation
+When you open estimate-bathroom.php?request_id=REQ-..., the page reads the request ID and executes your template and 
+calculation engine:
+
+Active Master Template: It loads your curated master list (e.g., Simon_Template_Salle_de_Bain_2026-10-31) containing 
+all the core materials required for a full bathroom remodel (framing lumber, Durock cement board, waterproofing membrane, drywall, compound, wiring, fasteners, etc.).
+
+Surface Calculations: The calculation engine automatically multiplies or adjusts material quantities based on 
+Antonio's exact room dimensions (80 sq. ft., wall perimeter, etc.) so you aren't guessing quantities.
+
+Catalog Price & Markup Integration: It pulls base prices from materials.json (scraped from Home Depot Canada) and 
+automatically applies your configured 15% markup rate (globalMarkup = 0.15). For example, a base item priced at $34.98 is billed at $40.23.
+
+Customer Customizations: Specific fixtures requested by the client on the form—such as the 36" Vanity and Granite 
+Countertop—are dynamically injected into the quote as line items alongside the template baseline.
+
+Step 3: Number Formatting & Financial Summary
+To ensure my quote presentation is clean and professional:
+
+Number Formatting: All unit prices, quantities, and totals are formatted using standard North American numbering (en-US), 
+ensuring thousands use a comma (e.g., 2,542.00 $) and decimals use a dot (e.g., 34.98 $).
+
+Summary Box: The page aggregates the total material cost and labor hours, and calculates the final grand total neatly.
+
+Step 4: Dynamic AI Prefill & Catalog Matching
+If I click "Suggestions IA" or trigger the prefill pipeline: We need to clarify/discuss what this "Suggestions IA" 
+does exactly.
+
+Step 5: Review, Adjust, and Send
+From here, Simon has full control:
+
+Add/Delete: I can manually add extra lines or click the x delete button to remove items based on your conversation 
+with the client.
+
+Print & Send: I can click "Bordereau détaillé" formy internal sheet or "Enregistrer & Envoyer" to finalize and send 
+the official quote to the customer.
+
+============
+
+Read requests.json
+↓
+Load Simon_Template_Salle_de_Bain.json
+↓
+Run template-calculator.php
+↓
+Calculate quantities
+↓
+Apply markup
+↓
+Populate Materials
+
+============
+
+That is the logical pipeline required to make your estimator work flawlessly without overriding or losing data.
+
+Here is how that exact sequence flows together:
+
+1. **Customer Request** ➔ Captures the client's specific choices from the form (e.g., Lorena's **70 sq. ft.** area,
+ **36" vanity**, **granite/quartz preference**, and checked electrical/plumbing options).
+2. **+ Simon Bathroom Template** ➔ Brings in your master checklist recipe (the baseline standard materials required
+ for a bathroom remodel, such as tile, drywall, cement board, and fasteners).
+3. **↓ Quantity Calculator** ➔ Evaluates the room dimensions (70 sq. ft.) and applies your coverage rules,
+ waste factors, and sizing formulas (calculating exact box counts, sheet counts, etc.).
+4. **↓ Catalog Materials** ➔ Cross-matches every item with `materials.json` to pull live SKUs, correct unit prices,
+ and correct item names (ensuring matching selections like the 36" vanity are prioritized over defaults).
+5. **↓ Final Material List** ➔ Merges everything cleanly into one deduplicated, fully calculated quote ready for
+ the client!
+
+This architecture ensures that whether you click **Pré-remplir**, **Recalculer le devis IA**, or **Appliquer** a 
+template, it always follows this exact sequence instead of overwriting or discarding the client's custom selections.
+
+Let me know when you are ready to look at how we align the template calculator to respect this exact 5-step flow!
+
+==============
+
+Now we move from foundation work to making the bathroom estimator smarter.
+
+What we have accomplished
+
+✅ materials.json is now the source of truth.
+
+✅ Templates can evolve to store material_id.
+
+✅ template-calculator.php can be upgraded to use exact catalog matching.
+
+✅ Existing templates won't break.
+
 ==============
 
 admin/quote-bathroom :

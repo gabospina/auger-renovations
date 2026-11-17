@@ -392,8 +392,6 @@ function setupPhotoPreviews() {
 
 // BOOTSTRAP INITIALIZATION
 
-// BOOTSTRAP INITIALIZATION
-
 document.addEventListener('DOMContentLoaded', async () => {
   await initCatalogAutocomplete();
   await loadTierPresets();
@@ -474,13 +472,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // "Pré-remplir selon la demande" button (runs on demand when Simon clicks it)
+  // Corrected event listener in quote-bathroom.js
   document.getElementById('btn-prefill-quote')?.addEventListener('click', () => {
-    prefillFromClientRequest();
-    
-    // RESTORE the orange highlight on whichever tier was active!
-    const activeKey = window.currentActiveTier || 'budget';
-    document.querySelectorAll('.btn-tier').forEach(b => b.classList.remove('active'));
-    document.getElementById(`tier-btn-${activeKey}`)?.classList.add('active');
+      // Extract the request ID from the URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const reqId = urlParams.get('request_id');
+      
+      if (reqId && typeof runQuotePrefill === 'function') {
+          runQuotePrefill(reqId);
+      } else {
+          console.error("ID de requête introuvable ou fonction runQuotePrefill non définie.");
+      }
+      
+      // Restore the orange highlight on whichever tier was active
+      const activeKey = window.currentActiveTier || 'budget';
+      document.querySelectorAll('.btn-tier').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tier-btn-${activeKey}`)?.classList.add('active');
   });
 
   // Send quote handler

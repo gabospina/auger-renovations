@@ -2,8 +2,18 @@ import os
 
 ROOT = r"C:/xampp/htdocs/auger-renovations"
 
+EXCLUDED = {
+    '.git',
+    'node_modules',
+    'vendor',
+    '__pycache__'
+}
+
 def show_tree(path, prefix=""):
-    items = sorted(os.listdir(path))
+    items = [
+    x for x in sorted(os.listdir(path))
+    if x not in EXCLUDED
+]
     for index, item in enumerate(items):
         full_path = os.path.join(path, item)
         connector = "└── " if index == len(items) - 1 else "├── "

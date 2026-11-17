@@ -1,6 +1,6 @@
 {
     "request_id": "REQ-20261017-8633",
-    "prefilled_at": "2026-10-28 18:39:44",
+    "prefilled_at": "2026-10-30 19:57:45",
     "client": {
         "name": "Simon Auger",
         "address": "Valley Field",
@@ -24,7 +24,7 @@
             "sku": "SKU-1001690476",
             "name": "Merola Tile Carreau mural et de sol Amberes Azul II, 13 po x 13 po, céramique, 15,85 pi2/bte",
             "quantity": 11,
-            "unit": "sqft",
+            "unit": "box",
             "estimated_unit_price": 168.04,
             "total": 1848.44
         },
@@ -61,20 +61,28 @@
             "total": 359.76
         },
         {
-            "sku": "SKU-1000822618",
-            "name": "Glacier Bay Delchester 24 po W x 32,7 po H x 18,7 po D Vanité de Salle de Bain en Bois Blanc avec Dessus en Céramique pour Évier Central Unique Intégré",
+            "sku": "CANAC-VANITY-36",
+            "name": "Meuble-vanité 36 po chêne naturel avec comptoir quartz",
             "quantity": 1,
-            "unit": "piece",
-            "estimated_unit_price": 198,
-            "total": 198
+            "unit": "unité",
+            "estimated_unit_price": 829,
+            "total": 829
         },
         {
-            "sku": "SKU-1001877076",
-            "name": "American Standard Toilette allongée deux pièces Mainstream, 4,8 L p.c., hauteur standard, à chasse simple, blanc",
+            "sku": "SKU-1000116247",
+            "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
             "quantity": 1,
             "unit": "piece",
-            "estimated_unit_price": 176,
-            "total": 176
+            "estimated_unit_price": 8.47,
+            "total": 8.47
+        },
+        {
+            "sku": "SKU-1000116247",
+            "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+            "quantity": 1,
+            "unit": "piece",
+            "estimated_unit_price": 8.47,
+            "total": 8.47
         },
         {
             "sku": "SKU-1000723588",
@@ -134,14 +142,14 @@
         }
     ],
     "financials": {
-        "materials_total": 3288.3,
+        "materials_total": 3760.24,
         "estimated_hours": 40,
         "hourly_rate": 75,
         "labor_total": 3120,
-        "subtotal": 6408.3,
-        "gst": 320.42,
-        "qst": 639.23,
-        "grand_total": 7367.94
+        "subtotal": 6880.24,
+        "gst": 344.01,
+        "qst": 686.3,
+        "grand_total": 7910.56
     },
     "notes": "I need this remodelation to be finsh in four weeks. Let me know if it is possible."
 }

@@ -55,28 +55,82 @@ $drywallSheets = ceil($wallArea / 32);
 // MATERIAL CATALOG LOOKUP HELPERS
 // ==========================================
 
-function findMaterialByCategory(array $catalog, array $keywords)
-{
+function findMaterialByCategory(array $catalog, array $keywords) {
     $matches = [];
 
     foreach ($catalog as $sku => $item) {
 
-        $text = strtolower(
-            ($item['name'] ?? '') . ' ' .
-            ($item['category'] ?? '')
-        );
+        $name =
+            strtolower(
+                (string)($item['name'] ?? '')
+            );
+
+        $category =
+            strtolower(
+                (string)($item['category'] ?? '')
+            );
+
+        $id =
+            strtolower(
+                (string)($item['id'] ?? $sku)
+            );
 
         $score = 0;
 
         foreach ($keywords as $keyword) {
 
+            $keyword =
+                strtolower(
+                    trim($keyword)
+                );
+
+            if ($keyword === '') {
+                continue;
+            }
+
+            /*
+            --------------------------------------------------
+            Highest priority:
+            exact phrase in product name
+            --------------------------------------------------
+            */
             if (
                 strpos(
-                    $text,
-                    strtolower($keyword)
+                    $name,
+                    $keyword
                 ) !== false
             ) {
-                $score++;
+                $score += 5;
+            }
+
+            /*
+            --------------------------------------------------
+            Medium priority:
+            category match
+            --------------------------------------------------
+            */
+            if (
+                strpos(
+                    $category,
+                    $keyword
+                ) !== false
+            ) {
+                $score += 2;
+            }
+
+            /*
+            --------------------------------------------------
+            Low priority:
+            SKU / ID match
+            --------------------------------------------------
+            */
+            if (
+                strpos(
+                    $id,
+                    $keyword
+                ) !== false
+            ) {
+                $score += 1;
             }
         }
 
@@ -84,8 +138,8 @@ function findMaterialByCategory(array $catalog, array $keywords)
 
             $matches[] = [
                 'score' => $score,
-                'sku' => $sku,
-                'data' => $item
+                'sku'   => $sku,
+                'data'  => $item
             ];
         }
     }
@@ -97,6 +151,22 @@ function findMaterialByCategory(array $catalog, array $keywords)
     usort(
         $matches,
         function ($a, $b) {
+
+            if ($a['score'] === $b['score']) {
+
+                $aPrice =
+                    floatval(
+                        $a['data']['price'] ?? 0
+                    );
+
+                $bPrice =
+                    floatval(
+                        $b['data']['price'] ?? 0
+                    );
+
+                return $aPrice <=> $bPrice;
+            }
+
             return $b['score'] <=> $a['score'];
         }
     );
@@ -120,6 +190,28 @@ function buildMaterialLine($catalogItem, $quantity)
                 2
             )
     ];
+}
+
+function addMaterialIfFound(
+    &$mappedMaterials,
+    $catalog,
+    array $keywords,
+    $quantity = 1
+) {
+
+    $item = findMaterialByCategory(
+        $catalog,
+        $keywords
+    );
+
+    if ($item) {
+
+        $mappedMaterials[] =
+            buildMaterialLine(
+                $item,
+                $quantity
+            );
+    }
 }
 
 // Build mapped materials list for the quote
@@ -233,18 +325,90 @@ if ($drywallItem) {
         );
 }
 
-// Add Vanity if recommended
+// ==========================================
+// VANITY
+// ==========================================
+
 if (!empty($analysis['recommendations']['replace_vanity'])) {
+
     $vanitySize = $project['vanity'] ?? '36';
-    if (is_array($vanitySize)) $vanitySize = $vanitySize[0] ?? '36';
-    
-    $vanityItem = findMaterialByCategory(
-        $catalog,
-        [
+
+    if (is_array($vanitySize)) {
+        $vanitySize = $vanitySize[0] ?? '36';
+    }
+
+    $countertops =
+        $project['countertop'] ?? [];
+
+    if (!is_array($countertops)) {
+        $countertops = [$countertops];
+    }
+
+    /*
+    --------------------------------------------------
+    If a countertop is being selected separately
+    prefer cabinet-only vanities.
+    --------------------------------------------------
+    */
+
+    $needsSeparateCountertop =
+        in_array('granite', $countertops) ||
+        in_array('quartz', $countertops) ||
+        in_array('marble', $countertops);
+
+    $vanityItem = null;
+
+    if ($needsSeparateCountertop) {
+
+        $cabinetKeywords = [
             'vanité',
-            'bathroom fixtures'
-        ]
-    );
+            (string)$vanitySize,
+            'sans comptoir'
+        ];
+
+        $vanityItem =
+            findMaterialByCategory(
+                $catalog,
+                $cabinetKeywords
+            );
+
+        /*
+        Fallback if exact cabinet-only model not found
+        */
+        if (!$vanityItem) {
+
+            $vanityItem =
+                findMaterialByCategory(
+                    $catalog,
+                    [
+                        'vanité',
+                        (string)$vanitySize,
+                        'armoire'
+                    ]
+                );
+        }
+    }
+
+    /*
+    --------------------------------------------------
+    Original behaviour remains unchanged
+    --------------------------------------------------
+    */
+
+    if (!$vanityItem) {
+
+        $vanityKeywords = [
+            'vanité',
+            (string)$vanitySize
+        ];
+
+        $vanityItem =
+            findMaterialByCategory(
+                $catalog,
+                $vanityKeywords
+            );
+    }
+
     if ($vanityItem) {
 
         $mappedMaterials[] =
@@ -255,22 +419,93 @@ if (!empty($analysis['recommendations']['replace_vanity'])) {
     }
 }
 
-    // Add Toilet if recommended
-    $toiletItem = findMaterialByCategory(
+// ==========================================
+// COUNTERTOPS
+// ==========================================
+
+$countertops =
+    $project['countertop'] ?? [];
+
+if (!is_array($countertops)) {
+    $countertops = [$countertops];
+}
+
+if (in_array('granite', $countertops)) {
+
+    addMaterialIfFound(
+        $mappedMaterials,
         $catalog,
-        [
-            'toilette',
-            'bathroom fixtures'
-        ]
+        ['granite'],
+        1
     );
 
-    if ($toiletItem) {
+} elseif (in_array('quartz', $countertops)) {
 
-        $mappedMaterials[] =
-            buildMaterialLine(
-                $toiletItem,
-                1
-            );
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        ['quartz'],
+        1
+    );
+
+} elseif (in_array('marble', $countertops)) {
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        ['marble'],
+        1
+    );
+
+} elseif (in_array('laminate', $countertops)) {
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        ['stratifié'],
+        1
+    );
+}
+
+// ==========================================
+// TOILET
+// ==========================================
+
+if (
+    !empty(
+        $analysis['recommendations']['replace_toilet']
+    )
+) {
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        ['toilette'],
+        1
+    );
+
+    // Optional accessories
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        ['bride'],
+        1
+    );
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        ['wax'],
+        1
+    );
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        ['supply'],
+        1
+    );
 }
 
 // Calculate Grand Total for Materials
@@ -306,6 +541,57 @@ if (
                 1
             );
     }
+}
+
+// ==========================================
+// HEATED FLOOR
+// ==========================================
+
+if (
+    in_array(
+        'heated_floor',
+        $electricalItems
+    )
+) {
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        [
+            'chauffant'
+        ],
+        1
+    );
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        [
+            'thermostat'
+        ],
+        1
+    );
+}
+
+// ==========================================
+// BATHROOM FAN
+// ==========================================
+
+if (
+    in_array(
+        'fan_replace',
+        $electricalItems
+    )
+) {
+
+    addMaterialIfFound(
+        $mappedMaterials,
+        $catalog,
+        [
+            'ventilateur'
+        ],
+        1
+    );
 }
 
 // ==========================================

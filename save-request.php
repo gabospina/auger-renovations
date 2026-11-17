@@ -152,6 +152,9 @@ if (file_exists($requestsFile)) {
 $allRequests[$requestId] = $newRequest;
 file_put_contents($requestsFile, json_encode($allRequests, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 
+require_once __DIR__ . '/admin/lib/tracker.php';
+track_event('quote_request', 'quote-bathroom.php', ['request_id' => $request_id ?? null]);
+
 // Redirect back to confirmation screen
 header('Location: quote-bathroom.php?submitted=1&req=' . urlencode($requestId));
 exit;

@@ -2,7 +2,7 @@
 // Shared calculation, catalog autocomplete, and invoice engine for Auger Rénovation
 
 let availableCatalog = [];
-let MARKUP_RATE = 0.15;
+let MARKUP_RATE = 0;
 
 // Expose on window object
 window.QuoteEngine = window.QuoteEngine || {};
@@ -14,6 +14,7 @@ window.QuoteEngine.getBilledPrice = function(baseCost) {
 };
 
 // 1. SETTINGS & CATALOG INITIALIZATION
+// 1. SETTINGS & CATALOG INITIALIZATION
 async function loadMarkupSetting() {
   const apiPath = window.location.pathname.includes('/admin/') 
     ? 'api-materials.php?action=get_settings' 
@@ -21,12 +22,28 @@ async function loadMarkupSetting() {
   try {
     const res = await fetch(apiPath + '&t=' + Date.now(), { cache: 'no-store' });
     const settings = await res.json();
+
     if (settings && typeof settings.markup_rate !== 'undefined') {
+      // Trust whatever the server returns, including 0.
       MARKUP_RATE = parseFloat(settings.markup_rate);
       window.QuoteEngine.markupRate = MARKUP_RATE;
     }
+
+    // Propagate the warning flag so the estimate page can display it.
+    if (settings && settings.settings_warning) {
+      window.__SETTINGS_WARNING = settings.settings_warning;
+    } else {
+      window.__SETTINGS_WARNING = null;
+    }
+
   } catch (err) {
-    console.warn('Impossible de charger le taux de marge personnalisé, repli sur 15%.');
+    // Network failure only — do NOT silently apply 0.15.
+    // Use 0 so nothing is overcharged; the estimate page will show
+    // the same "no markup applied" warning when the calculator runs.
+    MARKUP_RATE = 0;
+    window.QuoteEngine.markupRate = 0;
+    window.__SETTINGS_WARNING = 'no_markup_due_to_error';
+    console.warn('Impossible de charger le taux de marge. Aucune marge ne sera appliquée.');
   }
 }
 
@@ -65,17 +82,19 @@ async function initCatalogAutocomplete() {
 // 2. FORMATTING & CORE CALCULATIONS
 function formatMoney(value) {
   const num = typeof value === 'number' ? value : parseFloat(value) || 0;
-  return new Intl.NumberFormat('fr-CA', {
+  
+  // Format using 'en-US' style to enforce commas for thousands and dots for decimals
+  return num.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(num) + ' $';
+  }) + ' $';
 }
 
 function updateCalculations() {
   let matTotal = 0;
   document.querySelectorAll('#materials-list .quote-row').forEach(row => {
     const q = parseFloat(row.querySelector('.mat-qty')?.value) || 0;
-    const u = parseFloat(row.querySelector('.mat-unit')?.value) || 0;
+    const u = parseFloat((row.querySelector('.mat-unit')?.value || '0').replace(/,/g, '')) || 0;
     const total = q * u;
     const totalSpan = row.querySelector('.mat-total');
     if (totalSpan) totalSpan.textContent = formatMoney(total);
@@ -299,13 +318,38 @@ function addMaterialRow(desc = '', qty = 0, unit = 0) {
   container.appendChild(row);
 }
 
+/**
+ * Resolves the correct hourly rate from labor-rates.json injected via window.APP_LABOR_RATES
+ */
+function getRateFromJSON(desc) {
+  if (!window.APP_LABOR_RATES) return 0.00; // Default to 0.00 if rates aren't loaded
+
+  const lowerDesc = String(desc || '').toLowerCase();
+  
+  for (const [key, data] of Object.entries(window.APP_LABOR_RATES)) {
+    const keyMatch = lowerDesc.includes(key);
+    const labelMatch = data.label && lowerDesc.includes(data.label.toLowerCase());
+    
+    if (keyMatch || labelMatch) {
+      return parseFloat(data.hourly_rate) || 0.00;
+    }
+  }
+  
+  return 0.00; // Returns 0.00 if no keyword matches, keeping manual/blank rows at zero
+}
+
 function addLaborRow(desc = '', hours = 0, rate = 0) {
   const container = document.getElementById('labor-list');
   if (!container) return;
 
   const numHours = parseFloat(hours) || 0;
-  // Use the exact rate passed from the backend, or 0.00 if manually added
-  const numRate = parseFloat(rate) || 0.00;
+  
+  // If rate is 0 or not passed, check if we can automatically look it up from labor-rates.json based on description
+  let numRate = parseFloat(rate) || 0.00;
+  if (numRate === 0 && desc) {
+    numRate = getRateFromJSON(desc);
+  }
+
   const lineTotal = formatMoney(numHours * numRate);
 
   const row = document.createElement('div');
@@ -358,6 +402,8 @@ function printDetailedBreakdown() {
 
   const clientName = document.getElementById('client-name')?.value || 'Client';
   const clientAddress = document.getElementById('client-address')?.value || '';
+  const clientEmail = document.getElementById('client-email')?.value || '';
+  const clientPhone = document.getElementById('client-phone')?.value || '';
 
   // Detect language from <html lang="...">
   const isEn = (document.documentElement.lang || '').toLowerCase().startsWith('en');
@@ -368,6 +414,8 @@ function printDetailedBreakdown() {
     bannerTitle: 'DETAILED SITE WORKSHEET — Auger Renovation',
     clientLabel: 'Client',
     addressLabel: 'Address',
+    emailLabel: 'Email',
+    phoneLabel: 'Phone',
     sec1: '1. Materials',
     sec2: '2. Labor',
     colDesc: 'Description',
@@ -387,6 +435,8 @@ function printDetailedBreakdown() {
     bannerTitle: 'BORDEREAU DÉTAILLÉ DE CHANTIER — Auger Rénovation',
     clientLabel: 'Client',
     addressLabel: 'Adresse',
+    emailLabel: 'Courriel',
+    phoneLabel: 'Téléphone',
     sec1: '1. Matériaux',
     sec2: '2. Main-d\'œuvre',
     colDesc: 'Description',
@@ -432,7 +482,7 @@ function printDetailedBreakdown() {
   const materialRows = Array.from(document.querySelectorAll('#materials-list .quote-row')).map(row => {
     const desc = row.querySelector('.mat-desc')?.value || '';
     const qty = row.querySelector('.mat-qty')?.value || '0';
-    const unit = row.querySelector('.mat-unit')?.value || '0';
+    const unit = parseFloat((row.querySelector('.mat-unit')?.value || '0').replace(/,/g, '')) || 0;
     const lineTotal = row.querySelector('.mat-total')?.innerText || '0.00 $';
     if (!desc) return '';
     return `<tr><td>${desc}</td><td style="text-align:center;">${qty}</td><td style="text-align:right;">${unit} $</td><td style="text-align:right;">${lineTotal}</td></tr>`;
@@ -453,7 +503,16 @@ function printDetailedBreakdown() {
     </div>
 
     <h1>${txt.bannerTitle}</h1>
-    <p><strong>${txt.clientLabel} :</strong> ${clientName} | <strong>${txt.addressLabel} :</strong> ${clientAddress}</p>
+    <p style="margin-bottom: 4px;">
+      <strong>${txt.clientLabel} :</strong> ${clientName}
+      &nbsp;|&nbsp;
+      <strong>${txt.addressLabel} :</strong> ${clientAddress}
+    </p>
+    <p style="margin-top: 0; margin-bottom: 20px;">
+      <strong>${txt.emailLabel} :</strong> ${clientEmail || '—'}
+      &nbsp;|&nbsp;
+      <strong>${txt.phoneLabel} :</strong> ${clientPhone || '—'}
+    </p>
     
     <h3>${txt.sec1}</h3>
     <table>
@@ -535,16 +594,16 @@ async function sendQuote() {
   if (!sendBtn) return;
 
   const requestId = new URLSearchParams(window.location.search).get('request_id') || 'REQ-DEV';
-  const clientName = document.getElementById('client-name')?.textContent.trim() || 'Client';
-  const clientEmail = document.getElementById('client-email')?.textContent.trim() || '';
-  const clientPhone = document.getElementById('client-phone')?.textContent.trim() || '';
-  const clientAddress = document.getElementById('client-address')?.textContent.trim() || '';
+  const clientName = document.getElementById('client-name')?.value?.trim() || 'Client';
+  const clientEmail = document.getElementById('client-email')?.value?.trim() || '';
+  const clientPhone = document.getElementById('client-phone')?.value?.trim() || '';
+  const clientAddress = document.getElementById('client-address')?.value?.trim() || '';
 
   const materials = [];
   document.querySelectorAll('#materials-list .quote-row').forEach(row => {
     const desc = row.querySelector('.mat-desc')?.value.trim();
     const qty = parseFloat(row.querySelector('.mat-qty')?.value) || 0;
-    const unit = parseFloat(row.querySelector('.mat-unit')?.value) || 0;
+    const unit = row.querySelector('.mat-unit')?.value || 0;
     if (desc && qty > 0) {
       materials.push({ desc, qty, unit, total: qty * unit });
     }
@@ -592,18 +651,99 @@ async function sendQuote() {
       body: JSON.stringify(payload)
     });
 
-    const result = await res.json();
+        const result = await res.json();
     if (result.success) {
-      if (result.view_url) window.open(result.view_url, '_blank');
-      alert(`Soumission #${result.quote_number} générée et enregistrée avec succès !`);
+
+      // Open the quote tab FIRST (before any blocking call),
+      // so the tab is not held blank while an alert is displayed.
+      if (result.view_url) {
+        window.open(result.view_url, '_blank');
+      }
+
+      // Non-blocking toast — does not freeze the event loop.
+      showToast(
+        `Soumission #${result.quote_number} générée et enregistrée avec succès !`,
+        'success'
+      );
+
     } else {
-      alert('Erreur: ' + (result.error || 'Impossible de générer la soumission.'));
+      showToast(
+        'Erreur: ' + (result.error || 'Impossible de générer la soumission.'),
+        'error'
+      );
     }
   } catch (err) {
     console.error('Erreur lors de l’envoi:', err);
-    alert('Erreur de communication avec le serveur.');
+    showToast('Erreur de communication avec le serveur.', 'error');
   } finally {
     sendBtn.disabled = false;
     sendBtn.innerHTML = originalText;
   }
 }
+
+// ==========================================================
+// Non-blocking toast notification
+// ==========================================================
+function showToast(message, type = 'success', duration = 4000) {
+
+  // Container (reused across calls)
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 99999;
+      pointer-events: none;
+    `;
+    document.body.appendChild(container);
+  }
+
+  const colors = {
+    success: { bg: '#16a34a', border: '#15803d' },
+    error:   { bg: '#dc2626', border: '#b91c1c' },
+    info:    { bg: '#2563eb', border: '#1d4ed8' }
+  };
+  const palette = colors[type] || colors.info;
+
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    background: ${palette.bg};
+    color: #ffffff;
+    padding: 14px 22px;
+    border-radius: 6px;
+    border-left: 4px solid ${palette.border};
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-weight: 600;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  `;
+
+  container.appendChild(toast);
+
+  // Animate in on the next frame
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(0)';
+  });
+
+  // Auto-dismiss
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(20px)';
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+// Expose so other modules can use it if needed
+window.showToast = showToast;

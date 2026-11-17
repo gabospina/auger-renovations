@@ -4,10 +4,38 @@ $requestId = $_GET['request_id'] ?? null;
 $requestData = null;
 
 if ($requestId) {
-    $dataFile = __DIR__ . '/data/requests.json';
-    if (file_exists($dataFile)) {
+    // Robust multi-path resolution for requests.json
+    $possiblePaths = [
+        __DIR__ . '/data/requests.json',       // admin/data/requests.json
+        __DIR__ . '/../data/requests.json',     // data/requests.json at root if needed
+        __DIR__ . '/requests.json'
+    ];
+
+    $dataFile = '';
+    foreach ($possiblePaths as $path) {
+        if (file_exists($path)) {
+            $dataFile = $path;
+            break;
+        }
+    }
+
+    if ($dataFile) {
         $allRequests = json_decode(file_get_contents($dataFile), true) ?: [];
-        $requestData = $allRequests[$requestId] ?? null;
+        
+        // Handle requests stored as a sequential array or an associative dictionary
+        if (is_array($allRequests)) {
+            if (isset($allRequests[$requestId])) {
+                $requestData = $allRequests[$requestId];
+            } else {
+                foreach ($allRequests as $req) {
+                    $currentId = $req['id'] ?? $req['request_id'] ?? '';
+                    if ($currentId === $requestId) {
+                        $requestData = $req;
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -22,24 +50,10 @@ $photos = $requestData['photos'] ?? ['current' => [], 'desired' => []];
 /* =====================================================
    AI PREFILL CACHE
 ===================================================== */
-
 $prefillData = null;
-
-if (!empty($_GET['prefill'])) {
-
-    $prefillFile =
-        __DIR__ .
-        '/data/project-analysis/' .
-        $requestId .
-        '-prefill.json';
-
-    if (file_exists($prefillFile)) {
-
-        $prefillData = json_decode(
-            file_get_contents($prefillFile),
-            true
-        );
-    }
+$prefillFile = __DIR__ . '/data/project-analysis/' . $requestId . '-prefill.json';
+if (file_exists($prefillFile)) {
+    $prefillData = json_decode(file_get_contents($prefillFile), true);
 }
 
 /* =====================================================
@@ -52,6 +66,50 @@ if (file_exists($materialsFile)) {
 }
 
 $suggestedMaterials = [];
+
+/* =========================================================
+   AVAILABLE TEMPLATES (for <select> and badge)
+   Any .json with a non-empty items[] is a candidate.
+   Sorted by updated_at desc, filename asc as tiebreak.
+========================================================= */
+
+$availableTemplates = [];
+$activeTemplateFile = null;
+
+$templatesDir = __DIR__ . '/data/templates/';
+$templateFiles = is_dir($templatesDir) ? (glob($templatesDir . '*.json') ?: []) : [];
+
+foreach ($templateFiles as $file) {
+
+    $tplData = json_decode(file_get_contents($file), true);
+
+    if (
+        is_array($tplData) &&
+        !empty($tplData['items'])
+    ) {
+        $availableTemplates[] = [
+            'file'       => basename($file),
+            'name'       => $tplData['name']          ?? '',
+            'project'    => $tplData['project_title'] ?? '',
+            'client'     => $tplData['client_name']   ?? '',
+            'updated_at' => $tplData['updated_at']    ?? '',
+            'item_count' => count($tplData['items'])
+        ];
+    }
+}
+
+usort($availableTemplates, function ($a, $b) {
+
+    if ($a['updated_at'] !== $b['updated_at']) {
+        return strcmp($b['updated_at'], $a['updated_at']);
+    }
+
+    return strcmp($a['file'], $b['file']);
+});
+
+if (!empty($availableTemplates)) {
+    $activeTemplateFile = $availableTemplates[0]['file'];
+}
 
 /**
  * Finds matching catalog items for a category, sorts them by price, 
@@ -204,6 +262,18 @@ foreach ($allClientSelections as $selection) {
   ); ?>;
   </script>
 <?php endif; ?>
+<?php
+// Load labor rates directly from your JSON file
+$laborRatesFile = __DIR__ . '/data/labor-rates.json';
+$laborRates = [];
+if (file_exists($laborRatesFile)) {
+    $laborRates = json_decode(file_get_contents($laborRatesFile), true) ?: [];
+}
+?>
+<script>
+  // Make your labor-rates.json available globally to your JavaScript files
+  window.APP_LABOR_RATES = <?= json_encode($laborRates, JSON_UNESCAPED_UNICODE) ?>;
+</script>
   <style>
     .invoice-container { background-color: #ffffff; padding: 30px; border: 1px solid #e1e4e8; border-radius: 8px; }
     .invoice-content { position: relative; z-index: 1; }
@@ -326,31 +396,35 @@ foreach ($allClientSelections as $selection) {
     </div>
   </header>
 
+  <div id="settings-warning-banner" style="display:none; background:#fef3c7; border:1px solid #f59e0b; color:#92400e; padding:12px 18px; border-radius:6px; margin:16px auto; max-width:1300px; font-weight:600;">
+    ⚠️ Erreur de marge : aucun markup appliqué. Vérifiez materials.html ou contactez le développeur.
+  </div>
+
   <main class="container admin-grid">
     <section class="admin-left-col">
       <article class="card quote-card">
         <h2>Données du client</h2>
-        <div class="form-group"><label>Nom complet</label><input type="text" value="<?= htmlspecialchars($client['name'] ?? '') ?>"></div>
-        <div class="form-group"><label>Adresse du chantier</label><input type="text" value="<?= htmlspecialchars($client['address'] ?? '') ?>"></div>
-        <div class="form-group"><label>Courriel</label><input type="email" value="<?= htmlspecialchars($client['email'] ?? '') ?>"></div>
-        <div class="form-group"><label>Téléphone</label><input type="tel" value="<?= htmlspecialchars($client['phone'] ?? '') ?>"></div>
+        <div class="form-group"><label>Nom complet</label><input type="text" id="client-name" value="<?= htmlspecialchars($client['name'] ?? '') ?>"></div>
+        <div class="form-group"><label>Adresse du chantier</label><input type="text" id="client-address" value="<?= htmlspecialchars($client['address'] ?? '') ?>"></div>
+        <div class="form-group"><label>Courriel</label><input type="email" id="client-email" value="<?= htmlspecialchars($client['email'] ?? '') ?>"></div>
+        <div class="form-group"><label>Téléphone</label><input type="tel" id="client-phone" value="<?= htmlspecialchars($client['phone'] ?? '') ?>"></div>
       </article>
 
       <!-- ========================================== -->
       <!-- AI PROJECT ANALYSIS HUB (ADMIN PANEL)      -->
       <!-- ========================================== -->
       <article class="card quote-card" style="border: 2px solid #ea580c; margin-bottom: 20px;">
-        <h2><i class="fa-solid fa-wand-magic-sparkles" style="color: #ea580c;"></i> Analyseur IA du Projet (Mode Chantiers)</h2>
+        <!-- <h2><i class="fa-solid fa-wand-magic-sparkles" style="color: #ea580c;"></i> Analyseur IA du Projet (Mode Chantiers)</h2>
         
-        <div id="ai-analysis-container" style="padding: 10px 0;">
-          <p id="ai-status-text" style="color: #4b5563; font-size: 14px; margin-bottom: 15px;">
-            Analysez les photos et dimensions de ce client pour détecter automatiquement les luminaires, calcul de matériaux et pré-remplir le devis.
-          </p>
+        <div id="ai-analysis-container" style="padding: 10px 0;"> -->
+          <!-- <p id="ai-status-text" style="color: #4b5563; font-size: 14px; margin-bottom: 15px;">
+            Analysez les photos du chantier afin d'identifier les éléments existants, les contraintes potentielles et obtenir des recommandations pour la préparation du devis.
+          </p> -->
 
           <!-- Trigger Button -->
-          <button type="button" id="btn-run-ai-analysis" onclick="runAIAnalysis('<?= htmlspecialchars($requestId ?? '') ?>')" class="btn btn-primary" style="background: #ea580c; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
+          <!-- <button type="button" id="btn-run-ai-analysis" onclick="runAIAnalysis('<?= htmlspecialchars($requestId ?? '') ?>')" class="btn btn-primary" style="background: #ea580c; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
             <i class="fa-solid fa-robot"></i> Analyser les photos du client avec l'IA
-          </button>
+          </button> -->
 
           <!-- Results Panel (Hidden until analyzed) -->
           <div id="ai-results-panel" style="display: none; margin-top: 20px; background: #fff7ed; border: 1px solid #fed7aa; padding: 15px; border-radius: 8px;">
@@ -373,9 +447,9 @@ foreach ($allClientSelections as $selection) {
       <article class="card quote-card">
         <h2>Détails du chantier</h2>
         <div class="form-row-3">
-          <div class="form-group"><label>Type</label><input type="text" value="<?= htmlspecialchars($project['type'] ?? '') ?>"></div>
+          <div class="form-group"><label>Type</label><input type="text" id="bath-type" value="<?= htmlspecialchars($project['type'] ?? '') ?>"></div>
           <div class="form-group"><label>État actuel</label><input type="text" value="<?= htmlspecialchars($project['condition'] ?? '') ?>"></div>
-          <div class="form-group"><label>Superficie (pi²)</label><input type="text" value="<?= htmlspecialchars($project['size_sqft'] ?? '') ?>"></div>
+          <div class="form-group"><label>Superficie (pi²)</label><input type="text" id="bath-size" value="<?= htmlspecialchars($project['size_sqft'] ?? '') ?>"></div>
         </div>
         <!-- Travaux demandés dynamiques -->
         <div class="form-group" style="margin-top: 10px;">
@@ -484,7 +558,7 @@ foreach ($allClientSelections as $selection) {
         </div>
         <div class="form-group" style="margin-top: 10px;">
           <label>Notes transmises par le client :</label>
-          <textarea rows="3"><?= htmlspecialchars($project['notes'] ?? '') ?></textarea>
+          <textarea rows="3" id="bath-notes"><?= htmlspecialchars($project['notes'] ?? '') ?></textarea>
         </div>
       </article>
 
@@ -493,12 +567,6 @@ foreach ($allClientSelections as $selection) {
         <h4 style="margin: 6px 0 8px 0; font-size: 14px;">1. État actuel (<?= count($photos['current']) ?>)</h4>
         <ul class="photo-list">
           <?php foreach ($photos['current'] as $ph): ?>
-            <li class="thumb-item"><a href="../<?= htmlspecialchars($ph) ?>" target="_blank"><img src="../<?= htmlspecialchars($ph) ?>"></a></li>
-          <?php endforeach; ?>
-        </ul>
-        <h4 style="margin: 16px 0 8px 0; font-size: 14px;">2. Style désiré / Inspirations (<?= count($photos['desired']) ?>)</h4>
-        <ul class="photo-list">
-          <?php foreach ($photos['desired'] as $ph): ?>
             <li class="thumb-item"><a href="../<?= htmlspecialchars($ph) ?>" target="_blank"><img src="../<?= htmlspecialchars($ph) ?>"></a></li>
           <?php endforeach; ?>
         </ul>
@@ -545,50 +613,66 @@ foreach ($allClientSelections as $selection) {
             <button type="button" class="btn btn-tier <?= ($activeTier === 'premium') ? 'active' : '' ?>" data-tier="premium" id="tier-btn-premium" style="flex: 1;"><i class="fa-solid fa-gem"></i> Haut de gamme</button>
           </div>
         </div>
-        
-        <!-- TEMPLATE & FOLDER SELECTOR FOR SIMON -->
-        <div style="background: #fdfaf3; border: 1px solid #d1b06a; padding: 14px 18px; border-radius: 8px; margin-bottom: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <strong style="color: #8c733e; font-size: 14px;"><i class="fa-solid fa-folder-tree"></i> Charger un modèle ou dossier de prix ($/pi²)</strong>
-          </div>
-          <div style="display: flex; gap: 8px;">
-            <select id="custom-template-select" style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px;">
-              <option value="">-- Sélectionnez un modèle ou dossier enregistré --</option>
-            </select>
-            <button type="button" class="btn btn-secondary" onclick="applyCustomTemplate()" style="padding: 8px 16px; font-size: 13px;">Appliquer</button>
-          </div>
-        </div>
+
+        <div style="background:#f0fdf4;border:1px solid #86efac;padding:14px 18px;border-radius:8px;margin-bottom:20px;">
+          <strong style="color:#166534;">
+              <i class="fa-solid fa-check-circle"></i>
+              Modèle actif :
+          </strong>
+
+          <?php if (empty($availableTemplates)): ?>
+              <div style="margin-top:6px;font-size:14px;color:#92400e;">
+                  ⚠️ Aucun modèle valide trouvé dans /data/templates/
+              </div>
+          <?php else: ?>
+              <div style="margin-top:6px;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                  <select id="custom-template-select"
+                          onchange="onTemplateSelectChange()"
+                          style="flex:1;min-width:240px;padding:6px 10px;border:1px solid #86efac;border-radius:4px;background:#fff;font-size:13px;">
+                      <?php foreach ($availableTemplates as $i => $tpl): ?>
+                          <option value="<?= htmlspecialchars($tpl['file']) ?>"
+                                  <?= $i === 0 ? 'selected' : '' ?>>
+                              <?= htmlspecialchars($tpl['file']) ?>
+                              (<?= (int)$tpl['item_count'] ?> items<?= $tpl['updated_at'] ? ' • ' . htmlspecialchars($tpl['updated_at']) : '' ?>)
+                          </option>
+                      <?php endforeach; ?>
+                  </select>
+
+                  <span id="active-template-badge" style="font-weight:600;color:#166534;">
+                      ✅ <?= htmlspecialchars($activeTemplateFile) ?>
+                  </span>
+              </div>
+          <?php endif; ?>
+      </div>
 
         <div class="card-header-flex">
           <h2>1. Matériaux</h2>
-
           <div class="materials-buttons">
-
             <button
               type="button"
               class="btn btn-sm btn-outline"
               id="add-material">
               + Ajouter une ligne
             </button>
-
-            <button
-              type="button"
-              class="btn btn-outline"
-              id="btn-prefill-quote">
-              <i class="fa-solid fa-calculator"></i>
-              Pré-remplir (Estimateur Classique)
-            </button>
-
             <button
                 type="button"
                 class="btn"
-                id="btn-ai-prefill"
+                id="generate-image-btn"
                 style="background:#16a34a;color:#fff;">
-                <i class="fa-solid fa-robot"></i>
-                Recalculer le devis IA
+                <i class="btn-ai"></i>
+                Créer image du projet
             </button>
-
-
+            <div id="project-image-preview"></div>
+            <div
+                id="project-image-preview"
+                style="
+                    margin-top:20px;
+                    padding:12px;
+                    border:1px solid #e5e7eb;
+                    border-radius:8px;
+                    background:#fafafa;
+                ">
+            </div>
           </div>
         </div>
         <datalist id="catalog-materials"></datalist>
@@ -601,7 +685,51 @@ foreach ($allClientSelections as $selection) {
             <button type="button" class="row-delete delete-material"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>
-        <div class="section-subtotal">Total matériaux : <strong id="materials-total">250.00 $</strong></div>
+        <div
+            style="
+                margin-top:15px;
+                background:#f8fafc;
+                border:1px solid #e2e8f0;
+                border-radius:8px;
+                padding:12px;">
+
+            <div class="summary-line">
+                <span>
+                    Matériaux de base
+                    (Modèle Simon)
+                </span>
+
+                <strong id="template-material-total">
+                    0.00 $
+                </strong>
+            </div>
+
+            <div class="summary-line">
+                <span>
+                    Matériaux personnalisés
+                    (Client)
+                </span>
+
+                <strong id="customer-material-total">
+                    0.00 $
+                </strong>
+            </div>
+
+            <hr>
+
+            <div
+                class="summary-line"
+                style="font-weight:700;">
+                <span>
+                    Total matériaux
+                </span>
+
+                <strong id="materials-total">
+                    0.00 $
+                </strong>
+            </div>
+
+        </div>
       </article>
 
       <article class="card quote-card">
@@ -714,143 +842,467 @@ foreach ($allClientSelections as $selection) {
 
   // Load master material templates into the dropdown displaying the filename base
   async function loadSimonTemplates() {
+
     try {
-      const res = await fetch('api-templates.php?action=list');
-      const data = await res.json();
-      if (data.success && Array.isArray(data.templates)) {
-        const select = document.getElementById('custom-template-select');
-        const priceSelect = document.getElementById('price-template-select');
-        select.innerHTML = '<option value="">-- Sélectionnez un modèle ou dossier enregistré --</option>';
-        
-        data.templates.forEach(tpl => {
-          const opt = document.createElement('option');
-          opt.value = tpl.id || tpl.template_id;
-          
-          // Construct the exact filename display: Client_Project_Date
-          const client = (tpl.client_name || tpl.folder || 'Modele').replace(/[^a-zA-Z0-9_-]/g, '_');
-          const project = (tpl.project_title || tpl.name || 'Projet').replace(/[^a-zA-Z0-9_-]/g, '_');
-          const dateStr = tpl.updated_at ? tpl.updated_at.split(' ')[0] : new Date().toISOString().split('T')[0];
-          
-          const fileNameDisplay = `${client}_${project}_${dateStr}`;
-          
-          opt.textContent = fileNameDisplay;
-          opt.dataset.template = JSON.stringify(tpl);
-          select.appendChild(opt);
-          if (priceSelect) {
 
-          const priceOpt =
-              document.createElement('option');
+        const sel = document.getElementById('custom-template-select');
+        if (sel) {
+            window.ACTIVE_TEMPLATE_FILE = sel.value;
 
-            priceOpt.value =
-                tpl.id || tpl.template_id;
-
-            priceOpt.textContent =
-                fileNameDisplay;
-
-            priceSelect.appendChild(priceOpt);
+            const badge = document.getElementById('active-template-badge');
+            if (badge) badge.textContent = '✅ ' + sel.value;
         }
-        });
-      }
-      // ==========================================
-    // AI PREFILL INTEGRATION
-    // ==========================================
 
-    if (
-        window.PREFILL_DATA &&
-        window.PREFILL_DATA.client
-    ) {
+        const res = await fetch('api-templates.php?action=list');
+        const data = await res.json();
 
-        const client =
-            window.PREFILL_DATA.client;
+        if (
+            data.success &&
+            Array.isArray(data.templates) &&
+            data.templates.length > 0
+        ) {
 
-        const nameField =
-            document.getElementById('client-name');
+            // Sort newest-first to keep ACTIVE_TEMPLATE_ID/NAME in sync
+            data.templates.sort((a, b) => {
 
-        const emailField =
-            document.getElementById('client-email');
+                const aDate = new Date(a.updated_at || 0);
+                const bDate = new Date(b.updated_at || 0);
+                return bDate - aDate;
+            });
 
-        const phoneField =
-            document.getElementById('client-phone');
+            const newest = data.templates[0];
 
-        const addressField =
-            document.getElementById('client-address');
+            window.ACTIVE_TEMPLATE_ID   = newest.id || newest.template_id;
+            window.ACTIVE_TEMPLATE_NAME = newest.template_file
+                || newest.file
+                || newest.name
+                || newest.project_title
+                || 'Template';
+        }
 
-        if (nameField)
-            nameField.value = client.name || '';
+        if (window.PREFILL_DATA && window.PREFILL_DATA.client) {
 
-        if (emailField)
-            emailField.value = client.email || '';
+            const client = window.PREFILL_DATA.client;
 
-        if (phoneField)
-            phoneField.value = client.phone || '';
+            const map = {
+                'client-name':    client.name,
+                'client-email':   client.email,
+                'client-phone':   client.phone,
+                'client-address': client.address
+            };
 
-        if (addressField)
-            addressField.value = client.address || '';
-    }
+            Object.entries(map).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (el) el.value = val || '';
+            });
+        }
+
     } catch (e) {
-      console.error("Erreur de chargement des modèles maîtres", e);
+        console.error('Erreur de chargement des modèles maîtres', e);
     }
-  }
+}
 
   // Apply selected master material template and trigger AI calculation using room square footage
-  // Apply selected master material template and trigger calculation
   async function applyCustomTemplate() {
-    const select = document.getElementById('custom-template-select');
-    const opt = select.options[select.selectedIndex];
-    if (!opt.value) {
-      alert("Veuillez sélectionner un modèle maître.");
-      return;
+
+    console.log('applyCustomTemplate FIRED');
+
+    const reqId = new URLSearchParams(window.location.search).get('request_id');
+    if (!reqId) {
+        alert('Identifiant de demande introuvable.');
+        return;
     }
 
-    const tpl = JSON.parse(opt.dataset.template);
-    const roomSqft = window.CURRENT_PROJECT_SPEC?.sqft || 140;
+    const templateFile =
+        document.getElementById('custom-template-select')?.value
+        || window.ACTIVE_TEMPLATE_FILE
+        || null;
 
-    if (confirm(`Appliquer le modèle maître "${tpl.name}" et fusionner les quantités pour ${roomSqft} pi² ?`)) {
-      try {
-        const reqId = new URLSearchParams(window.location.search).get('request_id');
-        const templateId = select.value;
-        const calcRes = await fetch(`ai/template-calculator.php?id=${encodeURIComponent(reqId)}&template_id=${encodeURIComponent(templateId)}`);
-        const calcData = await calcRes.json();
+    const roomSqft =
+        window.PREFILL_DATA?.surfaces?.floor_area
+        || window.CURRENT_PROJECT_SPEC?.sqft
+        || 35;
 
-        if (calcData.success && Array.isArray(calcData.items)) {
-          const materialsList = document.getElementById('materials-list');
-          
-          calcData.items.forEach(item => {
-              mergeMaterialIntoTable(
-                  item.name,
-                  item.quantity,
-                  item.estimated_unit_price
-              );
-          });
+    console.log('Using template file:', templateFile);
+    console.log('Room sqft:', roomSqft);
 
-          if (typeof calculateTotals === 'function') {
-            calculateTotals();
-          }
+    console.log(
+        `Auto-applying template "${templateFile || 'newest'}" for ${roomSqft} pi²`
+    );
 
-          alert(`✅ Modèle appliqué et fusionné avec succès ! Coût total des matériaux : $${calcData.total_materials.toFixed(2)} (${calcData.price_per_sqft} $/pi²)`);
-        } else {
-          throw new Error(calcData.error || "Erreur de calcul par l'agent IA.");
+    try {
+
+        const calcRes =
+            await fetch(
+                `ai/template-calculator.php?id=${encodeURIComponent(reqId)}`
+                + (templateFile ? `&template_file=${encodeURIComponent(templateFile)}` : '')
+            );
+
+        const calcData =
+            await calcRes.json();
+
+        console.log(
+            'TEMPLATE CALCULATOR RESPONSE:',
+            calcData
+        );
+
+        console.log(
+            'TEMPLATE FILE:',
+            calcData.template_file
+        );
+
+        console.log(
+            'SIMON TEMPLATE ITEMS:',
+            calcData.template_item_count
+        );
+
+        console.log(
+            'FINAL MATERIAL COUNT:',
+            calcData.final_item_count
+        );
+
+        console.log(
+            'TOTAL MATERIALS:',
+            calcData.total_materials
+        );
+
+        if (
+          calcData.success &&
+          Array.isArray(
+              calcData.items
+          )
+      ) {
+
+        const materialsList =
+            document.getElementById(
+                'materials-list'
+            );
+
+        if (materialsList) {
+
+        materialsList.innerHTML ='';
+
+        const templateTotal =
+            document.getElementById(
+                'template-material-total'
+            );
+
+        const customerTotal =
+            document.getElementById(
+                'customer-material-total'
+            );
+
+        if (
+            templateTotal &&
+            typeof calcData.template_material_total
+                !== 'undefined'
+        ) {
+
+            templateTotal.textContent =
+                Number(
+                    calcData.template_material_total
+                ).toLocaleString(
+                    'en-US',
+                    { minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    }
+                ) + ' $';
         }
-      } catch (err) {
-        console.error(err);
-        alert("Erreur lors de l'application du modèle: " + err.message);
-      }
+
+        if (
+            customerTotal &&
+            typeof calcData.customer_material_total
+                !== 'undefined'
+        ) {
+
+            customerTotal.textContent =
+                Number(
+                    calcData.customer_material_total
+                ).toLocaleString(
+                    'en-US',
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                ) + ' $';
+        }
+
+        materialsList.innerHTML = '';
+
+        const simonItems =
+            calcData.items.filter(
+                item =>
+                    item.source ===
+                    'basic_materials_bathroom'
+            );
+
+        const customerItems =
+            calcData.items.filter(
+                item =>
+                    item.source ===
+                    'customer_request'
+            );
+
+        // ========================
+        // SIMON MATERIALS
+        // ========================
+
+        simonItems.forEach(item => {
+
+            addMaterialRowToTable(
+                item.name,
+                item.quantity,
+                item.estimated_unit_price
+            );
+
+        });
+
+        addMaterialsDivider(
+            'Matériaux de base (Modèle Simon)',
+            calcData.template_material_total
+        );
+
+        // ========================
+        // CUSTOMER MATERIALS
+        // ========================
+
+        customerItems.forEach(item => {
+
+            addMaterialRowToTable(
+                item.name,
+                item.quantity,
+                item.estimated_unit_price
+            );
+
+        });
+
+        addMaterialsDivider(
+            'Matériaux personnalisés (Client)',
+            calcData.customer_material_total
+        );
+
+        // ========================
+        // GRAND TOTAL
+        // ========================
+
+        addMaterialsDivider(
+            'Total matériaux',
+            calcData.total_materials,
+            true
+        );
     }
-  }
+
+    // ==========================================
+    // FIX: Also render labor rows from the
+    // fresh calculation response, not the
+    // stale window.PREFILL_DATA baked at load.
+    // ==========================================
+    const laborList =
+        document.getElementById(
+            'labor-list'
+        );
+
+    const laborData =
+        Array.isArray(
+            calcData.labor_breakdown
+        )
+            ? calcData.labor_breakdown
+            : [];
+
+        if (laborList) {
+
+            laborList.innerHTML = '';
+
+            if (laborData.length > 0) {
+
+                laborData.forEach(labor => {
+
+                    const resolvedRate =
+                        parseFloat(
+                            labor.rate ||
+                            labor.unit_price ||
+                            labor.hourly_rate
+                        ) || 75.00;
+
+                    const resolvedHours =
+                        parseFloat(
+                            labor.hours ||
+                            labor.qty
+                        ) || 0;
+
+                    if (
+                        typeof addLaborRow ===
+                        'function'
+                    ) {
+
+                        addLaborRow(
+                            labor.desc ||
+                            labor.name ||
+                            'Travail spécialisé',
+                            resolvedHours,
+                            resolvedRate
+                        );
+
+                    } else {
+
+                        const row =
+                            document.createElement(
+                                'div'
+                            );
+
+                        row.className =
+                            'quote-row calc-grid';
+
+                        row.innerHTML = `
+                          <input type="text" class="lab-desc" value="${labor.desc || labor.name || 'Travail spécialisé'}">
+                          <input type="number" class="lab-hours" value="${resolvedHours}" step="any">
+                          <input type="number" class="lab-rate" value="${resolvedRate.toFixed(2)}" step="any">
+                          <span class="lab-total line-total">${(resolvedHours * resolvedRate).toFixed(2)} $</span>
+                          <button type="button" class="row-delete delete-labor" onclick="this.closest('.quote-row').remove(); if(typeof calculateTotals === 'function') calculateTotals();"><i class="fa-solid fa-trash"></i></button>
+                        `;
+
+                        laborList.appendChild(row);
+                    }
+
+                });
+
+            } else {
+
+            // Keep one empty editable row if no labor exists
+            // so the section is not blank
+            const row =
+                document.createElement('div');
+
+            row.className =
+                'quote-row calc-grid';
+
+            row.innerHTML = `
+              <input type="text" class="lab-desc" placeholder="Description du travail">
+              <input type="number" class="lab-hours" value="0" step="any">
+              <input type="number" class="lab-rate" value="0.00" step="any">
+              <span class="lab-total line-total">0.00 $</span>
+              <button type="button" class="row-delete delete-labor"><i class="fa-solid fa-trash"></i></button>
+            `;
+
+                  laborList.appendChild(row);
+                  }
+              }
+
+              if (
+                  typeof calculateTotals ===
+                  'function'
+              ) {
+                  calculateTotals();
+              }
+
+              const ppf = (typeof calcData.price_per_sqft === 'number')
+                  ? calcData.price_per_sqft.toFixed(2)
+                  : '0.00';
+
+              // Show settings warning if markup_rate was unreadable → 0% applied
+              if (calcData.settings_warning === 'no_markup_due_to_error') {
+                  const banner = document.getElementById('settings-warning-banner');
+                  if (banner) banner.style.display = 'block';
+                  alert(
+                      "⚠️ Erreur de marge : aucun markup appliqué. Vérifiez materials.html ou contactez le développeur."
+                  );
+              } else {
+                  const banner = document.getElementById('settings-warning-banner');
+                  if (banner) banner.style.display = 'none';
+              }
+
+              alert(
+                  `✅ Modèle appliqué avec succès ! Coût total des matériaux : $${calcData.total_materials.toFixed(2)} (${ppf} $/pi²)`
+              );
+
+          } else {
+
+            throw new Error(
+                calcData.error ||
+                "Erreur de calcul par l'agent IA."
+            );
+
+        }
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert(
+            "Erreur lors de l'application du modèle: " +
+            err.message
+        );
+
+    }
+}
 
   function addMaterialRowToTable(desc, qty, unitPrice) {
     const materialsList = document.getElementById('materials-list');
     const row = document.createElement('div');
     row.className = 'quote-row calc-grid';
+
+    // Format unit price with comma separator for thousands and dot for decimals (e.g. 2,542.00)
+    const numericUnit = parseFloat(unitPrice || 0);
+    const formattedUnit = numericUnit.toString();   // "2923.75" — no comma
+
+    const lineTotal = (parseFloat(qty || 0) * numericUnit).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
     row.innerHTML = `
       <input type="text" class="mat-desc" value="${desc}">
       <input type="number" class="mat-qty" value="${qty}" step="any">
-      <input type="number" class="mat-unit" value="${unitPrice.toFixed(2)}" step="any">
-      <span class="mat-total line-total">${(qty * unitPrice).toFixed(2)} $</span>
+      <input type="text" class="mat-unit" value="${formattedUnit}">
+      <span class="mat-total line-total">${lineTotal} $</span>
       <button type="button" class="row-delete delete-material" onclick="this.closest('.quote-row').remove(); if(typeof calculateTotals === 'function') calculateTotals();"><i class="fa-solid fa-trash"></i></button>
     `;
     materialsList.appendChild(row);
   }
+
+  function addMaterialsDivider(
+    label,
+    total,
+    highlight = false
+) {
+    const row =
+        document.createElement('div');
+
+    row.style.borderTop =
+        '2px solid #d1d5db';
+
+    row.style.margin =
+        '12px 0';
+
+    row.style.padding =
+        '10px 0';
+
+    row.style.display =
+        'flex';
+
+    row.style.justifyContent =
+        'space-between';
+
+    row.style.fontWeight =
+        highlight ? '700' : '600';
+
+    row.innerHTML = `
+        <span>${label}</span>
+        <span>
+            ${Number(total).toLocaleString(
+                'en-US',
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            )} $
+        </span>
+    `;
+
+    document
+        .getElementById('materials-list')
+        .appendChild(row);
+}
 
   function mergeMaterialIntoTable(desc, qty, unitPrice) {
     const rows = document.querySelectorAll('#materials-list .quote-row');
@@ -876,63 +1328,16 @@ foreach ($allClientSelections as $selection) {
     }
 }
 
-  document.addEventListener('DOMContentLoaded', async () => {
-    await loadSimonTemplates();
 
-    // 1. Safely load Material Prefills
-    if (window.PREFILL_DATA && window.PREFILL_DATA.items) {
-        const materialsList = document.getElementById('materials-list');
-        if (materialsList) {
-            materialsList.innerHTML = '';
-        }
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadSimonTemplates();
 
-        const materials = window.PREFILL_DATA.items || [];
-        materials.forEach(item => {
-            addMaterialRow(
-                item.description || item.desc || item.name || '',
-                item.quantity || item.qty || 1,
-                item.unit_price || item.unit_billed || item.estimated_unit_price || item.unit || 0
-            );
-        });
-    }
+      console.log('FORCING TEMPLATE CALCULATOR');
+      applyCustomTemplate();
 
-    // 2. Safely load Granular Labor Breakdown
-    if (window.PREFILL_DATA && window.PREFILL_DATA.labor_breakdown && Array.isArray(window.PREFILL_DATA.labor_breakdown)) {
-        const laborList = document.getElementById('labor-list');
-        if (laborList) {
-            laborList.innerHTML = '';
-        }
-
-        window.PREFILL_DATA.labor_breakdown.forEach(labor => {
-            // Explicitly resolve rate from multiple possible property names with a safe fallback
-            const resolvedRate = parseFloat(labor.rate || labor.unit_price || labor.hourly_rate) || 0.00;
-
-            addLaborRow(
-                labor.desc || labor.name || 'Travail spécialisé',
-                parseFloat(labor.hours) || parseFloat(labor.qty) || 0,
-                resolvedRate
-            );
-        });
-    } else if (window.PREFILL_DATA && window.PREFILL_DATA.financials && window.PREFILL_DATA.financials.labor_total > 0) {
-        // Fallback if breakdown is absent but financials exist
-        const laborList = document.getElementById('labor-list');
-        if (laborList) {
-            laborList.innerHTML = '';
-        }
-        
-        const fallbackRate = parseFloat(window.PREFILL_DATA.financials.hourly_rate) || 75.00;
-        
-        addLaborRow(
-            `Main d'œuvre spécialisée`,
-            parseFloat(window.PREFILL_DATA.financials.estimated_hours) || 10,
-            fallbackRate
-        );
-    }
-
-    if (typeof updateCalculations === 'function') {
-        updateCalculations();
-    }
-});
+      console.log('DOM LOADED');
+      console.log('Current request:', new URLSearchParams(window.location.search).get('request_id'));
+    }); 
 
     // ==========================================
     // Return to Materials section after AI Prefill
@@ -956,23 +1361,100 @@ foreach ($allClientSelections as $selection) {
         }, 400);
     }
 
-  document.getElementById('btn-ai-prefill')
-  ?.addEventListener('click', () => {
-      const reqId =
-          new URLSearchParams(
-              window.location.search
-          ).get('request_id');
-      if (!reqId) {
-          alert('Identifiant de demande introuvable.');
-          return;
-      }
-      sessionStorage.setItem(
-          'scrollToMaterials',
-          'yes'
-      );
-      runQuotePrefill(reqId);
-  });
-</script>
+  document.getElementById('btn-ai-prefill')?.addEventListener('click', async () => {
+    const reqId = new URLSearchParams(window.location.search).get('request_id');
+    if (!reqId) {
+        alert('Identifiant de demande introuvable.');
+        return;
+    }
+
+    const btn = document.getElementById('btn-ai-prefill');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Génération en cours...';
+
+    sessionStorage.setItem('scrollToMaterials', 'yes');
+
+    try {
+        // Step 1: Ensure analysis/mapping cache is generated first
+        await fetch(`ai/analyze-request.php?id=${encodeURIComponent(reqId)}`);
+        await fetch(`ai/material-mapper.php?id=${encodeURIComponent(reqId)}`);
+
+        // Step 2: Now fetch the quote prefill
+        const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`);
+        const json = await res.json();
+
+        if (json.success && json.redirect_url) {
+            window.location.href = json.redirect_url;
+        } else {
+            // Fallback: reload page with prefill parameter if redirect wasn't explicit
+            window.location.href = `estimate-bathroom.php?request_id=${encodeURIComponent(reqId)}&prefill=1`;
+        }
+    } catch (err) {
+        console.error("Erreur de relance IA :", err);
+        alert("Erreur lors du recalcul IA : " + err.message);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-robot"></i> Recalculer le devis IA';
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const generateImgBtn = document.getElementById('generate-image-btn');
   
+  if (generateImgBtn) {
+    generateImgBtn.addEventListener('click', async () => {
+      const originalText = generateImgBtn.innerHTML;
+      generateImgBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Génération en cours...';
+      generateImgBtn.disabled = true;
+
+      try {
+        // Grab the request_id directly from the current page URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestId = urlParams.get('request_id');
+
+        if (!requestId) {
+          alert("Erreur : Aucun request_id trouvé dans l'URL.");
+          return;
+        }
+
+        const response = await fetch('ai/generate-project-image.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ request_id: requestId })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Image du projet générée avec succès !');
+          const previewContainer = document.getElementById('project-image-preview');
+          if (previewContainer && result.image_url) {
+            previewContainer.innerHTML = `<img src="${result.image_url}" alt="Rendu projet" style="max-width:100%; border-radius:8px; margin-top:10px;">`;
+          }
+        } else {
+          alert('Erreur lors de la génération : ' + (result.message || 'Erreur inconnue'));
+        }
+      } catch (err) {
+        console.error('Erreur:', err);
+        alert('Une erreur est survenue lors de la communication avec le serveur.');
+      } finally {
+        generateImgBtn.innerHTML = originalText;
+        generateImgBtn.disabled = false;
+      }
+    });
+  }
+});
+</script>
+<script>
+  function onTemplateSelectChange() {
+    const sel = document.getElementById('custom-template-select');
+    const badge = document.getElementById('active-template-badge');
+    if (sel && badge) {
+      badge.textContent = '✅ ' + sel.value;
+    }
+    window.ACTIVE_TEMPLATE_FILE = sel ? sel.value : null;
+  }
+</script>
 </body>
 </html>

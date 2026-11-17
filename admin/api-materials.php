@@ -32,9 +32,9 @@ if (!is_dir($dataDir)) {
     mkdir($dataDir, 0777, true);
 }
 
-if (!file_exists($settingsFile)) {
-    file_put_contents($settingsFile, json_encode(['markup_rate' => 0.15], JSON_PRETTY_PRINT));
-}
+// if (!file_exists($settingsFile)) {
+//     file_put_contents($settingsFile, json_encode(['markup_rate' => 0.15], JSON_PRETTY_PRINT));
+// }
 
 if (!file_exists($dataFile)) {
     file_put_contents($dataFile, json_encode(new stdClass(), JSON_PRETTY_PRINT));
@@ -92,7 +92,7 @@ if ($action === 'update_price') {
     exit;
 }
 
-// 3. SAVE / ADD
+// 3. SAVE / ADD (Updated to preserve calculation attributes)
 if ($action === 'save') {
     $p = getPayload();
     $name = trim($p['name'] ?? '');
@@ -112,28 +112,31 @@ if ($action === 'save') {
     $cleanSku = preg_replace('/^SKU-?/i', '', $rawSku);
     $cleanSku = preg_replace('/[^a-zA-Z0-9_-]/', '', $cleanSku);
 
-    if (ctype_digit($cleanSku)) {
-        $key = 'SKU-' . $cleanSku;
-        $storedId = $cleanSku;
-    } else {
-        $key = $rawSku;
-        $storedId = $rawSku;
-    }
+    $key = ctype_digit($cleanSku) ? 'SKU-' . $cleanSku : $rawSku;
+    $storedId = ctype_digit($cleanSku) ? $cleanSku : $rawSku;
 
     $originalKey = trim($p['original_key'] ?? '');
     if ($originalKey && $originalKey !== $key && isset($materials[$originalKey])) {
         unset($materials[$originalKey]);
     }
 
+    // Preserve existing calculation metadata if updating, or default if new
+    $existing = $materials[$key] ?? [];
+
     $materials[$key] = [
-        'id'           => $storedId,
-        'name'         => $name,
-        'supplier'     => !empty($supplier) ? $supplier : 'Home Depot',
-        'category'     => trim($p['category'] ?? 'Général'),
-        'unit'         => trim($p['unit'] ?? 'unité'),
-        'price'        => floatval($p['price'] ?? 0),
-        'url'          => trim($p['url'] ?? ''),
-        'last_updated' => date('Y-m-d H:i:s')
+        'id'                  => $storedId,
+        'name'                => $name,
+        'supplier'            => !empty($supplier) ? $supplier : 'Home Depot',
+        'category'            => trim($p['category'] ?? 'Général'),
+        'unit'                => trim($p['unit'] ?? 'unité'),
+        'price'               => floatval($p['price'] ?? 0),
+        'qty_type'            => trim($p['qty_type'] ?? ($existing['qty_type'] ?? 'fixed')),
+        'purchase_unit'       => trim($p['purchase_unit'] ?? ($existing['purchase_unit'] ?? 'piece')),
+        'calculation_unit'    => trim($p['calculation_unit'] ?? ($existing['calculation_unit'] ?? 'unit')),
+        'coverage_per_unit'   => floatval($p['coverage_per_unit'] ?? ($existing['coverage_per_unit'] ?? 1.0)),
+        'waste_factor'        => floatval($p['waste_factor'] ?? ($existing['waste_factor'] ?? 1.10)),
+        'url'                 => trim($p['url'] ?? ''),
+        'last_updated'        => date('Y-m-d H:i:s')
     ];
 
     file_put_contents($dataFile, json_encode($materials, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
@@ -197,20 +200,6 @@ if ($action === 'sync') {
     $returnCode = 0;
     exec($cmd . ' 2>&1', $output, $returnCode);
 
-    $debugFile = __DIR__ . DIRECTORY_SEPARATOR . 'sync-debug.log';
-    file_put_contents(
-        $debugFile,
-        "\n====================================================\n" .
-        "SYNC: " . date('Y-m-d H:i:s') . "\n" .
-        "TARGET: " . ($targetId ?: 'ALL') . "\n" .
-        "RETURN CODE: " . $returnCode . "\n" .
-        "COMMAND: " . $cmd . "\n" .
-        "====================================================\n" .
-        implode("\n", $output) .
-        "\n\n",
-        FILE_APPEND
-    );
-
     $rawUpdated = file_get_contents($dataFile);
     $updatedMaterials = json_decode($rawUpdated, true) ?: [];
 
@@ -249,13 +238,41 @@ if ($action === 'save_tiers') {
 }
 
 // 8. GET SETTINGS
+// 8. GET SETTINGS
 if ($action === 'get_settings') {
-    $rawSettings = file_get_contents($settingsFile);
-    $settings = json_decode($rawSettings, true);
-    if (!is_array($settings)) {
-        $settings = [];
+
+    // If the settings file is missing, unreadable, invalid, or has no
+    // markup_rate key, return 0% markup + a warning flag.
+    // Never substitute 0.15 — that would silently override Simon's intent.
+    if (!is_file($settingsFile)) {
+        echo json_encode([
+            'markup_rate'       => 0,
+            'auto_sync_enabled' => false,
+            'sync_day'          => 'monday',
+            'sync_time'         => '06:00',
+            'last_auto_sync'    => null,
+            'settings_warning'  => 'no_markup_due_to_error'
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
     }
-    $settings['markup_rate']       = floatval($settings['markup_rate'] ?? 0.15);
+
+    $rawSettings = @file_get_contents($settingsFile);
+    $settings    = $rawSettings !== false ? json_decode($rawSettings, true) : null;
+
+    if (!is_array($settings) || !array_key_exists('markup_rate', $settings)) {
+        echo json_encode([
+            'markup_rate'       => 0,
+            'auto_sync_enabled' => false,
+            'sync_day'          => 'monday',
+            'sync_time'         => '06:00',
+            'last_auto_sync'    => null,
+            'settings_warning'  => 'no_markup_due_to_error'
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        exit;
+    }
+
+    // File is valid — trust whatever Simon set (including 0).
+    $settings['markup_rate']       = floatval($settings['markup_rate']);
     $settings['auto_sync_enabled'] = (bool)($settings['auto_sync_enabled'] ?? false);
     $settings['sync_day']          = $settings['sync_day'] ?? 'monday';
     $settings['sync_time']         = $settings['sync_time'] ?? '06:00';

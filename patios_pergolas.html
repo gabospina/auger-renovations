@@ -6,6 +6,42 @@
   <title>Patios & Pergolas – Projets complétés | Auger Rénovation</title>
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Google LocalBusiness Schema for local search -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    "name": "Auger Renovations",
+    "image": "https://auger-renovations.onrender.com/assets/images/Auger_Logo.png",
+    "url": "https://auger-renovations.onrender.com",
+    "telephone": "+1-514-236-7959",
+    "priceRange": "$$",
+    "description": "Rénovations résidentielles à Montréal : cuisines, salles de bains, sous-sols, planchers, patios et pergolas.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "St Lazare-de-Vaudreuil",
+      "addressLocality": "Vaudreuil-Dorion",
+      "addressRegion": "QC",
+      "postalCode": "POSTAL_CODE_HERE",
+      "addressCountry": "CA"
+    },
+    "areaServed": [
+      {"@type": "City", "name": "Montréal"},
+      {"@type": "City", "name": "Laval"},
+      {"@type": "City", "name": "Longueuil"},
+      {"@type": "City", "name": "Brossard"}
+    ],
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "08:00",
+        "closes": "18:00"
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -104,6 +140,46 @@
 
     </div>
   </footer>
+  <!-- WhatsApp floating button -->
+  <style>
+  .whatsapp-float-ar {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      font-family: -apple-system, Arial, sans-serif;
+      font-size: 15px;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+      z-index: 9000;
+      transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .whatsapp-float-ar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
+      color: #fff;
+  }
+  .whatsapp-float-ar .wa-icon { font-size: 18px; line-height: 1; }
+  @media (max-width: 640px) {
+      .whatsapp-float-ar { bottom: 16px; right: 16px; padding: 10px 14px; font-size: 14px; }
+      .whatsapp-float-ar .wa-label { display: none; }
+  }
+  </style>
 
-</body>
+  <a href="https://wa.me/15142367959?text=Bonjour%20Auger%20Renovations%2C%20j%27aimerais%20discuter%20d%27un%20projet%20de%20r%C3%A9novation."
+    target="_blank"
+    rel="noopener"
+    class="whatsapp-float-ar"
+    aria-label="Contactez-nous sur WhatsApp">
+      <span class="wa-icon">💬</span>
+      <span class="wa-label">Discuter sur WhatsApp</span>
+  </a>
+<script src="assets/js/track.js"></script></body>
 </html>
