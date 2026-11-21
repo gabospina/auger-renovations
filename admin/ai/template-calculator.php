@@ -2,6 +2,7 @@
 // admin/ai/template-calculator.php
 session_start();
 header('Content-Type: application/json; charset=utf-8');
+error_log('TEMPLATE CALCULATOR EXECUTED');
 
 // Prevent PHP warnings/notices from corrupting the JSON response.
 // Warnings still go to the error log, but never into the HTTP body.
@@ -385,8 +386,47 @@ foreach ($masterRecipe['items'] as $tplItem) {
                 $calculatedQty = 2;
             } elseif (strpos($lowerName, 'rouleau') !== false || strpos($lowerName, 'pinceau') !== false) {
                 $calculatedQty = 2;
+            } elseif (
+                strpos($lowerName, 'silicone') !== false
+            ) {
+
+                $calculatedQty =
+                    max(
+                        2,
+                        ceil(
+                            $perimeterFt / 20
+                        )
+                    );
+
+            } elseif (
+                strpos($lowerName, 'membrane') !== false ||
+                strpos($lowerName, 'kerdi') !== false
+            ) {
+
+                $calculatedQty =
+                    max(
+                        1,
+                        ceil(
+                            $wallSqft / 80
+                        )
+                    );
+
+            } elseif (
+                strpos($lowerName, 'mortier') !== false
+            ) {
+
+                $calculatedQty =
+                    max(
+                        1,
+                        ceil(
+                            $floorSqft / 50
+                        )
+                    );
+
             } else {
+
                 $calculatedQty = 1;
+
             }
         }
     }
@@ -397,6 +437,15 @@ foreach ($masterRecipe['items'] as $tplItem) {
 // 4b. Inject the client-requested vanity (width match),
 //     ignoring the template's hardcoded vanity row.
 if ($preferredVanity) {
+    error_log(
+        'PREFERRED VANITY FOUND => ' .
+        ($preferredVanity['name'] ?? 'NONE')
+    );
+
+    error_log(
+        'REQUESTED WIDTH => ' .
+        $requestedVanityWidth
+    );
     addOrMergeItem(
         $rawCalculatedItems,
         $preferredVanity['id'] ?? '',
@@ -409,7 +458,17 @@ if ($preferredVanity) {
 
 // 5. Merge Customer Travaux Demandés from Request Data
 $requestMaterials = $requestData['materials'] ?? ($requestData['prefilled_items'] ?? []);
+error_log(
+    'REQUEST MATERIAL COUNT => '
+    . count($requestMaterials)
+);
 foreach ($requestMaterials as $reqMat) {
+    error_log(
+        'REQUEST MATERIAL => '
+        . ($reqMat['name']
+            ?? $reqMat['desc']
+            ?? 'UNKNOWN')
+    );
     $reqSku = $reqMat['sku'] ?? '';
     $reqName = trim($reqMat['desc'] ?? ($reqMat['name'] ?? ''));
     $reqQty = floatval($reqMat['qty'] ?? ($reqMat['quantity'] ?? 1));

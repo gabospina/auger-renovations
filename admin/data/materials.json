@@ -5,6 +5,9 @@
     "supplier": "Home Depot",
     "category": "Salle de bain & Douche",
     "unit": "feuille",
+    "qty_type": "wall_board",
+    "coverage_per_unit": 15,
+    "waste_factor": 1.10, 
     "price": 26.98,
     "url": "https://www.homedepot.ca/produit/cgc-durock-cement-board-with-edgeguard-1-2-inch-x-3-ft-x-5-ft/1000113392",
     "last_updated": "2026-10-31 19:33:57"

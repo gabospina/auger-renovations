@@ -77,7 +77,32 @@ $availableTemplates = [];
 $activeTemplateFile = null;
 
 $templatesDir = __DIR__ . '/data/templates/';
-$templateFiles = is_dir($templatesDir) ? (glob($templatesDir . '*.json') ?: []) : [];
+
+$templateFiles = [];
+
+if (is_dir($templatesDir)) {
+
+    $iterator =
+        new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
+                $templatesDir,
+                FilesystemIterator::SKIP_DOTS
+            )
+        );
+
+    foreach ($iterator as $file) {
+
+        if (
+            strtolower(
+                $file->getExtension()
+            ) === 'json'
+        ) {
+
+            $templateFiles[] =
+                $file->getPathname();
+        }
+    }
+}
 
 foreach ($templateFiles as $file) {
 
@@ -199,12 +224,17 @@ $allClientSelections = array_merge(
 
 // Collect suggestions filtered by price bracket / tier
 foreach ($allClientSelections as $selection) {
-    if (isset($keywordMappings[$selection])) {
-        $found = findTieredCatalogItem($keywordMappings[$selection], $materials, $activeTier);
-        if ($found && !isset($suggestedMaterials[$found['id']])) {
-            $suggestedMaterials[$found['id']] = $found['data'];
-        }
-    }
+  error_log(
+      'ALL CLIENT SELECTIONS => ' .
+      print_r($allClientSelections, true)
+  );
+  if (isset($keywordMappings[$selection])) {
+      $found = findTieredCatalogItem($keywordMappings[$selection], $materials, $activeTier);
+      if ($found && !isset($suggestedMaterials[$found['id']])) {
+        error_log('SUGGESTED: '. ($found['data']['name'] ?? ''));
+        $suggestedMaterials[$found['id']] = $found['data'];
+      }
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -686,6 +716,18 @@ if (file_exists($laborRatesFile)) {
           </div>
         </div>
         <div
+            id="missing-materials-warning"
+            style="
+                display:none;
+                margin-bottom:12px;
+                padding:12px;
+                border:1px solid #f59e0b;
+                background:#fffbeb;
+                border-radius:8px;
+                color:#92400e;
+            ">
+        </div>
+        <div
             style="
                 margin-top:15px;
                 background:#f8fafc;
@@ -695,8 +737,7 @@ if (file_exists($laborRatesFile)) {
 
             <div class="summary-line">
                 <span>
-                    Matériaux de base
-                    (Modèle Simon)
+                    Matériaux de base (Modèle Simon3)
                 </span>
 
                 <strong id="template-material-total">
@@ -706,8 +747,7 @@ if (file_exists($laborRatesFile)) {
 
             <div class="summary-line">
                 <span>
-                    Matériaux personnalisés
-                    (Client)
+                    Matériaux personnalisés (Client3)
                 </span>
 
                 <strong id="customer-material-total">
@@ -715,13 +755,24 @@ if (file_exists($laborRatesFile)) {
                 </strong>
             </div>
 
+            <div class="summary-line">
+                <span>
+                    Matériaux ajoutés par Simon3
+                </span>
+
+                <strong id="simon-added-material-total">
+                    0.00 $
+                </strong>
+            </div>
+            
+
             <hr>
 
             <div
                 class="summary-line"
                 style="font-weight:700;">
                 <span>
-                    Total matériaux
+                    Total matériaux3
                 </span>
 
                 <strong id="materials-total">
@@ -821,27 +872,28 @@ if (file_exists($laborRatesFile)) {
     }
   }
 
-  // 2. Trigger Material Mapper & Quote Prefill
-  async function runQuotePrefill(reqId) {
-    try {
-      // Map materials and generate prefill cache
-      await fetch(`ai/material-mapper.php?id=${encodeURIComponent(reqId)}`);
-      const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`);
-      const json = await res.json();
+// 2. Trigger Material Mapper & Quote Prefill
+async function runQuotePrefill(reqId) {
+  try {
+    // Map materials and generate prefill cache
+    await fetch(`ai/material-mapper.php?id=${encodeURIComponent(reqId)}`);
+    const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`);
+    const json = await res.json();
 
-      if (json.success && json.redirect_url) {
-          window.location.href = json.redirect_url;
-      } else {
-        throw new Error(json.error || "Erreur de pré-remplissage.");
-      }
-    } catch (e) {
-      console.error(e);
-      alert("Erreur: " + e.message);
+    if (json.success && json.redirect_url) {
+        window.location.href = json.redirect_url;
+    } else {
+      throw new Error(json.error || "Erreur de pré-remplissage.");
     }
+  } catch (e) {
+    console.error(e);
+    alert("Erreur: " + e.message);
   }
+}
 
-  // Load master material templates into the dropdown displaying the filename base
-  async function loadSimonTemplates() {
+
+// Load master material templates into the dropdown displaying the filename base
+async function loadSimonTemplates() {
 
     try {
 
@@ -902,8 +954,63 @@ if (file_exists($laborRatesFile)) {
     }
 }
 
-  // Apply selected master material template and trigger AI calculation using room square footage
-  async function applyCustomTemplate() {
+function rerenderSimonAddedSection() {
+    const materialsList = document.getElementById('materials-list');
+    if (!materialsList) return;
+
+    const simonAddedItems = window.SIMON_ADDED_MATERIALS || [];
+
+    // Find the existing "Simon added" header (matches "Simon2" or "Simon")
+    let oldHeader = null;
+    materialsList.querySelectorAll('.materials-section-header').forEach(h => {
+        if (h.textContent.includes('ajoutés par Simon')) {
+            oldHeader = h;
+        }
+    });
+
+    const headerText = oldHeader
+        ? oldHeader.textContent.trim()
+        : 'Matériaux ajoutés par Simon';
+
+    // Delete the old section: header + every row + its divider
+    if (oldHeader) {
+        let node = oldHeader;
+        while (node) {
+            const next = node.nextSibling;
+            node.remove();
+            node = next;
+        }
+    }
+
+    // Re-add header with the SAME text it had before
+    const newHeader = document.createElement('div');
+    newHeader.className = 'materials-section-header';
+    newHeader.innerHTML = '<strong>' + headerText + '</strong>';
+    materialsList.appendChild(newHeader);
+
+    // Re-add rows from the array (correct order — above the divider)
+    let total = 0;
+    simonAddedItems.forEach(item => {
+        addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price);
+        total += parseFloat(item.quantity || 0) * parseFloat(item.estimated_unit_price || 0);
+    });
+
+    // Re-add divider with the recomputed total
+    addMaterialsDivider('Sous-total — ' + headerText, total);
+
+    // Update the top badge
+    const el = document.getElementById('simon-added-material-total');
+    if (el) {
+        el.textContent = Number(total).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }) + ' $';
+    }
+}
+
+
+// Apply selected master material template and trigger AI calculation using room square footage
+async function applyCustomTemplate() {
 
     console.log('applyCustomTemplate FIRED');
 
@@ -940,6 +1047,9 @@ if (file_exists($laborRatesFile)) {
 
         const calcData =
             await calcRes.json();
+
+        window.DEBUG_CALC_DATA =
+            calcData;
 
         console.log(
             'TEMPLATE CALCULATOR RESPONSE:',
@@ -980,8 +1090,6 @@ if (file_exists($laborRatesFile)) {
 
         if (materialsList) {
 
-        materialsList.innerHTML ='';
-
         const templateTotal =
             document.getElementById(
                 'template-material-total'
@@ -991,6 +1099,11 @@ if (file_exists($laborRatesFile)) {
             document.getElementById(
                 'customer-material-total'
             );
+
+        const simonAddedTotalEl =
+          document.getElementById(
+              'simon-added-material-total'
+          );
 
         if (
             templateTotal &&
@@ -1003,10 +1116,12 @@ if (file_exists($laborRatesFile)) {
                     calcData.template_material_total
                 ).toLocaleString(
                     'en-US',
-                    { minimumFractionDigits: 2,
-                      maximumFractionDigits: 2
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
                     }
                 ) + ' $';
+
         }
 
         if (
@@ -1029,44 +1144,61 @@ if (file_exists($laborRatesFile)) {
 
         materialsList.innerHTML = '';
 
-        const simonItems =
-            calcData.items.filter(
-                item =>
-                    item.source ===
-                    'basic_materials_bathroom'
-            );
+        // ─── Section 1: Simon template materials ─────────────────────
+        const simonHeader = document.createElement('div');
+        simonHeader.className = 'materials-section-header';
+        simonHeader.innerHTML = '<strong>Matériaux de base (Modèle Simon1)</strong>';
+        materialsList.appendChild(simonHeader);
 
-        const customerItems =
-            calcData.items.filter(
-                item =>
-                    item.source ===
-                    'customer_request'
-            );
-
-        // ========================
-        // SIMON MATERIALS
-        // ========================
-
+        const simonItems = calcData.items.filter(
+            item => item.source === 'basic_materials_bathroom'
+        );
         simonItems.forEach(item => {
-
-            addMaterialRowToTable(
-                item.name,
-                item.quantity,
-                item.estimated_unit_price
-            );
-
+            addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price);
         });
-
         addMaterialsDivider(
-            'Matériaux de base (Modèle Simon)',
+            'Sous-total — Matériaux de base (Modèle Simon2)',
             calcData.template_material_total
         );
 
-        // ========================
-        // CUSTOMER MATERIALS
-        // ========================
+        // ─── Section 2: Customer custom materials ────────────────────
+        const customerHeader = document.createElement('div');
+        customerHeader.className = 'materials-section-header';
+        customerHeader.innerHTML = '<strong>Matériaux personnalisés (Client2)</strong>';
+        materialsList.appendChild(customerHeader);
 
+        const customerItems = calcData.items.filter(
+            item => item.source === 'customer_request'
+        );
         customerItems.forEach(item => {
+            addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price);
+        });
+        addMaterialsDivider(
+            'Sous-total — Matériaux personnalisés (Client2)',
+            calcData.customer_material_total
+        );
+
+        const simonAddedItems =
+            window.SIMON_ADDED_MATERIALS || [];
+
+        // ─── Section 3: Materials added by Simon ──────────
+
+        const simonAddedHeader =
+            document.createElement('div');
+
+        simonAddedHeader.className =
+            'materials-section-header';
+
+        simonAddedHeader.innerHTML =
+            '<strong>Matériaux ajoutés par Simon2</strong>';
+
+        materialsList.appendChild(
+            simonAddedHeader
+        );
+
+        let simonAddedTotal = 0;
+
+        simonAddedItems.forEach(item => {
 
             addMaterialRowToTable(
                 item.name,
@@ -1074,22 +1206,50 @@ if (file_exists($laborRatesFile)) {
                 item.estimated_unit_price
             );
 
+            simonAddedTotal +=
+                (
+                    parseFloat(item.quantity || 0)
+                    *
+                    parseFloat(item.estimated_unit_price || 0)
+                );
+
         });
 
         addMaterialsDivider(
-            'Matériaux personnalisés (Client)',
-            calcData.customer_material_total
+            'Sous-total — Matériaux ajoutés par Simon2',
+            simonAddedTotal
         );
 
+        if (simonAddedTotalEl) {
+
+            simonAddedTotalEl.textContent =
+                Number(
+                    simonAddedTotal
+                ).toLocaleString(
+                    'en-US',
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                ) + ' $';
+
+        }
+
+        // ─── Grand total ─────────────────────────────────────────────
+        const grandMaterialsTotal =
+            parseFloat(calcData.total_materials || 0)
+            +
+            simonAddedTotal;
+
+        
+
+        // ─── Debug (leave for now to verify counts) ──────────────────
+        console.log('SIMON ITEMS', simonItems.length);
+        console.log('CUSTOMER ITEMS', customerItems.length);
+        console.log('CUSTOMER ITEMS DATA', customerItems);
         // ========================
         // GRAND TOTAL
         // ========================
-
-        addMaterialsDivider(
-            'Total matériaux',
-            calcData.total_materials,
-            true
-        );
     }
 
     // ==========================================
@@ -1195,6 +1355,8 @@ if (file_exists($laborRatesFile)) {
                   calculateTotals();
               }
 
+              refreshMissingWarning();
+
               const ppf = (typeof calcData.price_per_sqft === 'number')
                   ? calcData.price_per_sqft.toFixed(2)
                   : '0.00';
@@ -1236,37 +1398,78 @@ if (file_exists($laborRatesFile)) {
     }
 }
 
-  function addMaterialRowToTable(desc, qty, unitPrice) {
-    const materialsList = document.getElementById('materials-list');
-    const row = document.createElement('div');
-    row.className = 'quote-row calc-grid';
+ function addMaterialRowToTable(
+    desc,
+    qty,
+    unitPrice
+  ) {
 
-    // Format unit price with comma separator for thousands and dot for decimals (e.g. 2,542.00)
-    const numericUnit = parseFloat(unitPrice || 0);
-    const formattedUnit = numericUnit.toString();   // "2923.75" — no comma
+    const materialsList =
+        document.getElementById(
+            'materials-list'
+        );
 
-    const lineTotal = (parseFloat(qty || 0) * numericUnit).toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+    const row =
+        document.createElement(
+            'div'
+        );
+
+    row.className =
+        'quote-row calc-grid';
+
+    const numericUnit =
+        parseFloat(
+            unitPrice || 0
+        );
+
+    const formattedUnit =
+        numericUnit.toString();
+
+    const lineTotal =
+        (
+            parseFloat(qty || 0)
+            *
+            numericUnit
+        )
+        .toLocaleString(
+            'en-US',
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
 
     row.innerHTML = `
       <input type="text" class="mat-desc" value="${desc}">
       <input type="number" class="mat-qty" value="${qty}" step="any">
       <input type="text" class="mat-unit" value="${formattedUnit}">
       <span class="mat-total line-total">${lineTotal} $</span>
-      <button type="button" class="row-delete delete-material" onclick="this.closest('.quote-row').remove(); if(typeof calculateTotals === 'function') calculateTotals();"><i class="fa-solid fa-trash"></i></button>
+      <button type="button"
+              class="row-delete delete-material"
+              onclick="this.closest('.quote-row').remove(); if(typeof calculateTotals === 'function') calculateTotals();">
+          <i class="fa-solid fa-trash"></i>
+      </button>
     `;
-    materialsList.appendChild(row);
-  }
+
+    materialsList.appendChild(
+        row
+    );
+}
+ 
 
   function addMaterialsDivider(
-    label,
-    total,
-    highlight = false
-) {
+        label,
+        total,
+        highlight = false
+    ) {
     const row =
         document.createElement('div');
+
+    row.className =
+        'materials-divider';
+
+    row.dataset.label =
+        label;
 
     row.style.borderTop =
         '2px solid #d1d5db';
@@ -1302,7 +1505,7 @@ if (file_exists($laborRatesFile)) {
     document
         .getElementById('materials-list')
         .appendChild(row);
-}
+  }
 
   function mergeMaterialIntoTable(desc, qty, unitPrice) {
     const rows = document.querySelectorAll('#materials-list .quote-row');
@@ -1322,7 +1525,7 @@ if (file_exists($laborRatesFile)) {
             return;
         }
     }
-    addMaterialRowToTable(desc, qty, unitPrice);
+    addMaterialRowToTable(desc, qty, unitPrice, source = 'simon');
     if (typeof calculateTotals === 'function') {
         calculateTotals();
     }

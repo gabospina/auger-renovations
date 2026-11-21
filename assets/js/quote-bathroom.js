@@ -143,6 +143,8 @@ function generatePreview() {
   `;
 }
 
+
+
 // Core automatic estimator based on actual requested scope & room measurements
 function prefillFromClassicEstimator() {
   const spec = window.CURRENT_PROJECT_SPEC || {};
@@ -390,6 +392,98 @@ function setupPhotoPreviews() {
   handleFileInput('photo-desired', 'photo-desired-grid');
 }
 
+function checkMissingMaterials() {
+    // Normalize text: lowercase + strip accents (é→e, à→a, etc.)
+    const norm = s =>
+        String(s || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim();
+
+    // Gather all present material descriptions AND SKUs
+    const existingMaterials = Array.from(
+        document.querySelectorAll('#materials-list .mat-desc')
+    ).map(el => norm(el.value));
+
+    const existingSkus = Array.from(
+        document.querySelectorAll('#materials-list [data-sku]')
+    ).map(el => norm(el.dataset.sku));
+
+    const allExisting = existingMaterials.concat(existingSkus);
+
+    // Requirements: each entry is "found if ANY alias matches"
+    // and has a friendly label for the banner.
+    const requirements = {
+        walk_in_shower: [
+            { aliases: ['kerdi', 'membrane', 'redgard', 'etanch', 'waterproof'],
+              label: "Membrane d'étanchéité (Kerdi / RedGard / Membrane)" },
+            { aliases: ['silicone', 'caultic', 'calfeutr'],
+              label: "Silicone / Calfeutrage" }
+        ],
+        frameless_glass: [
+            { aliases: ['silicone', 'caultic', 'calfeutr'],
+              label: "Silicone / Calfeutrage" }
+        ],
+        replace_toilet: [
+            { aliases: ['toilette', 'toilet', 'wc'],
+              label: "Toilette / WC" },
+            { aliases: ['anneau', 'wax', 'cire'],
+              label: "Anneau de cire (wax ring)" }
+        ],
+        replace_vanity: [
+            { aliases: ['vanite', 'vanity'],
+              label: "Vanité" },
+            { aliases: ['robinet', 'faucet', 'mitigeur'],
+              label: "Robinet / Mitigeur" }
+        ],
+        heated_floor: [
+            { aliases: ['chauffant', 'chauffage', 'radiant', 'tapis'],
+              label: "Tapis / câble chauffant" },
+            { aliases: ['thermostat', 'controleur', 'controller'],
+              label: "Thermostat" }
+        ]
+    };
+
+    const selectedItems = [
+        ...(window.CURRENT_PROJECT_SPEC?.shower || []),
+        ...(window.CURRENT_PROJECT_SPEC?.plumbing || []),
+        ...(window.CURRENT_PROJECT_SPEC?.electrical || [])
+    ];
+
+    const missing = [];
+
+    selectedItems.forEach(selection => {
+        const reqs = requirements[selection];
+        if (!reqs) return;
+
+        reqs.forEach(req => {
+            const found = req.aliases.some(alias =>
+                allExisting.some(m => m.includes(alias))
+            );
+            if (!found) missing.push(req.label);
+        });
+    });
+
+    return [...new Set(missing)];
+}
+
+function refreshMissingWarning() {
+    const missing = checkMissingMaterials();
+    const box = document.getElementById('missing-materials-warning');
+    if (!box) return;
+
+    if (missing.length > 0) {
+        box.style.display = 'block';
+        box.innerHTML =
+            '<strong>⚠ Matériaux potentiellement manquants :</strong><br>'
+            + missing.join(', ');
+    } else {
+        box.style.display = 'none';
+    }
+}
+
+
 // BOOTSTRAP INITIALIZATION
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -494,49 +588,109 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('send-quote')?.addEventListener('click', sendQuote);
 });
 
+window.MANUAL_CUSTOMER_MATERIALS =
+    window.MANUAL_CUSTOMER_MATERIALS || [];
+
+window.SIMON_ADDED_MATERIALS =
+    window.SIMON_ADDED_MATERIALS || [];
+
 // 1. When Simon clicks the [+] button in Suggested Materials
+
 document.addEventListener('click', function(event) {
-  const btn = event.target.closest('.btn-add-suggested-material');
-  if (!btn) return;
-  
-  const suggestionId = btn.dataset.id;
-  const name = btn.dataset.name;
-  const price = parseFloat(btn.dataset.price || 0);
 
-  // Add to 1. Matériaux table
-  addMaterialRow(name, 1, price);
-  updateCalculations();
+    const btn = event.target.closest('.btn-add-suggested-material');
+    if (!btn) return;
 
-  // Hide the item from the Suggested Materials table instead of removing it completely
-  const suggestedRow = document.getElementById(`suggested-row-${suggestionId}`);
-  if (suggestedRow) {
-    suggestedRow.style.display = 'none';
-  }
+    const suggestionId = btn.dataset.id;
+    const name = btn.dataset.name;
+    const price = parseFloat(btn.dataset.price || 0);
+
+    console.log('Adding suggested material:', name);
+
+    window.SIMON_ADDED_MATERIALS.push({
+        name: name,
+        quantity: 1,
+        estimated_unit_price: price,
+        source: 'simon_added'
+    });
+
+    // Single call: re-renders section 3 with correct rows + correct total
+    rerenderSimonAddedSection();
+
+    if (typeof updateCalculations === 'function') {
+        updateCalculations();
+    }
+
+    refreshMissingWarning();
+
+    const suggestedRow = document.getElementById(`suggested-row-${suggestionId}`);
+    if (suggestedRow) {
+        suggestedRow.style.display = 'none';
+    }
 });
 
 // 2. When Simon clicks the trash can icon inside 1. Matériaux to delete a row
-document.addEventListener('click', function(event) {
-  const deleteBtn = event.target.closest('.delete-material');
-  if (!deleteBtn) return;
+document.addEventListener('click', function (event) {
+    const deleteBtn = event.target.closest('.delete-material');
+    if (!deleteBtn) return;
 
-  const row = deleteBtn.closest('.quote-row');
-  if (!row) return;
+    const row = deleteBtn.closest('.quote-row');
+    if (!row) return;
 
-  // Optional: Check if the description matches any hidden suggested item to restore it
-  const descInput = row.querySelector('.mat-desc');
-  const itemName = descInput ? descInput.value.trim() : '';
+    const descInput = row.querySelector('.mat-desc');
+    const itemName = descInput ? descInput.value.trim() : '';
+    const lowerItemName = itemName.toLowerCase();
 
-  if (itemName) {
-    // Find matching hidden suggested row by product name and make it visible again
-    document.querySelectorAll('tr[id^="suggested-row-"]').forEach(sRow => {
-      const nameCell = sRow.cells[1]; // Index 1 is the product name cell
-      if (nameCell && nameCell.textContent.trim() === itemName) {
-        sRow.style.display = ''; // Bring it back!
-      }
-    });
-  }
+    // ── 1. Remove from window.SIMON_ADDED_MATERIALS if it's a Simon-added item ──
+    if (Array.isArray(window.SIMON_ADDED_MATERIALS) && lowerItemName) {
+        const beforeCount = window.SIMON_ADDED_MATERIALS.length;
+        window.SIMON_ADDED_MATERIALS = window.SIMON_ADDED_MATERIALS.filter(
+            it => (it.name || '').trim().toLowerCase() !== lowerItemName
+        );
+        const removed = beforeCount - window.SIMON_ADDED_MATERIALS.length;
+        if (removed > 0) {
+            console.log('[delete] removed', removed, 'Simon-added item(s):', itemName);
+            // Re-render section 3 so its subtotal reflects the removal
+            if (typeof rerenderSimonAddedSection === 'function') {
+                rerenderSimonAddedSection();
+            }
+        }
+    }
 
-  // Remove the row from materials and recalculate
-  row.remove();
-  updateCalculations();
+    // ── 2. Remove the row from the materials table ──
+    row.remove();
+
+    // ── 3. Restore any suggested rows whose name is no longer present in the quote ──
+    if (itemName) {
+        // Build a fresh list of names currently in the materials table
+        const currentQuoteNames = [];
+        document
+            .querySelectorAll('#materials-list .mat-desc')
+            .forEach(input => {
+                const v = (input.value || '').trim().toLowerCase();
+                if (v) currentQuoteNames.push(v);
+            });
+
+        document
+            .querySelectorAll('[id^="suggested-row-"]')
+            .forEach(suggRow => {
+                const nameCell = suggRow.cells && suggRow.cells[1];
+                const suggName = nameCell?.textContent?.trim()?.toLowerCase();
+                if (!suggName) return;
+
+                // If nothing in the current quote matches this suggestion,
+                // the material was removed → show it again
+                const stillInQuote = currentQuoteNames.some(q =>
+                    q.includes(suggName) || suggName.includes(q)
+                );
+                suggRow.style.display = stillInQuote ? 'none' : '';
+            });
+    }
+
+    // ── 4. Recompute totals ──
+    if (typeof updateCalculations === 'function') {
+        updateCalculations();
+    }
+
+    refreshMissingWarning();
 });

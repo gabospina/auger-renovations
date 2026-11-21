@@ -65,6 +65,21 @@ function findMaterialByCategory(array $catalog, array $keywords) {
                 (string)($item['name'] ?? '')
             );
 
+        if (
+            strpos($name, 'vanité') !== false
+            ||
+            strpos($name, 'vanity') !== false
+        ) {
+            error_log(
+                'VANITY CANDIDATE => '
+                . ($item['name'] ?? '')
+                . ' | PRICE='
+                . ($item['price'] ?? 0)
+                . ' | SCORE='
+                . $score
+            );
+        }
+
         $category =
             strtolower(
                 (string)($item['category'] ?? '')
@@ -366,6 +381,10 @@ if (!empty($analysis['recommendations']['replace_vanity'])) {
             'sans comptoir'
         ];
 
+        error_log(
+            'VANITY SIZE: ' .
+            $vanitySize
+        );
         $vanityItem =
             findMaterialByCategory(
                 $catalog,
