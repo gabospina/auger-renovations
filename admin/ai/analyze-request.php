@@ -235,7 +235,41 @@ if (!is_dir($analysisDir)) {
     mkdir($analysisDir, 0755, true);
 }
 $analysisFile = $analysisDir . '/' . $reqId . '.json';
+
+error_log(
+    'WRITING => ' .
+    $analysisFile
+);
+
+$result =
+    file_put_contents(
+        $analysisFile,
+        json_encode(
+            $analysisResult,
+            JSON_PRETTY_PRINT
+            | JSON_UNESCAPED_UNICODE
+            | JSON_UNESCAPED_SLASHES
+        )
+    );
+
+error_log(
+    'WRITE RESULT => ' .
+    var_export(
+        $result,
+        true
+    )
+);
+
 file_put_contents($analysisFile, json_encode($analysisResult, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+error_log(
+    'WRITE RESULT => ' .
+    (
+        file_exists($analysisFile)
+            ? 'SUCCESS'
+            : 'FAILED'
+    )
+);
 
 // 6. Return JSON response to frontend
 echo json_encode([

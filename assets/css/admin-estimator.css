@@ -12,11 +12,44 @@
 }
 
 .admin-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.admin-title {
+    font-size: 15px;
+    color: #ffffff;
+}
+.admin-title strong {
+    color: #d1b06a;
+}
+.btn.btn-outline {
+    color: #ffffff;
+    border: 1px solid #555;
+    background: transparent;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.btn.btn-outline:hover {
+    background: #333;
+    border-color: #d1b06a;
+    color: #ffffff;
+}
+.btn.btn-outline i {
+    font-size: 13px;
 }
 
 .badge-req {

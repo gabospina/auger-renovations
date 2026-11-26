@@ -103,8 +103,8 @@ if (file_exists($analyticsFile)) {
 <title>QR Codes — Auger Renovations</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-body { font-family: system-ui, sans-serif; background: #f6f8fa; margin: 0; padding: 30px; color: #24292e; }
-.container { max-width: 1100px; margin: 0 auto; }
+body { font-family: system-ui, sans-serif; background: #f6f8fa; margin: 0; padding: 0; color: #24292e; }
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
 .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 h1 { color: #24292e; margin: 0; }
 .back-link { color: #24292e; text-decoration: none; font-weight: 600; }
@@ -141,13 +141,73 @@ h1 { color: #24292e; margin: 0; }
 .info-box strong { color: #0d47a1; }
 @media (max-width: 640px) { .qr-preview img { width: 160px; height: 160px; } }
 </style>
+<style>
+/* === STANDARD ADMIN TOPBAR (matches analytics.php / request.php) === */
+body { padding: 0 !important; }
+
+.admin-topbar {
+    background: #111111;
+    color: #ffffff;
+    padding: 14px 24px;
+    border-bottom: 2px solid #d1b06a;
+}
+.admin-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.admin-title { font-size: 15px; color: #ffffff; }
+.admin-title strong { color: #d1b06a; font-weight: 700; }
+.admin-topbar .btn.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    border: 1px solid #555;
+    background: transparent;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.admin-topbar .btn.btn-outline:hover {
+    background: #333;
+    border-color: #d1b06a;
+    color: #ffffff;
+}
+.admin-topbar .btn.btn-outline i { font-size: 13px; }
+</style>
 </head>
 <body>
+<header class="admin-topbar">
+    <div class="admin-container">
+        <div class="admin-title">
+            <strong>Auger Rénovation</strong> — Portail Administratif
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <a href="analytics.php" class="btn btn-outline">
+                <i class="fa-solid fa-chart-line"></i> Analytics
+            </a>
+            <a href="settings.php" class="btn btn-outline">
+                <i class="fa-solid fa-gear"></i> Paramètres
+            </a>
+            <a href="admin.php" class="btn btn-outline" style="background: #444;">
+                <i class="fa-solid fa-arrow-left"></i> Retour au Tableau de bord
+            </a>
+        </div>
+    </div>
+</header>
 <div class="container">
 
     <div class="header-bar">
         <h1>📱 QR Codes</h1>
-        <a href="admin.php" class="back-link">← Retour admin</a>
     </div>
 
     <?php if ($message): ?>

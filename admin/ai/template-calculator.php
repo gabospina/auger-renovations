@@ -456,12 +456,76 @@ if ($preferredVanity) {
     );
 }
 
+// ── Diagnostic helper for this file ──
+$debugLog = __DIR__ . '/../../sync-debug.log';
+function tc_debug($msg) {
+    global $debugLog;
+    $line = '[' . date('Y-m-d H:i:s') . '] [TC] ' . $msg . PHP_EOL;
+    @file_put_contents($debugLog, $line, FILE_APPEND | LOCK_EX);
+    error_log('[TC] ' . $msg); // also to Apache error log
+}
+
 // 5. Merge Customer Travaux Demandés from Request Data
 $requestMaterials = $requestData['materials'] ?? ($requestData['prefilled_items'] ?? []);
+tc_debug('REQUEST MATERIAL COUNT => ' . count($requestMaterials));
+
 error_log(
-    'REQUEST MATERIAL COUNT => '
-    . count($requestMaterials)
+    'REQUEST ID TEMPLATE CALCULATOR => ' .
+    ($requestId ?? 'NULL')
 );
+
+error_log(
+    'ANALYSIS FILE PATH => ' .
+    $analysisFile
+);
+
+// ── Merge material-mapper output ──
+$analysisFile = __DIR__ . '/../data/project-analysis/' . $requestId . '.json';
+$analysis = [];
+
+if (file_exists($analysisFile)) {
+    $analysis = json_decode(file_get_contents($analysisFile), true) ?: [];
+    tc_debug('ANALYSIS FILE FOUND: ' . basename($analysisFile));
+} else {
+    tc_debug('ANALYSIS FILE MISSING: ' . $analysisFile);
+}
+
+$mappedMaterials = $analysis['mapped_materials']['materials'] ?? [];
+tc_debug('MAPPED MATERIAL COUNT => ' . count($mappedMaterials));
+
+// Defensive dedupe — prevents mapper duplicates from reaching addOrMergeItem
+$dedupedMapped = [];
+foreach ($mappedMaterials as $m) {
+    $key = !empty($m['sku']) ? $m['sku'] : strtolower(trim($m['name'] ?? ''));
+    if (!isset($dedupedMapped[$key])) {
+        $dedupedMapped[$key] = $m;
+    } else {
+        if (($m['quantity'] ?? 0) > ($dedupedMapped[$key]['quantity'] ?? 0)) {
+            $dedupedMapped[$key]['quantity'] = $m['quantity'];
+        }
+    }
+}
+$mappedMaterials = array_values($dedupedMapped);
+
+foreach ($mappedMaterials as $mappedItem) {
+    tc_debug('ADDING MAPPED => ' . ($mappedItem['sku'] ?? 'NO SKU') . ' | ' . ($mappedItem['name'] ?? 'NO NAME'));
+    error_log(
+        'ADDING CUSTOMER MATERIAL => ' .
+        ($mappedItem['name'] ?? '')
+    );
+    addOrMergeItem(
+        $rawCalculatedItems,
+        $mappedItem['sku'] ?? '',
+        $mappedItem['name'] ?? '',
+        floatval($mappedItem['quantity'] ?? 1),
+        floatval($mappedItem['estimated_unit_price'] ?? 0),
+        'customer_request'
+    );
+    
+}
+
+tc_debug('AFTER MAPPER MERGE: $rawCalculatedItems count = ' . count($rawCalculatedItems));
+
 foreach ($requestMaterials as $reqMat) {
     error_log(
         'REQUEST MATERIAL => '

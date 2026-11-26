@@ -1,0 +1,235 @@
+{
+  "heated_floor": {
+    "required_keywords": ["chauffant", "thermostat"],
+    "selection_values": ["heated_floor"],
+    "warning": "Tapis / câble chauffant, Thermostat"
+  },
+
+  "gfci": {
+    "required_keywords": ["ddft", "gfci"],
+    "selection_values": ["gfci"],
+    "warning": "Prise GFCI"
+  },
+
+  "fan_replace": {
+    "required_keywords": ["ventilateur"],
+    "selection_values": ["fan_replace", "new_fan"],
+    "warning": "Ventilateur de salle de bain"
+  },
+
+  "led_mirror": {
+    "required_keywords": ["miroir", "luminaire", "led"],
+    "selection_values": ["led_mirror"],
+    "warning": "Miroir DEL"
+  },
+
+  "plumbing_relocation": {
+    "required_keywords": ["pex"],
+    "selection_values": ["plumbing_relocation"],
+    "warning": "PEX"
+  },
+
+  "new_toilet": {
+  "required_keywords": [
+    "toilette",
+    "bride",
+    "wax",
+    "supply"
+  ],
+  "selection_values": [
+    "replace_toilet"
+  ],
+  "warning": "Toilette, bride, cire ou conduite d'alimentation"
+  },
+
+  "new_sink": {
+    "required_keywords": [
+      "lavabo",
+      "drain"
+    ],
+    "selection_values": [
+      "new_sink"
+    ],
+    "warning": "Lavabo ou drain de lavabo"
+  },
+
+  "new_faucet": {
+    "required_keywords": [
+      "robinet"
+    ],
+    "selection_values": [
+      "new_faucet"
+    ],
+    "warning": "Robinet"
+  },
+
+  "new_shower_head": {
+    "required_keywords": [
+      "pomme"
+    ],
+    "selection_values": [
+      "new_shower_head"
+    ],
+    "warning": "Pomme de douche"
+  },
+
+  "new_bathtub": {
+    "required_keywords": [
+      "bain"
+    ],
+    "selection_values": [
+      "new_bathtub"
+    ],
+    "warning": "Bain"
+  },
+
+  "walk_in_shower": {
+    "required_keywords": [
+      "membrane",
+      "drain"
+    ],
+    "selection_values": [
+      "walk_in"
+    ],
+    "warning": "Membrane ou drain de douche"
+  },
+
+  "glass_shower": {
+    "required_keywords": [
+      "porte douche",
+      "verre"
+    ],
+    "selection_values": [
+      "glass_door"
+    ],
+    "warning": "Porte de douche en verre"
+  },
+
+  "frameless_glass": {
+    "required_keywords": [
+      "verre sans cadre"
+    ],
+    "selection_values": [
+      "frameless_glass"
+    ],
+    "warning": "Verre sans cadre"
+  },
+
+  "rain_shower": {
+    "required_keywords": [
+      "pomme pluie"
+    ],
+    "selection_values": [
+      "rain_shower"
+    ],
+    "warning": "Pomme de pluie"
+  },
+
+  "body_jets": {
+    "required_keywords": [
+      "jet"
+    ],
+    "selection_values": [
+      "body_jets"
+    ],
+    "warning": "Jets corporels"
+  },
+
+  "linear_drain": {
+    "required_keywords": [
+      "drain lineaire"
+    ],
+    "selection_values": [
+      "linear_drain"
+    ],
+    "warning": "Drain linéaire"
+  },
+
+  "waterproofing": {
+    "required_keywords": [
+      "kerdi",
+      "membrane",
+      "redgard"
+    ],
+    "selection_values": [
+      "waterproof"
+    ],
+    "warning": "Membrane d'étanchéité"
+  },
+
+  "ceramic_floor": {
+    "required_keywords": [
+      "ceramique",
+      "coulis",
+      "mortier"
+    ],
+    "selection_values": [
+      "ceramic"
+    ],
+    "warning": "Céramique, coulis ou mortier"
+  },
+
+  "granite_countertop": {
+    "required_keywords": [
+      "granite"
+    ],
+    "selection_values": [
+      "granite"
+    ],
+    "warning": "Comptoir granite"
+  },
+
+  "quartz_countertop": {
+    "required_keywords": [
+      "quartz"
+    ],
+    "selection_values": [
+      "quartz"
+    ],
+    "warning": "Comptoir quartz"
+  },
+
+  "marble_countertop": {
+    "required_keywords": [
+      "marble",
+      "marbre"
+    ],
+    "selection_values": [
+      "marble"
+    ],
+    "warning": "Comptoir marbre"
+  },
+
+  "laminate_countertop": {
+    "required_keywords": [
+      "stratifie",
+      "laminate"
+    ],
+    "selection_values": [
+      "laminate"
+    ],
+    "warning": "Comptoir stratifié"
+  },
+
+  "pot_lights": {
+    "required_keywords": [
+      "encastre",
+      "pot light"
+    ],
+    "selection_values": [
+      "pot_lights"
+    ],
+    "warning": "Lumière encastrée"
+  },
+
+  "painting": {
+    "required_keywords": [
+      "peinture",
+      "rouleau"
+    ],
+    "selection_values": [
+      "painting"
+    ],
+    "warning": "Peinture"
+  }
+}

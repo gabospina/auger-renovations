@@ -1,432 +1,4 @@
 {
-    "REQ-20261008-93ED": {
-        "request_id": "REQ-20261008-93ED",
-        "created_at": "2026-10-08 15:30:55",
-        "status": "pending",
-        "client": {
-            "name": "Gabriel Ospina",
-            "address": "11 Rue du Château-Kirkland",
-            "email": "gobasuras@gmail.com",
-            "phone": "514-758-6345"
-        },
-        "project": {
-            "type": "complete",
-            "condition": "moyen",
-            "size_sqft": "",
-            "work_items": [
-                "Retirer la douche",
-                "Ajouter un bain",
-                "Remplacer le plancher",
-                "Remplacer la vanité",
-                "Remplacer le closet",
-                "Peinture murs et plafond",
-                "Remplacer la toilette"
-            ],
-            "notes": "New modern tooilette adn shower head"
-        },
-        "photos": {
-            "current": [
-                "uploads/REQ-20261008-93ED/ARenovation-BathroomWhiteShowerFloorDarkGray_6ac7ef6fd99e1.jpg"
-            ],
-            "desired": [
-                "uploads/REQ-20261008-93ED/Bathroom-5_6ac7ef6fd9e58.png"
-            ]
-        }
-    },
-    "REQ-20261015-A0DE": {
-        "request_id": "REQ-20261015-A0DE",
-        "created_at": "2026-10-15 17:30:37",
-        "status": "Soumission envoyée",
-        "client": {
-            "name": "abcdefghi",
-            "address": "11 Rue du Château-Kirkland",
-            "email": "gobasuras@gmail.com",
-            "phone": "514-758-1234"
-        },
-        "project": {
-            "type": "complete",
-            "condition": "average",
-            "renovation_level": "complete",
-            "size_sqft": "140",
-            "length": "14",
-            "width": "10",
-            "ceiling_height": "8",
-            "issues": [
-                "water_damage",
-                "mold",
-                "leaks"
-            ],
-            "demo": [
-                "vanity",
-                "toilet",
-                "bathtub",
-                "shower",
-                "floor_tile",
-                "drywall"
-            ],
-            "plumbing": [
-                "replace_sink",
-                "replace_faucet",
-                "replace_tub",
-                "move_plumbing"
-            ],
-            "electrical": [
-                "heated_floor",
-                "led_mirror"
-            ],
-            "shower": [],
-            "floor": [
-                "porcelain",
-                "luxury_vinyl"
-            ],
-            "vanity": [
-                "30",
-                "36",
-                "60"
-            ],
-            "countertop": [
-                "quartz",
-                "granite"
-            ],
-            "painting": [],
-            "budget_range": "20000_40000",
-            "design_style": "modern",
-            "desired_start_date": "2026-10-30",
-            "project_priority": "urgent",
-            "ai_render_requested": false,
-            "notes": ""
-        },
-        "photos": {
-            "current": [
-                "uploads/REQ-20261015-A0DE/Bathroom-3_6ad145fd0a589.png"
-            ],
-            "desired": [
-                "uploads/REQ-20261015-A0DE/Bathroom-1_6ad145fd0a7e7.png"
-            ]
-        },
-        "quote_id": "AR-2026-0019",
-        "quote_amount": "381.54 $"
-    },
-    "REQ-20261017-8633": {
-        "request_id": "REQ-20261017-8633",
-        "created_at": "2026-10-17 17:34:57",
-        "status": "Soumission envoyée",
-        "client": {
-            "name": "Simon Auger",
-            "address": "Valley Field",
-            "email": "simon@gmail.com",
-            "phone": "514-234-5678"
-        },
-        "project": {
-            "type": "complete",
-            "condition": "poor",
-            "renovation_level": "complete",
-            "size_sqft": "140",
-            "length": "14",
-            "width": "10",
-            "ceiling_height": "8",
-            "issues": [
-                "water_damage",
-                "mold",
-                "leaks"
-            ],
-            "demo": [
-                "vanity",
-                "toilet",
-                "bathtub",
-                "shower",
-                "floor_tile",
-                "drywall"
-            ],
-            "plumbing": [
-                "replace_sink",
-                "replace_faucet",
-                "replace_tub",
-                "move_plumbing"
-            ],
-            "electrical": [
-                "gfci",
-                "heated_floor",
-                "led_mirror"
-            ],
-            "shower": [
-                "replace_standard_shower",
-                "rain_shower"
-            ],
-            "floor": [
-                "ceramic"
-            ],
-            "vanity": [
-                "36"
-            ],
-            "countertop": [
-                "granite"
-            ],
-            "painting": [
-                "walls"
-            ],
-            "budget_range": "20000_40000",
-            "design_style": "modern",
-            "desired_start_date": "2026-10-30",
-            "project_priority": "urgent",
-            "ai_render_requested": false,
-            "notes": "I need this remodelation to be finsh in four weeks. Let me know if it is possible."
-        },
-        "photos": {
-            "current": [
-                "uploads/REQ-20261017-8633/Bathroom-3_6ad3ea0118934.png"
-            ],
-            "desired": [
-                "uploads/REQ-20261017-8633/Bathroom-5_6ad3ea0118bd2.png"
-            ]
-        },
-        "quote_id": "AR-2026-0025",
-        "quote_amount": "381.54 $"
-    },
-    "REQ-20261029-84F4": {
-        "request_id": "REQ-20261029-84F4",
-        "created_at": "2026-10-29 15:42:42",
-        "status": "pending",
-        "client": {
-            "name": "Angelica",
-            "address": "23 Rue Final",
-            "email": "afdfsa@dfafa.com",
-            "phone": "514-123-4567"
-        },
-        "project": {
-            "type": "complete",
-            "condition": "good",
-            "renovation_level": "complete",
-            "size_sqft": "35",
-            "length": "7",
-            "width": "5",
-            "ceiling_height": "8",
-            "issues": [
-                "water_damage",
-                "cracked_tiles",
-                "none"
-            ],
-            "demo": [],
-            "plumbing": [
-                "replace_toilet",
-                "replace_shower_head"
-            ],
-            "electrical": [
-                "potlights",
-                "heated_floor",
-                "led_mirror"
-            ],
-            "shower": [
-                "replace_standard_shower",
-                "rain_shower",
-                "waterproof_membrane"
-            ],
-            "floor": [
-                "ceramic"
-            ],
-            "vanity": [
-                "30"
-            ],
-            "countertop": [
-                "quartz"
-            ],
-            "painting": [
-                "walls",
-                "door",
-                "trim"
-            ],
-            "budget_range": "10000_20000",
-            "design_style": "modern",
-            "desired_start_date": "2026-11-07",
-            "project_priority": "not_urgent",
-            "ai_render_requested": false,
-            "notes": "Require prompt respond or quote."
-        },
-        "photos": {
-            "current": [
-                "uploads/REQ-20261029-84F4/ARenovation-BathroomWhiteMetalFrameBlack_6ae3a1b228932.jpeg"
-            ],
-            "desired": [
-                "uploads/REQ-20261029-84F4/Bathroom-1_6ae3a1b228cf2.png"
-            ]
-        }
-    },
-    "REQ-20261030-1337": {
-        "request_id": "REQ-20261030-1337",
-        "created_at": "2026-10-30 09:39:21",
-        "status": "pending",
-        "client": {
-            "name": "Lorena",
-            "address": "12 Picourt",
-            "email": "picourt@gmail.com",
-            "phone": "438-123-4567"
-        },
-        "project": {
-            "type": "complete",
-            "condition": "average",
-            "renovation_level": "complete",
-            "size_sqft": "70",
-            "length": "10",
-            "width": "7",
-            "ceiling_height": "7",
-            "issues": [
-                "mold",
-                "soft_floor",
-                "cracked_tiles"
-            ],
-            "demo": [
-                "vanity",
-                "toilet",
-                "bathtub",
-                "shower",
-                "floor_tile",
-                "wall_tile",
-                "drywall",
-                "ceiling"
-            ],
-            "plumbing": [
-                "replace_toilet",
-                "replace_vanity",
-                "replace_sink",
-                "replace_faucet",
-                "replace_shower_head",
-                "replace_tub",
-                "move_plumbing"
-            ],
-            "electrical": [
-                "fan_replace",
-                "gfci",
-                "heated_floor"
-            ],
-            "shower": [
-                "replace_standard_shower",
-                "glass_shower",
-                "frameless_glass",
-                "waterproof_membrane"
-            ],
-            "floor": [
-                "ceramic"
-            ],
-            "vanity": [
-                "36"
-            ],
-            "countertop": [
-                "granite"
-            ],
-            "painting": [
-                "walls",
-                "ceiling",
-                "door",
-                "trim"
-            ],
-            "budget_range": "5000_10000",
-            "design_style": "modern",
-            "desired_start_date": "2026-10-30",
-            "project_priority": "next_month",
-            "ai_render_requested": false,
-            "notes": "I need one month to look for new accessories."
-        },
-        "photos": {
-            "current": [
-                "uploads/REQ-20261030-1337/ARenovation-BathroomShowerBlackWhite-3_6ae49e0921851.jpeg"
-            ],
-            "desired": [
-                "uploads/REQ-20261030-1337/ARenovation-BathroomShowerGlassBlackFrameFloorBrown_6ae49e0921d71.jpeg"
-            ]
-        }
-    },
-    "REQ-20261031-D61D": {
-        "request_id": "REQ-20261031-D61D",
-        "created_at": "2026-10-31 11:02:36",
-        "status": "pending",
-        "client": {
-            "name": "Antonio",
-            "address": "11 Chateau",
-            "email": "chateau@gmail.com",
-            "phone": "514-123-4567"
-        },
-        "project": {
-            "type": "complete",
-            "condition": "average",
-            "renovation_level": "complete",
-            "size_sqft": "80",
-            "length": "10",
-            "width": "8",
-            "ceiling_height": "8",
-            "issues": [
-                "water_damage",
-                "soft_floor",
-                "cracked_tiles",
-                "none"
-            ],
-            "demo": [
-                "vanity",
-                "toilet",
-                "bathtub",
-                "shower",
-                "floor_tile",
-                "wall_tile",
-                "drywall",
-                "ceiling"
-            ],
-            "plumbing": [
-                "replace_toilet",
-                "replace_vanity",
-                "replace_sink",
-                "replace_faucet",
-                "replace_shower_head",
-                "replace_tub",
-                "move_plumbing"
-            ],
-            "electrical": [
-                "potlights",
-                "fan_replace",
-                "fan_new",
-                "gfci",
-                "heated_floor",
-                "led_mirror"
-            ],
-            "shower": [
-                "replace_standard_shower",
-                "walk_in_shower",
-                "glass_shower",
-                "frameless_glass",
-                "rain_shower",
-                "body_jets",
-                "linear_drain",
-                "waterproof_membrane"
-            ],
-            "floor": [
-                "ceramic"
-            ],
-            "vanity": [
-                "36"
-            ],
-            "countertop": [
-                "granite"
-            ],
-            "painting": [
-                "walls",
-                "ceiling",
-                "door",
-                "trim"
-            ],
-            "budget_range": "5000_10000",
-            "design_style": "modern",
-            "desired_start_date": "2026-10-31",
-            "project_priority": "urgent",
-            "ai_render_requested": false,
-            "notes": "Let me know your rice in order to start this job SAP."
-        },
-        "photos": {
-            "current": [
-                "uploads/REQ-20261031-D61D/1792961900_4116_6ae6030cbdbed.jpg"
-            ],
-            "desired": [
-                "uploads/REQ-20261031-D61D/ARenovation-BathroomShowerGlassBlackFrameFloorBrown_6ae6030cbdff5.jpeg"
-            ]
-        }
-    },
     "REQ-20261103-D9FC": {
         "request_id": "REQ-20261103-D9FC",
         "created_at": "2026-11-03 10:14:07",
@@ -524,56 +96,310 @@
         "quote_amount": "18 704,85 $",
         "accepted_at": "2026-11-06 00:23:24"
     },
-    "REQ-20261116-91CC": {
-        "request_id": "REQ-20261116-91CC",
-        "created_at": "2026-11-16 18:48:08",
+    "REQ-20261124-17D5": {
+        "request_id": "REQ-20261124-17D5",
+        "created_at": "2026-11-24 14:26:23",
         "status": "pending",
         "client": {
-            "name": "dfdsfd",
-            "address": "dfffsdfds dsd",
-            "email": "fsfsf@dsfsdf.ca",
-            "phone": "1111111111123"
+            "name": "TEST-Simple",
+            "address": "1 Test Street",
+            "email": "test-simple@example.com",
+            "phone": "514-000-0001"
+        },
+        "project": {
+            "type": "complete",
+            "condition": "good",
+            "renovation_level": "complete",
+            "size_sqft": "40",
+            "length": "5",
+            "width": "8",
+            "ceiling_height": "8",
+            "issues": [],
+            "demo": [],
+            "plumbing": [
+                "replace_faucet"
+            ],
+            "electrical": [],
+            "shower": [],
+            "floor": [],
+            "vanity": [],
+            "countertop": [],
+            "painting": [
+                "walls",
+                "ceiling",
+                "door",
+                "trim"
+            ],
+            "budget_range": "",
+            "design_style": "",
+            "desired_start_date": "",
+            "project_priority": "",
+            "ai_render_requested": false,
+            "notes": "Simple refresh test"
+        },
+        "photos": {
+            "current": [],
+            "desired": []
+        }
+    },
+    "REQ-20261124-955D": {
+        "request_id": "REQ-20261124-955D",
+        "created_at": "2026-11-24 14:32:51",
+        "status": "pending",
+        "client": {
+            "name": "TEST-Complete",
+            "address": "2 Test Street",
+            "email": "test-complete@example.com",
+            "phone": "514-000-0002"
+        },
+        "project": {
+            "type": "complete",
+            "condition": "average",
+            "renovation_level": "partial",
+            "size_sqft": "100",
+            "length": "10",
+            "width": "10",
+            "ceiling_height": "8",
+            "issues": [
+                "cracked_tiles"
+            ],
+            "demo": [
+                "vanity",
+                "toilet",
+                "bathtub",
+                "shower",
+                "floor_tile",
+                "wall_tile",
+                "drywall",
+                "ceiling"
+            ],
+            "plumbing": [
+                "replace_toilet",
+                "replace_vanity",
+                "replace_sink",
+                "replace_faucet",
+                "replace_shower_head",
+                "replace_tub",
+                "move_plumbing"
+            ],
+            "electrical": [
+                "potlights",
+                "fan_replace",
+                "fan_new",
+                "gfci",
+                "heated_floor",
+                "led_mirror"
+            ],
+            "shower": [
+                "replace_standard_shower",
+                "walk_in_shower",
+                "glass_shower",
+                "frameless_glass",
+                "rain_shower",
+                "body_jets",
+                "linear_drain",
+                "waterproof_membrane"
+            ],
+            "floor": [
+                "ceramic"
+            ],
+            "vanity": [
+                "36"
+            ],
+            "countertop": [],
+            "painting": [
+                "walls",
+                "ceiling",
+                "door",
+                "trim"
+            ],
+            "budget_range": "10000_20000",
+            "design_style": "modern",
+            "desired_start_date": "2026-11-27",
+            "project_priority": "urgent",
+            "ai_render_requested": false,
+            "notes": "Complete renovation test"
+        },
+        "photos": {
+            "current": [],
+            "desired": []
+        }
+    },
+    "REQ-20261125-58A2": {
+        "request_id": "REQ-20261125-58A2",
+        "created_at": "2026-11-25 15:23:54",
+        "status": "pending",
+        "client": {
+            "name": "TestAgain",
+            "address": "Rue TestAgain",
+            "email": "testAgai@testAgi.com",
+            "phone": "514-754-123f4"
         },
         "project": {
             "type": "complete",
             "condition": "average",
             "renovation_level": "complete",
-            "size_sqft": "90",
-            "length": "10",
-            "width": "9",
+            "size_sqft": "64",
+            "length": "8",
+            "width": "8",
             "ceiling_height": "8",
             "issues": [
+                "water_damage",
+                "mold",
+                "leaks",
                 "soft_floor",
-                "cracked_tiles"
+                "cracked_tiles",
+                "none"
             ],
             "demo": [
+                "vanity",
+                "toilet",
+                "bathtub",
+                "shower",
+                "floor_tile",
+                "wall_tile",
+                "drywall",
                 "ceiling"
             ],
             "plumbing": [
-                "replace_vanity"
+                "replace_toilet",
+                "replace_vanity",
+                "replace_sink",
+                "replace_faucet",
+                "replace_shower_head",
+                "replace_tub",
+                "move_plumbing"
             ],
-            "electrical": [],
+            "electrical": [
+                "potlights",
+                "fan_replace",
+                "fan_new",
+                "gfci",
+                "heated_floor",
+                "led_mirror"
+            ],
             "shower": [
                 "replace_standard_shower",
-                "rain_shower"
+                "walk_in_shower",
+                "glass_shower",
+                "frameless_glass",
+                "rain_shower",
+                "body_jets",
+                "linear_drain",
+                "waterproof_membrane"
             ],
-            "floor": [],
-            "vanity": [],
-            "countertop": [],
+            "floor": [
+                "ceramic"
+            ],
+            "vanity": [
+                "36"
+            ],
+            "countertop": [
+                "granite"
+            ],
             "painting": [
-                "ceiling"
+                "walls",
+                "ceiling",
+                "door",
+                "trim"
             ],
-            "budget_range": "5000_10000",
-            "design_style": "",
+            "budget_range": "10000_20000",
+            "design_style": "modern",
             "desired_start_date": "2026-11-27",
             "project_priority": "urgent",
             "ai_render_requested": false,
-            "notes": "sdsfdfds"
+            "notes": "TestAgain"
         },
         "photos": {
-            "current": [
-                "uploads/REQ-20261116-91CC/bathroom-Nov-22-21_6afb963839357.png"
+            "current": [],
+            "desired": []
+        }
+    },
+    "REQ-20261125-136B": {
+        "request_id": "REQ-20261125-136B",
+        "created_at": "2026-11-25 15:34:49",
+        "status": "pending",
+        "client": {
+            "name": "TestTest2",
+            "address": "Rue TestTest2",
+            "email": "TstTest2@test.com",
+            "phone": "123-456-7890"
+        },
+        "project": {
+            "type": "complete",
+            "condition": "average",
+            "renovation_level": "complete",
+            "size_sqft": "120",
+            "length": "12",
+            "width": "10",
+            "ceiling_height": "8",
+            "issues": [
+                "water_damage",
+                "mold",
+                "leaks",
+                "soft_floor",
+                "cracked_tiles",
+                "none"
             ],
+            "demo": [
+                "vanity",
+                "toilet",
+                "bathtub",
+                "shower",
+                "floor_tile",
+                "wall_tile",
+                "drywall",
+                "ceiling"
+            ],
+            "plumbing": [
+                "replace_toilet",
+                "replace_vanity",
+                "replace_sink",
+                "replace_faucet",
+                "replace_shower_head",
+                "replace_tub",
+                "move_plumbing"
+            ],
+            "electrical": [
+                "potlights",
+                "fan_replace",
+                "fan_new",
+                "gfci",
+                "heated_floor",
+                "led_mirror"
+            ],
+            "shower": [
+                "replace_standard_shower",
+                "walk_in_shower",
+                "glass_shower",
+                "frameless_glass",
+                "rain_shower",
+                "body_jets",
+                "linear_drain",
+                "waterproof_membrane"
+            ],
+            "floor": [
+                "ceramic"
+            ],
+            "vanity": [
+                "36"
+            ],
+            "countertop": [],
+            "painting": [
+                "walls",
+                "ceiling",
+                "door",
+                "trim"
+            ],
+            "budget_range": "10000_20000",
+            "design_style": "traditional",
+            "desired_start_date": "2026-11-27",
+            "project_priority": "not_urgent",
+            "ai_render_requested": false,
+            "notes": "TestTest2"
+        },
+        "photos": {
+            "current": [],
             "desired": []
         }
     }

@@ -34,7 +34,7 @@
       </div>
 
       <div style="display: flex; gap: 10px; align-items: center; border-top: 1px solid #fed7aa; padding-top: 12px;">
-        <button type="button" id="btn-generate-prefill" onclick="runQuotePrefill('<?= htmlspecialchars($reqId ?? $_GET['id'] ?? '') ?>')" class="btn" style="background: #16a34a; color: white; padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px;">
+        <button type="button" id="btn-generate-prefill" onclick="runAIPrefillPipeline('<?= htmlspecialchars($reqId ?? $_GET['id'] ?? '') ?>')" class="btn" style="background: #16a34a; color: white; padding: 8px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px;">
           <i class="fa-solid fa-file-invoice-dollar"></i> Générer le devis pré-rempli (IA)
         </button>
         <span id="ai-confidence-badge" style="font-size: 12px; background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-weight: bold;"></span>
@@ -109,32 +109,74 @@ async function runAIAnalysis(reqId) {
   }
 }
 
-// 2. Trigger the Material Mapper & Quote Prefill Engine
-async function runQuotePrefill(reqId) {
+// 2. Trigger the Complete AI Pipeline
+async function runAIPrefillPipeline(reqId) {
+
+  if (!reqId) {
+    alert("Identifiant de demande introuvable.");
+    return;
+  }
+
+  const btn = document.getElementById('btn-generate-prefill');
+
   try {
-    const btn = document.getElementById('btn-generate-prefill');
+
     btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calcul des matériaux...';
+    btn.innerHTML =
+      '<i class="fa-solid fa-spinner fa-spin"></i> Analyse et calcul en cours...';
 
-    // Step A: Map materials based on surfaces
-    await fetch(`ai/material-mapper.php?id=${encodeURIComponent(reqId)}`);
+    // STEP 1
+    // Ensure analysis file exists:
+    // REQ-XXXX.json
+    await fetch(
+      `ai/analyze-request.php?id=${encodeURIComponent(reqId)}`
+    );
 
-    // Step B: Generate prefill package and get redirect URL
-    const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`);
+    // STEP 2
+    // Populate mapped_materials into analysis JSON
+    await fetch(
+      `ai/material-mapper.php?id=${encodeURIComponent(reqId)}`
+    );
+
+    // STEP 3
+    // Build prefill package
+    const res =
+      await fetch(
+        `ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`
+      );
+
     const json = await res.json();
 
-    if (json.success && json.redirect_url) {
-      // Redirect straight into Simon's quote editor with prefilled data
-      window.location.href = json.redirect_url;
+    if (
+      json.success &&
+      json.redirect_url
+    ) {
+
+      window.location.href =
+        json.redirect_url;
+
     } else {
-      throw new Error(json.error || "Erreur lors de la génération du devis pré-rempli.");
+
+      throw new Error(
+        json.error ||
+        "Erreur lors de la génération du devis pré-rempli."
+      );
+
     }
+
   } catch (e) {
+
     console.error(e);
-    alert("Erreur: " + e.message);
-    const btn = document.getElementById('btn-generate-prefill');
+
+    alert(
+      "Erreur: " + e.message
+    );
+
     btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-file-invoice-dollar"></i> Générer le devis pré-rempli (IA)';
+
+    btn.innerHTML =
+      '<i class="fa-solid fa-file-invoice-dollar"></i> Générer le devis pré-rempli (IA)';
   }
 }
+
 </script>

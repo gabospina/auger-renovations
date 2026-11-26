@@ -444,33 +444,20 @@ if (file_exists($laborRatesFile)) {
       <!-- AI PROJECT ANALYSIS HUB (ADMIN PANEL)      -->
       <!-- ========================================== -->
       <article class="card quote-card" style="border: 2px solid #ea580c; margin-bottom: 20px;">
-        <!-- <h2><i class="fa-solid fa-wand-magic-sparkles" style="color: #ea580c;"></i> Analyseur IA du Projet (Mode Chantiers)</h2>
-        
-        <div id="ai-analysis-container" style="padding: 10px 0;"> -->
-          <!-- <p id="ai-status-text" style="color: #4b5563; font-size: 14px; margin-bottom: 15px;">
-            Analysez les photos du chantier afin d'identifier les éléments existants, les contraintes potentielles et obtenir des recommandations pour la préparation du devis.
-          </p> -->
-
-          <!-- Trigger Button -->
-          <!-- <button type="button" id="btn-run-ai-analysis" onclick="runAIAnalysis('<?= htmlspecialchars($requestId ?? '') ?>')" class="btn btn-primary" style="background: #ea580c; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; width: 100%;">
-            <i class="fa-solid fa-robot"></i> Analyser les photos du client avec l'IA
-          </button> -->
-
-          <!-- Results Panel (Hidden until analyzed) -->
-          <div id="ai-results-panel" style="display: none; margin-top: 20px; background: #fff7ed; border: 1px solid #fed7aa; padding: 15px; border-radius: 8px;">
+        <!-- Results Panel (Hidden until analyzed) -->
+        <div id="ai-results-panel" style="display: none; margin-top: 20px; background: #fff7ed; border: 1px solid #fed7aa; padding: 15px; border-radius: 8px;">
             <h3 style="color: #c2410c; margin-top: 0; font-size: 16px;"><i class="fa-solid fa-square-check"></i> Résultats de l'analyse</h3>
             
             <div style="font-size: 14px; margin-bottom: 15px;">
-              <strong>Éléments détectés :</strong>
-              <ul id="ai-detected-list" style="margin: 5px 0 0 20px; color: #374151;"></ul>
+                <strong>Éléments détectés :</strong>
+                <ul id="ai-detected-list" style="margin: 5px 0 0 20px; color: #374151;"></ul>
             </div>
 
             <div style="display: flex; gap: 10px; align-items: center; border-top: 1px solid #fed7aa; padding-top: 12px;">
-              <button type="button" onclick="runQuotePrefill('<?= htmlspecialchars($requestId ?? '') ?>')" class="btn" style="background: #16a34a; color: white; padding: 10px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px; width: 100%;">
+                <button type="button" onclick="runQuotePrefill('<?= htmlspecialchars($requestId ?? '') ?>')" class="btn" style="background: #16a34a; color: white; padding: 10px 16px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px; width: 100%;">
                 <i class="fa-solid fa-file-invoice-dollar"></i> Injecter dans le calculateur (Pré-remplir)
-              </button>
+                </button>
             </div>
-          </div>
         </div>
       </article>
 
@@ -604,226 +591,226 @@ if (file_exists($laborRatesFile)) {
     </section>
 
     <section class="admin-right-col">
-      <article class="card quote-card">
-        <h2>Matériaux suggérés automatiquement</h2>
-        <?php if (empty($suggestedMaterials)): ?>
-          <p style="color:#777;">Aucun matériau suggéré pour cette demande.</p>
-        <?php else: ?>
-          <table style="width:100%; border-collapse:collapse; font-size:13px;">
-            <thead><tr><th style="text-align:left; padding:8px;">Produit</th><th style="text-align:left; padding:8px;">Catégorie</th><th style="text-align:right; padding:8px;">Prix</th></tr></thead>
-            <tbody>
-            <?php foreach ($suggestedMaterials as $materialId => $mat): ?>
-              <tr id="suggested-row-<?= htmlspecialchars($materialId) ?>">
-                <td style="width:50px; text-align:center;"><button type="button" class="btn-add-suggested-material" data-id="<?= htmlspecialchars($materialId) ?>" data-name="<?= htmlspecialchars($mat['name']) ?>" data-price="<?= floatval($mat['price']) ?>">+</button></td>
-                <td><?= htmlspecialchars($mat['name']) ?></td>
-                <td><?= htmlspecialchars($mat['category']) ?></td>
-                <td style="text-align:right;"><?= number_format(floatval($mat['price']), 2) ?> $</td>
-              </tr>
-            <?php endforeach; ?>
-            </tbody>
-          </table>
-        <?php endif; ?>
-      </article>
+        <article class="card quote-card">
+            <h2>Matériaux suggérés automatiquement</h2>
+            <?php if (empty($suggestedMaterials)): ?>
+            <p style="color:#777;">Aucun matériau suggéré pour cette demande.</p>
+            <?php else: ?>
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <thead><tr><th style="text-align:left; padding:8px;">Produit</th><th style="text-align:left; padding:8px;">Catégorie</th><th style="text-align:right; padding:8px;">Prix</th></tr></thead>
+                <tbody>
+                <?php foreach ($suggestedMaterials as $materialId => $mat): ?>
+                <tr id="suggested-row-<?= htmlspecialchars($materialId) ?>">
+                    <td style="width:50px; text-align:center;"><button type="button" class="btn-add-suggested-material" data-id="<?= htmlspecialchars($materialId) ?>" data-name="<?= htmlspecialchars($mat['name']) ?>" data-price="<?= floatval($mat['price']) ?>">+</button></td>
+                    <td><?= htmlspecialchars($mat['name']) ?></td>
+                    <td><?= htmlspecialchars($mat['category']) ?></td>
+                    <td style="text-align:right;"><?= number_format(floatval($mat['price']), 2) ?> $</td>
+                </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+        </article>
 
-      <article class="card quote-card">
-        
-        <div style="background: #f8fafc; padding: 14px 18px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 22px;">
-          <strong style="font-size: 13px; color: #334155; display: block; margin-bottom: 10px; text-transform: uppercase;">Sélectionnez le niveau de finition :</strong>
-          <!-- Voice Assistant Widget -->
-          <div style="background: #fdf8f6; border: 1px solid #f97316; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <strong style="color: #c2410c; display: block; font-size: 14px;">Assistant Vocal Intelligent (Mode Chantier)</strong>
-              <span id="voice-status" style="font-size: 12px; color: #4b5563;">Cliquez sur le micro et décrivez le projet (ex: "Client Marc Leblanc, salle de bain 8 par 10 pieds, douche et toilette").</span>
-            </div>
+        <article class="card quote-card">
             
-          </div>
-          <div style="display: flex; gap: 12px;">
-            <button type="button" class="btn btn-tier <?= ($activeTier === 'budget') ? 'active' : '' ?>" data-tier="budget" id="tier-btn-budget" style="flex: 1;"><i class="fa-solid fa-coins"></i> Économique</button>
-            <button type="button" class="btn btn-tier <?= ($activeTier === 'standard') ? 'active' : '' ?>" data-tier="standard" id="tier-btn-standard" style="flex: 1;"><i class="fa-solid fa-star"></i> Standard</button>
-            <button type="button" class="btn btn-tier <?= ($activeTier === 'premium') ? 'active' : '' ?>" data-tier="premium" id="tier-btn-premium" style="flex: 1;"><i class="fa-solid fa-gem"></i> Haut de gamme</button>
-          </div>
-        </div>
+            <div style="background: #f8fafc; padding: 14px 18px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 22px;">
+            <strong style="font-size: 13px; color: #334155; display: block; margin-bottom: 10px; text-transform: uppercase;">Sélectionnez le niveau de finition :</strong>
+            <!-- Voice Assistant Widget -->
+            <div style="background: #fdf8f6; border: 1px solid #f97316; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                <strong style="color: #c2410c; display: block; font-size: 14px;">Assistant Vocal Intelligent (Mode Chantier)</strong>
+                <span id="voice-status" style="font-size: 12px; color: #4b5563;">Cliquez sur le micro et décrivez le projet (ex: "Client Marc Leblanc, salle de bain 8 par 10 pieds, douche et toilette").</span>
+                </div>
+                
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button type="button" class="btn btn-tier <?= ($activeTier === 'budget') ? 'active' : '' ?>" data-tier="budget" id="tier-btn-budget" style="flex: 1;"><i class="fa-solid fa-coins"></i> Économique</button>
+                <button type="button" class="btn btn-tier <?= ($activeTier === 'standard') ? 'active' : '' ?>" data-tier="standard" id="tier-btn-standard" style="flex: 1;"><i class="fa-solid fa-star"></i> Standard</button>
+                <button type="button" class="btn btn-tier <?= ($activeTier === 'premium') ? 'active' : '' ?>" data-tier="premium" id="tier-btn-premium" style="flex: 1;"><i class="fa-solid fa-gem"></i> Haut de gamme</button>
+            </div>
+            </div>
 
-        <div style="background:#f0fdf4;border:1px solid #86efac;padding:14px 18px;border-radius:8px;margin-bottom:20px;">
-          <strong style="color:#166534;">
-              <i class="fa-solid fa-check-circle"></i>
-              Modèle actif :
-          </strong>
+            <div style="background:#f0fdf4;border:1px solid #86efac;padding:14px 18px;border-radius:8px;margin-bottom:20px;">
+                <strong style="color:#166534;">
+                    <i class="fa-solid fa-check-circle"></i>
+                    Modèle actif :
+                </strong>
 
-          <?php if (empty($availableTemplates)): ?>
-              <div style="margin-top:6px;font-size:14px;color:#92400e;">
-                  ⚠️ Aucun modèle valide trouvé dans /data/templates/
-              </div>
-          <?php else: ?>
-              <div style="margin-top:6px;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-                  <select id="custom-template-select"
-                          onchange="onTemplateSelectChange()"
-                          style="flex:1;min-width:240px;padding:6px 10px;border:1px solid #86efac;border-radius:4px;background:#fff;font-size:13px;">
-                      <?php foreach ($availableTemplates as $i => $tpl): ?>
-                          <option value="<?= htmlspecialchars($tpl['file']) ?>"
-                                  <?= $i === 0 ? 'selected' : '' ?>>
-                              <?= htmlspecialchars($tpl['file']) ?>
-                              (<?= (int)$tpl['item_count'] ?> items<?= $tpl['updated_at'] ? ' • ' . htmlspecialchars($tpl['updated_at']) : '' ?>)
-                          </option>
-                      <?php endforeach; ?>
-                  </select>
+                <?php if (empty($availableTemplates)): ?>
+                    <div style="margin-top:6px;font-size:14px;color:#92400e;">
+                        ⚠️ Aucun modèle valide trouvé dans /data/templates/
+                    </div>
+                <?php else: ?>
+                    <div style="margin-top:6px;font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                        <select id="custom-template-select"
+                                onchange="onTemplateSelectChange()"
+                                style="flex:1;min-width:240px;padding:6px 10px;border:1px solid #86efac;border-radius:4px;background:#fff;font-size:13px;">
+                            <?php foreach ($availableTemplates as $i => $tpl): ?>
+                                <option value="<?= htmlspecialchars($tpl['file']) ?>"
+                                        <?= $i === 0 ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($tpl['file']) ?>
+                                    (<?= (int)$tpl['item_count'] ?> items<?= $tpl['updated_at'] ? ' • ' . htmlspecialchars($tpl['updated_at']) : '' ?>)
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
 
-                  <span id="active-template-badge" style="font-weight:600;color:#166534;">
-                      ✅ <?= htmlspecialchars($activeTemplateFile) ?>
-                  </span>
-              </div>
-          <?php endif; ?>
-      </div>
+                        <span id="active-template-badge" style="font-weight:600;color:#166534;">
+                            ✅ <?= htmlspecialchars($activeTemplateFile) ?>
+                        </span>
+                    </div>
+                <?php endif; ?>
+            </div>
 
-        <div class="card-header-flex">
-          <h2>1. Matériaux</h2>
-          <div class="materials-buttons">
-            <button
-              type="button"
-              class="btn btn-sm btn-outline"
-              id="add-material">
-              + Ajouter une ligne
-            </button>
-            <button
+            <div class="card-header-flex">
+            <h2>1. Matériaux</h2>
+            <div class="materials-buttons">
+                <button
                 type="button"
-                class="btn"
-                id="generate-image-btn"
-                style="background:#16a34a;color:#fff;">
-                <i class="btn-ai"></i>
-                Créer image du projet
-            </button>
-            <div id="project-image-preview"></div>
+                class="btn btn-sm btn-outline"
+                id="add-material">
+                + Ajouter une ligne
+                </button>
+                <button
+                    type="button"
+                    class="btn"
+                    id="generate-image-btn"
+                    style="background:#16a34a;color:#fff;">
+                    <i class="btn-ai"></i>
+                    Créer image du projet
+                </button>
+                <div id="project-image-preview"></div>
+                <div
+                    id="project-image-preview"
+                    style="
+                        margin-top:20px;
+                        padding:12px;
+                        border:1px solid #e5e7eb;
+                        border-radius:8px;
+                        background:#fafafa;
+                    ">
+                </div>
+            </div>
+            </div>
+            <datalist id="catalog-materials"></datalist>
+            <div id="materials-list">
+            <div class="quote-row calc-grid">
+                <input type="text" class="mat-desc" list="catalog-materials" placeholder="Sélectionner ou saisir un matériau">
+                <input type="number" class="mat-qty" value="0" step="any">
+                <input type="number" class="mat-unit" value="0.00" step="any">
+                <span class="mat-total line-total">0.00 $</span>
+                <button type="button" class="row-delete delete-material"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            </div>
             <div
-                id="project-image-preview"
+                id="missing-materials-warning"
                 style="
-                    margin-top:20px;
+                    display:none;
+                    margin-bottom:12px;
                     padding:12px;
-                    border:1px solid #e5e7eb;
+                    border:1px solid #f59e0b;
+                    background:#fffbeb;
                     border-radius:8px;
-                    background:#fafafa;
+                    color:#92400e;
                 ">
             </div>
-          </div>
-        </div>
-        <datalist id="catalog-materials"></datalist>
-        <div id="materials-list">
-          <div class="quote-row calc-grid">
-            <input type="text" class="mat-desc" list="catalog-materials" placeholder="Sélectionner ou saisir un matériau">
-            <input type="number" class="mat-qty" value="0" step="any">
-            <input type="number" class="mat-unit" value="0.00" step="any">
-            <span class="mat-total line-total">0.00 $</span>
-            <button type="button" class="row-delete delete-material"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </div>
-        <div
-            id="missing-materials-warning"
-            style="
-                display:none;
-                margin-bottom:12px;
-                padding:12px;
-                border:1px solid #f59e0b;
-                background:#fffbeb;
-                border-radius:8px;
-                color:#92400e;
-            ">
-        </div>
-        <div
-            style="
-                margin-top:15px;
-                background:#f8fafc;
-                border:1px solid #e2e8f0;
-                border-radius:8px;
-                padding:12px;">
-
-            <div class="summary-line">
-                <span>
-                    Matériaux de base (Modèle Simon3)
-                </span>
-
-                <strong id="template-material-total">
-                    0.00 $
-                </strong>
-            </div>
-
-            <div class="summary-line">
-                <span>
-                    Matériaux personnalisés (Client3)
-                </span>
-
-                <strong id="customer-material-total">
-                    0.00 $
-                </strong>
-            </div>
-
-            <div class="summary-line">
-                <span>
-                    Matériaux ajoutés par Simon3
-                </span>
-
-                <strong id="simon-added-material-total">
-                    0.00 $
-                </strong>
-            </div>
-            
-
-            <hr>
-
             <div
-                class="summary-line"
-                style="font-weight:700;">
-                <span>
-                    Total matériaux3
-                </span>
+                style="
+                    margin-top:15px;
+                    background:#f8fafc;
+                    border:1px solid #e2e8f0;
+                    border-radius:8px;
+                    padding:12px;">
 
-                <strong id="materials-total">
-                    0.00 $
-                </strong>
+                <div class="summary-line">
+                    <span>
+                        Matériaux de base (Modèle Simon3)
+                    </span>
+
+                    <strong id="template-material-total">
+                        0.00 $
+                    </strong>
+                </div>
+
+                <div class="summary-line">
+                    <span>
+                        Matériaux personnalisés (Client3)
+                    </span>
+
+                    <strong id="customer-material-total">
+                        0.00 $
+                    </strong>
+                </div>
+
+                <div class="summary-line">
+                    <span>
+                        Matériaux ajoutés par Simon3
+                    </span>
+
+                    <strong id="simon-added-material-total">
+                        0.00 $
+                    </strong>
+                </div>
+                
+
+                <hr>
+
+                <div
+                    class="summary-line"
+                    style="font-weight:700;">
+                    <span>
+                        Total matériaux3
+                    </span>
+
+                    <strong id="materials-total">
+                        0.00 $
+                    </strong>
+                </div>
+
             </div>
+        </article>
 
-        </div>
-      </article>
+        <article class="card quote-card">
+            <div class="card-header-flex">
+            <h2>2. Main-d'œuvre</h2>
+            <button type="button" class="btn btn-sm btn-outline" id="add-labor">+ Ajouter une ligne</button>
+            </div>
+            <div id="labor-list">
+            <div class="quote-row calc-grid">
+                <input type="text" class="lab-desc" placeholder="Description du travail">
+                <input type="number" class="lab-hours" value="0" step="any">
+                <input type="number" class="lab-rate" value="0.00" step="any">
+                <span class="lab-total line-total">0.00 $</span>
+                <button type="button" class="row-delete delete-labor"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            </div>
+            <div class="section-subtotal">Total main-d'œuvre : <strong id="labor-total">600.00 $</strong></div>
+        </article>
 
-      <article class="card quote-card">
-        <div class="card-header-flex">
-          <h2>2. Main-d'œuvre</h2>
-          <button type="button" class="btn btn-sm btn-outline" id="add-labor">+ Ajouter une ligne</button>
-        </div>
-        <div id="labor-list">
-          <div class="quote-row calc-grid">
-            <input type="text" class="lab-desc" placeholder="Description du travail">
-            <input type="number" class="lab-hours" value="0" step="any">
-            <input type="number" class="lab-rate" value="0.00" step="any">
-            <span class="lab-total line-total">0.00 $</span>
-            <button type="button" class="row-delete delete-labor"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </div>
-        <div class="section-subtotal">Total main-d'œuvre : <strong id="labor-total">600.00 $</strong></div>
-      </article>
+        <article class="card quote-card summary-card">
+            <h2>3. Sommaire financier</h2>
+            <div class="summary-line"><span>Sous-total :</span><span id="subtotal">0.00 $</span></div>
+            <div class="summary-line"><span>TPS (5.000%) :</span><span id="tps">0.00 $</span></div>
+            <div class="summary-line"><span>TVQ (9.975%) :</span><span id="tvq">0.00 $</span></div>
+            <hr style="border: 0; border-top: 1px solid #d0d7de; margin: 12px 0;">
+            <div class="summary-line total-highlight"><span>Total de la soumission :</span><span id="grand-total">977.29 $</span></div>
 
-      <article class="card quote-card summary-card">
-        <h2>3. Sommaire financier</h2>
-        <div class="summary-line"><span>Sous-total :</span><span id="subtotal">0.00 $</span></div>
-        <div class="summary-line"><span>TPS (5.000%) :</span><span id="tps">0.00 $</span></div>
-        <div class="summary-line"><span>TVQ (9.975%) :</span><span id="tvq">0.00 $</span></div>
-        <hr style="border: 0; border-top: 1px solid #d0d7de; margin: 12px 0;">
-        <div class="summary-line total-highlight"><span>Total de la soumission :</span><span id="grand-total">977.29 $</span></div>
+            <div class="admin-actions">
+            <button type="button" class="btn btn-outline" id="generate-quote"><i class="fa-solid fa-eye"></i> Actualiser l'aperçu</button>
+            <button type="button" class="btn btn-secondary" onclick="printDetailedBreakdown()"><i class="fa-solid fa-print"></i> Bordereau détaillé</button>
+            <button type="button" class="btn btn-outline-dark" onclick="printClientQuote()"><i class="fa-solid fa-file-invoice-dollar"></i> Imprimer soumission</button>
+            <button type="button" class="btn btn-primary" id="send-quote"><i class="fa-solid fa-paper-plane"></i> Enregistrer & Envoyer</button>
+            </div>
+        </article>
 
-        <div class="admin-actions">
-          <button type="button" class="btn btn-outline" id="generate-quote"><i class="fa-solid fa-eye"></i> Actualiser l'aperçu</button>
-          <button type="button" class="btn btn-secondary" onclick="printDetailedBreakdown()"><i class="fa-solid fa-print"></i> Bordereau détaillé</button>
-          <button type="button" class="btn btn-outline-dark" onclick="printClientQuote()"><i class="fa-solid fa-file-invoice-dollar"></i> Imprimer soumission</button>
-          <button type="button" class="btn btn-primary" id="send-quote"><i class="fa-solid fa-paper-plane"></i> Enregistrer & Envoyer</button>
-        </div>
-      </article>
-
-      <article class="card quote-card">
-        <h2>Aperçu officiel de la soumission</h2>
-        <div id="quote-preview" class="quote-preview-box"><em>Cliquez sur « Actualiser l'aperçu » pour compiler la soumission.</em></div>
-      </article>
+        <article class="card quote-card">
+            <h2>Aperçu officiel de la soumission</h2>
+            <div id="quote-preview" class="quote-preview-box"><em>Cliquez sur « Actualiser l'aperçu » pour compiler la soumission.</em></div>
+        </article>
     </section>
   </main>
 
-  <script src="../assets/js/quote-engine.js"></script>
+  <script src="../assets/js/quote-engine.js?v=<?= filemtime(__DIR__ . '/../assets/js/quote-engine.js') ?>"></script>
   <script src="../assets/js/quote-tiers.js"></script>
   <script src="../assets/js/quote-bathroom.js"></script>
   <script>
@@ -876,8 +863,10 @@ if (file_exists($laborRatesFile)) {
 async function runQuotePrefill(reqId) {
   try {
     // Map materials and generate prefill cache
+    await fetch(`ai/analyze-request.php?id=${encodeURIComponent(reqId)}`);
     await fetch(`ai/material-mapper.php?id=${encodeURIComponent(reqId)}`);
     const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`);
+
     const json = await res.json();
 
     if (json.success && json.redirect_url) {
@@ -991,7 +980,7 @@ function rerenderSimonAddedSection() {
     // Re-add rows from the array (correct order — above the divider)
     let total = 0;
     simonAddedItems.forEach(item => {
-        addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price);
+        addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price, 'simon_added');
         total += parseFloat(item.quantity || 0) * parseFloat(item.estimated_unit_price || 0);
     });
 
@@ -1154,7 +1143,7 @@ async function applyCustomTemplate() {
             item => item.source === 'basic_materials_bathroom'
         );
         simonItems.forEach(item => {
-            addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price);
+            addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price, 'basic_materials_bathroom');
         });
         addMaterialsDivider(
             'Sous-total — Matériaux de base (Modèle Simon2)',
@@ -1171,7 +1160,7 @@ async function applyCustomTemplate() {
             item => item.source === 'customer_request'
         );
         customerItems.forEach(item => {
-            addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price);
+            addMaterialRowToTable(item.name, item.quantity, item.estimated_unit_price, 'customer_request');
         });
         addMaterialsDivider(
             'Sous-total — Matériaux personnalisés (Client2)',
@@ -1203,7 +1192,8 @@ async function applyCustomTemplate() {
             addMaterialRowToTable(
                 item.name,
                 item.quantity,
-                item.estimated_unit_price
+                item.estimated_unit_price,
+                'basic_materials_bathroom'
             );
 
             simonAddedTotal +=
@@ -1333,8 +1323,7 @@ async function applyCustomTemplate() {
             const row =
                 document.createElement('div');
 
-            row.className =
-                'quote-row calc-grid';
+            row.className = 'quote-row calc-grid';
 
             row.innerHTML = `
               <input type="text" class="lab-desc" placeholder="Description du travail">
@@ -1398,11 +1387,12 @@ async function applyCustomTemplate() {
     }
 }
 
- function addMaterialRowToTable(
+function addMaterialRowToTable(
     desc,
     qty,
-    unitPrice
-  ) {
+    unitPrice,
+    source = 'basic_materials_bathroom'
+    ) {
 
     const materialsList =
         document.getElementById(
@@ -1414,8 +1404,9 @@ async function applyCustomTemplate() {
             'div'
         );
 
-    row.className =
-        'quote-row calc-grid';
+    row.className ='quote-row calc-grid';
+
+    row.dataset.source = source;
 
     const numericUnit =
         parseFloat(
@@ -1457,10 +1448,10 @@ async function applyCustomTemplate() {
 }
  
 
-  function addMaterialsDivider(
-        label,
-        total,
-        highlight = false
+function addMaterialsDivider(
+    label,
+    total,
+    highlight = false
     ) {
     const row =
         document.createElement('div');
@@ -1505,7 +1496,9 @@ async function applyCustomTemplate() {
     document
         .getElementById('materials-list')
         .appendChild(row);
-  }
+    }
+
+
 
   function mergeMaterialIntoTable(desc, qty, unitPrice) {
     const rows = document.querySelectorAll('#materials-list .quote-row');
@@ -1532,15 +1525,15 @@ async function applyCustomTemplate() {
 }
 
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadSimonTemplates();
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadSimonTemplates();
 
-      console.log('FORCING TEMPLATE CALCULATOR');
-      applyCustomTemplate();
+    console.log('FORCING TEMPLATE CALCULATOR');
+    applyCustomTemplate();
 
-      console.log('DOM LOADED');
-      console.log('Current request:', new URLSearchParams(window.location.search).get('request_id'));
-    }); 
+    console.log('DOM LOADED');
+    console.log('Current request:', new URLSearchParams(window.location.search).get('request_id'));
+}); 
 
     // ==========================================
     // Return to Materials section after AI Prefill
@@ -1564,7 +1557,7 @@ async function applyCustomTemplate() {
         }, 400);
     }
 
-  document.getElementById('btn-ai-prefill')?.addEventListener('click', async () => {
+document.getElementById('btn-ai-prefill')?.addEventListener('click', async () => {
     const reqId = new URLSearchParams(window.location.search).get('request_id');
     if (!reqId) {
         alert('Identifiant de demande introuvable.');

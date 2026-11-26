@@ -211,6 +211,12 @@ $data = json_decode(file_get_contents($siteTextFile), true);
           <h3>Google Business</h3>
           <p>Checklist pour optimiser votre fiche Google</p>
       </a>
+
+      <a href="orphan-cleaner.php" class="card">
+          <i class="fa-solid fa-broom"></i>
+          <h3>Nettoyage</h3>
+          <p>Supprimer les anciens dossiers et soumissions</p>
+      </a>
     </div>
 
     <div class="settings-panel">

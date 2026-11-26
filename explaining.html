@@ -7,6 +7,43 @@ password: Auger2026!
 
 ===========
 
+1. How Your JS Modules Currently Work Together
+
+quote-engine.js: Loads MARKUP_RATE (get_settings) and availableCatalog (list), provides addMaterialRow() / 
+addLaborRow(), attaches autocomplete, formats money (en-US commas/dots + $), computes subtotal, 5% TPS, 9.975% TVQ, 
+and grandTotal, and handles printing (printDetailedBreakdown(), printClientQuote()) and sendQuote().
+
+quote-tiers.js: Loads TIER_PRESETS (budget, standard, premium) and calculates material quantities/billed prices 
+and labor hours based on room dimensions and qty_type.
+
+quantity-engine.js: Defines a standalone calculateMaterialQuantity(material, dimensions) helper 
+(floor_area, net_wall_area, perimeter, paint_area, fixed) with ceiling rounding—currently standalone and not 
+yet imported/wired into quote-engine.js or quote-tiers.js.
+
+quote-bathroom.js: Builds the client-facing preview (generatePreview()), implements a classic fallback estimator 
+(prefillFromClassicEstimator()), checks missing required materials (checkMissingMaterials()), and handles [+] 
+suggested materials and trash-can row deletions.
+
+
+============
+
+material-mapper.php is now a production-critical file. It already successfully handles:
+
+Tile quantity calculations
+Durock quantities
+Drywall quantities
+Vanity selection
+Countertop selection
+Toilet accessories
+Heated floor detection
+GFCI
+Fan replacement
+LED mirror
+Plumbing relocation
+Writing mapped materials back to project-analysis
+
+===========
+
 This is what I need. Let me know if you understand my logic:
 
 Step 1: Capturing the Customer's Request (requests.json)
@@ -370,7 +407,7 @@ in the input field on the page before clicking **Enregistrer & Envoyer** or twea
 
 How Economique/Standard/Premium button and Auto-Fill Request button work, displaying different products.
 
-1. How Each Button Works in the Code -
+1. How Each Button Works in the Code - quote-tiers.js
 
 The Finish Tier Buttons (applyPresetTier('budget')):
 

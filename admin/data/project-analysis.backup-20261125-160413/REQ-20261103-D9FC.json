@@ -1,0 +1,192 @@
+{
+    "request_id": "REQ-20261103-D9FC",
+    "analysis_date": "2026-11-23 15:55:16",
+    "room_type": "bathroom",
+    "complexity": "high",
+    "risk_level": "high",
+    "recommended_tier": "premium",
+    "estimated_hours": 65,
+    "dimensions": {
+        "length": 10,
+        "width": 9,
+        "ceiling_height": 8
+    },
+    "surfaces": {
+        "floor_area": 90,
+        "wall_area": 304,
+        "ceiling_area": 90
+    },
+    "detected_items": [
+        "Bain-douche encastré",
+        "Toilette standard",
+        "Vanité simple (36\")",
+        "Plancher en Ceramic"
+    ],
+    "recommendations": {
+        "replace_tub": true,
+        "replace_toilet": true,
+        "replace_vanity": true,
+        "replace_flooring": true,
+        "water_damage_inspection": true,
+        "mold_remediation": true,
+        "heated_floor_installation": true,
+        "plumbing_relocation": true
+    },
+    "matching_portfolio_photos": [
+        "assets/images/salle_de_bains/bathroom-4.png",
+        "assets/images/salle_de_bains/ARenovation-BathroomShowerBalckWhite-3.jpeg",
+        "assets/images/salle_de_bains/1792839327_8998.png"
+    ],
+    "confidence": 0.93,
+    "mapped_materials": {
+        "request_id": "REQ-20261103-D9FC",
+        "mapped_at": "2026-11-23 16:08:24",
+        "materials": [
+            {
+                "sku": "SKU-1001690476",
+                "name": "Merola Tile Carreau mural et de sol Amberes Azul II, 13 po x 13 po, céramique, 15,85 pi2/bte",
+                "quantity": 7,
+                "unit": "box",
+                "estimated_unit_price": 168.04,
+                "total": 1176.28
+            },
+            {
+                "sku": "SKU-1000668022",
+                "name": "Custom Building Products SimpleGrout #165 Delorean Gray 1 Qt. Coulis pré-mélangé",
+                "quantity": 1,
+                "unit": "bag",
+                "estimated_unit_price": 25.28,
+                "total": 25.28
+            },
+            {
+                "sku": "SKU-1000150306",
+                "name": "Custom Building Products RedGard 3.78 L 100 pi² Membrane d’imperméabilisation et de fissuration prête à l’emploi pour carreaux et pierre",
+                "quantity": 1,
+                "unit": "pail",
+                "estimated_unit_price": 105,
+                "total": 105
+            },
+            {
+                "sku": "SKU-1000113392",
+                "name": "CGC Durock Panneau de ciment avec EdgeGuard 1/2 pouce. x 3 pieds x 5",
+                "quantity": 10,
+                "unit": "feuille",
+                "estimated_unit_price": 26.98,
+                "total": 269.8
+            },
+            {
+                "sku": "SKU-1000658028",
+                "name": "BEHR ULTRA Peinture et apprêt très durable pour l’intérieur, émail coquille d’œuf en Blanc ultra pur, 3,79 L",
+                "quantity": 1,
+                "unit": "gallon",
+                "estimated_unit_price": 63.57,
+                "total": 63.57
+            },
+            {
+                "sku": "SKU-1000738382",
+                "name": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
+                "quantity": 1,
+                "unit": "unité",
+                "estimated_unit_price": 9.97,
+                "total": 9.97
+            },
+            {
+                "sku": "SKU-1000152285",
+                "name": "CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger résistant à la moisissure",
+                "quantity": 10,
+                "unit": "sheet",
+                "estimated_unit_price": 29.98,
+                "total": 299.8
+            },
+            {
+                "sku": "SKU-1001541919",
+                "name": "Wyndham Collection Vanité Daria de 36 po bleue foncée, sans comptoir, sans évier, armoire pour médicament",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 2542.39,
+                "total": 2542.39
+            },
+            {
+                "sku": "SKU-1001331643",
+                "name": "Magick Woods Dessus blanc granite de 78,74 cm [31 po] larg. x 55,88 cm [22 po] prof. avec lavabo non encastré",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 239,
+                "total": 239
+            },
+            {
+                "sku": "SKU-1000116247",
+                "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 8.47,
+                "total": 8.47
+            },
+            {
+                "sku": "SKU-1000116247",
+                "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 8.47,
+                "total": 8.47
+            },
+            {
+                "sku": "SKU-1000723588",
+                "name": "Leviton Decora 15A125V prise inviolable à DDFT Blanc",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 23.87,
+                "total": 23.87
+            },
+            {
+                "sku": "SKU-HEAT-001",
+                "name": "câble chauffant électrique pour plancher",
+                "quantity": 1,
+                "unit": "unité",
+                "estimated_unit_price": 399.99,
+                "total": 399.99
+            },
+            {
+                "sku": "SKU-THERMO-001",
+                "name": "Thermostat programmable pour plancher chauffant",
+                "quantity": 1,
+                "unit": "unité",
+                "estimated_unit_price": 189.99,
+                "total": 189.99
+            },
+            {
+                "sku": "SKU-1000107097",
+                "name": "Broan-NuTone Ventilateur 50 pi³/min de la série Économique de Broan-Nutone®, 2,0 sones - ENERGY STAR®",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 34.98,
+                "total": 34.98
+            },
+            {
+                "sku": "SKU-POTLIGHT-001",
+                "name": "Luminaire encastré DEL 4 pouces",
+                "quantity": 1,
+                "unit": "unité",
+                "estimated_unit_price": 24.99,
+                "total": 24.99
+            },
+            {
+                "sku": "SKU-1001983822",
+                "name": "DYMOND 12-Pack 6 inches LED Canless Recessed Light Adjustable 5CCT Dimmable",
+                "quantity": 1,
+                "unit": "unite",
+                "estimated_unit_price": 14.08,
+                "total": 14.08
+            },
+            {
+                "sku": "SKU-1000848589",
+                "name": "APOLLO Tuyau PEX-B blanc de 1/2 po x 10 pi",
+                "quantity": 4,
+                "unit": "roll",
+                "estimated_unit_price": 6.98,
+                "total": 27.92
+            }
+        ],
+        "total_materials_cost": 5463.85
+    }
+}

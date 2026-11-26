@@ -90,6 +90,61 @@ function formatMoney(value) {
   }) + ' $';
 }
 
+// =====================================================
+// FIX: Update section divider subtotals when rows are
+// removed from #materials-list. Dividers are created by
+// addMaterialsDivider() and their amounts are never
+// refreshed by default. This walks the DOM in order and
+// recomputes each divider from the rows above it.
+// =====================================================
+function updateDividerAmount(divider, amount) {
+    const formatted = formatMoney(amount);
+
+    // Try specific child selectors first
+    let target = divider.querySelector('.divider-amount')
+              || divider.querySelector('strong')
+              || divider.querySelector('.materials-divider-total');
+
+    if (target) {
+        target.textContent = formatted;
+        return;
+    }
+
+    // Fallback: replace the LAST price-looking token in innerHTML
+    const html = divider.innerHTML;
+    const priceRegex = /[\d,]+\.\d{2}\s*\$/g;
+    const matches = html.match(priceRegex);
+    if (matches && matches.length > 0) {
+        const lastMatch = matches[matches.length - 1];
+        const lastIdx = html.lastIndexOf(lastMatch);
+        if (lastIdx !== -1) {
+            divider.innerHTML =
+                html.substring(0, lastIdx)
+                + formatted
+                + html.substring(lastIdx + lastMatch.length);
+        }
+    }
+}
+
+function updateSectionSubtotals() {
+    const list = document.getElementById('materials-list');
+    if (!list) return;
+
+    let accumulator = 0;
+    Array.from(list.children).forEach(child => {
+        if (child.classList.contains('quote-row')) {
+            const q = parseFloat(child.querySelector('.mat-qty')?.value) || 0;
+            const u = parseFloat((child.querySelector('.mat-unit')?.value || '0').replace(/,/g, '')) || 0;
+            accumulator += q * u;
+        } else if (child.classList.contains('materials-divider')) {
+            updateDividerAmount(child, accumulator);
+            accumulator = 0;
+        }
+    });
+}
+
+window.updateSectionSubtotals = updateSectionSubtotals;
+
 function updateCalculations() {
   let matTotal = 0;
   document.querySelectorAll('#materials-list .quote-row').forEach(row => {
@@ -130,9 +185,92 @@ function updateCalculations() {
   if (elTvq) elTvq.textContent = formatMoney(tvq);
   if (elGrand) elGrand.textContent = formatMoney(grandTotal);
 
-  if (typeof generatePreview === 'function') {
-    generatePreview();
+  let templateTotal = 0;
+  let customerTotal = 0;
+  let simonAddedTotal = 0;
+
+  document
+      .querySelectorAll('#materials-list .quote-row')
+      .forEach(row => {
+
+          const qty =
+              parseFloat(
+                  row.querySelector('.mat-qty')?.value
+              ) || 0;
+
+          const unit =
+              parseFloat(
+                  (
+                      row.querySelector('.mat-unit')?.value
+                      || '0'
+                  ).replace(/,/g,'')
+              ) || 0;
+
+          const lineTotal =
+              qty * unit;
+
+          const source =
+              row.dataset.source || '';
+
+          if (
+              source === 'basic_materials_bathroom'
+          ) {
+
+              templateTotal += lineTotal;
+
+          } else if (
+              source === 'customer_request'
+          ) {
+
+              customerTotal += lineTotal;
+
+          } else if (
+              source === 'simon_added'
+          ) {
+
+              simonAddedTotal += lineTotal;
+
+          }
+
+      });
+
+  const templateEl =
+      document.getElementById(
+          'template-material-total'
+      );
+
+  const customerEl =
+      document.getElementById(
+          'customer-material-total'
+      );
+
+  const simonEl =
+      document.getElementById(
+          'simon-added-material-total'
+      );
+
+  if (templateEl) {
+      templateEl.textContent =
+          formatMoney(templateTotal);
   }
+
+  if (customerEl) {
+      customerEl.textContent =
+          formatMoney(customerTotal);
+  }
+
+  if (simonEl) {
+      simonEl.textContent =
+          formatMoney(simonAddedTotal);
+  }
+
+    // NEW: refresh section divider subtotals (Sous-total rows)
+  if (typeof updateSectionSubtotals === 'function') {
+    updateSectionSubtotals();
+    }
+    if (typeof generatePreview === 'function') {
+      generatePreview();
+    }
 }
 
 window.recalcSummary = updateCalculations;

@@ -77,40 +77,223 @@ function pct($a, $b) { return $b > 0 ? round(($a / $b) * 100, 1) : 0; }
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Analytics — Auger Renovations</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-body { font-family: -apple-system, Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; color: #333; }
-.container { max-width: 1200px; margin: 0 auto; }
+/* === PAGE-LEVEL BASE === */
+body {
+    font-family: -apple-system, Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 0;          /* ← was: 20px  (breaks full-width topbar) */
+    color: #333;
+}
+
+/* === STANDARD ADMIN TOPBAR === */
+.admin-topbar {
+    background: #111111;
+    color: #ffffff;
+    padding: 14px 24px;
+    border-bottom: 2px solid #d1b06a;
+}
+.admin-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.admin-title {
+    font-size: 15px;
+    color: #ffffff;
+}
+.admin-title strong {
+    color: #d1b06a;
+    font-weight: 700;
+}
+
+/* Topbar buttons */
+.admin-topbar .btn.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    border: 1px solid #555;
+    background: transparent;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.admin-topbar .btn.btn-outline:hover {
+    background: #333;
+    border-color: #d1b06a;
+    color: #ffffff;
+}
+.admin-topbar .btn.btn-outline i {
+    font-size: 13px;
+}
+
+/* === PAGE CONTENT === */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;        /* ← moved from body to container */
+}
+
 h1 { color: #003366; }
-.tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-.tab { padding: 10px 18px; background: #fff; border: 1px solid #ccd4dd; border-radius: 8px; color: #333; text-decoration: none; font-weight: 600; }
-.tab.active { background: #003366; color: #fff; border-color: #003366; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.metric { background: #fff; border-radius: 12px; padding: 22px; box-shadow: 0 2px 10px rgba(0,0,0,.06); border-left: 5px solid #ccd4dd; }
-.metric.views { border-left-color: #ff6600; }
-.metric.wa { border-left-color: #25D366; }
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+.tab {
+    padding: 10px 18px;
+    background: #fff;
+    border: 1px solid #ccd4dd;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+}
+.tab.active {
+    background: #003366;
+    color: #fff;
+    border-color: #003366;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.metric {
+    background: #fff;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    border-left: 5px solid #ccd4dd;
+}
+.metric.views  { border-left-color: #ff6600; }
+.metric.wa     { border-left-color: #25D366; }
 .metric.quotes { border-left-color: #003366; }
 .metric.unique { border-left-color: #8b5cf6; }
-.metric-label { font-size: .8rem; color: #666; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
-.metric-value { font-size: 2rem; font-weight: 800; color: #003366; line-height: 1.1; margin: 4px 0; }
-.card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 24px; }
-.card h2 { margin: 0 0 16px; color: #003366; font-size: 1.1rem; }
-.chart-bars { display: flex; align-items: flex-end; justify-content: space-around; gap: 8px; height: 180px; padding-top: 20px; border-bottom: 2px solid #e5eaf0; }
-.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 6px; max-width: 60px; }
-.bar { width: 100%; background: linear-gradient(180deg, #ff6600, #ff8a33); border-radius: 6px 6px 0 0; min-height: 3px; transition: height .4s; }
+.metric-label {
+    font-size: .8rem;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+.metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #003366;
+    line-height: 1.1;
+    margin: 4px 0;
+}
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    margin-bottom: 24px;
+}
+.card h2 {
+    margin: 0 0 16px;
+    color: #003366;
+    font-size: 1.1rem;
+}
+.chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 8px;
+    height: 180px;
+    padding-top: 20px;
+    border-bottom: 2px solid #e5eaf0;
+}
+.bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    gap: 6px;
+    max-width: 60px;
+}
+.bar {
+    width: 100%;
+    background: linear-gradient(180deg, #ff6600, #ff8a33);
+    border-radius: 6px 6px 0 0;
+    min-height: 3px;
+    transition: height .4s;
+}
 .bar-value { font-size: .75rem; font-weight: 700; color: #333; }
 .bar-label { font-size: .7rem; color: #888; font-weight: 600; text-transform: uppercase; }
 .top-list { list-style: none; padding: 0; margin: 0; }
-.top-list li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eef1f5; }
+.top-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eef1f5;
+}
 .top-list li:last-child { border-bottom: none; }
-.top-list code { background: #f0f4fa; padding: 2px 8px; border-radius: 4px; font-size: .82rem; color: #003366; }
-.top-list-count { background: #f0f4fa; color: #003366; padding: 3px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+.top-list code {
+    background: #f0f4fa;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: .82rem;
+    color: #003366;
+}
+.top-list-count {
+    background: #f0f4fa;
+    color: #003366;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 700;
+}
 .recent-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
-.recent-table th { text-align: left; padding: 8px; background: #f7f9fc; color: #003366; font-weight: 700; font-size: .75rem; text-transform: uppercase; }
+.recent-table th {
+    text-align: left;
+    padding: 8px;
+    background: #f7f9fc;
+    color: #003366;
+    font-weight: 700;
+    font-size: .75rem;
+    text-transform: uppercase;
+}
 .recent-table td { padding: 8px; border-bottom: 1px solid #eef1f5; }
 .empty { text-align: center; padding: 60px 20px; color: #888; }
 </style>
 </head>
 <body>
+    <header class="admin-topbar">
+    <div class="admin-container">
+        <div class="admin-title">
+            <strong>Auger Rénovation</strong> — Portail Administratif
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <a href="materials.html" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px;">
+                <i class="fa-solid fa-boxes-stacked"></i> Catalogue Matériaux
+            </a>
+            <a href="send-review.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px;">
+                <i class="fa-solid fa-star"></i> Demandes d'avis
+            </a>
+            <a href="admin.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px; background: #444;">
+                <i class="fa-solid fa-arrow-left"></i> Retour au Tableau de bord
+            </a>
+        </div>
+    </div>
+</header>
 <div class="container">
     <h1>📊 Analytics — Auger Renovations</h1>
 
@@ -196,7 +379,7 @@ h1 { color: #003366; }
 
     <?php endif; ?>
 
-    <p style="text-align:center; margin-top:30px;"><a href="admin.php" style="color:#003366;">← Retour admin</a></p>
+    <p style="text-align:center; margin-top:30px;">
 </div>
 </body>
 </html>

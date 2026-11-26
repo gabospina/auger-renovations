@@ -152,6 +152,36 @@ if (file_exists($requestsFile)) {
 $allRequests[$requestId] = $newRequest;
 file_put_contents($requestsFile, json_encode($allRequests, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 
+// =====================================================
+// AUTO-GENERATE ANALYSIS + MATERIAL MAPPING
+// =====================================================
+
+try {
+
+    $baseUrl =
+        'http://localhost/auger-renovations/admin/ai/';
+
+    @file_get_contents(
+        $baseUrl .
+        'analyze-request.php?id=' .
+        urlencode($requestId)
+    );
+
+    @file_get_contents(
+        $baseUrl .
+        'material-mapper.php?id=' .
+        urlencode($requestId)
+    );
+
+} catch (Throwable $e) {
+
+    error_log(
+        'Auto-analysis failed: ' .
+        $e->getMessage()
+    );
+
+}
+
 // Track the successful quote request (AFTER save)
 require_once __DIR__ . '/admin/lib/tracker.php';
 track_event('quote_request', 'quote-bathroom.php', ['request_id' => $requestId]);

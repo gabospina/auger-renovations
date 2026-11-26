@@ -77,9 +77,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <title>Paramètres — Auger Renovations</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-body { font-family: -apple-system, Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 30px; color: #333; }
-.container { max-width: 800px; margin: 0 auto; }
+body { font-family: -apple-system, Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; color: #333; }
+.container { max-width: 800px; margin: 0 auto; padding: 20px; }
 h1 { color: #003366; }
 .card { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 2px 10px rgba(0,0,0,.06); margin-bottom: 24px; }
 h2 { color: #003366; margin-top: 0; font-size: 1.15rem; }
@@ -98,11 +99,71 @@ input:focus { outline: none; border-color: #ff6600; box-shadow: 0 0 0 3px rgba(2
 .hint { color: #666; font-size: .85rem; margin-top: 6px; }
 .back { color: #003366; text-decoration: none; font-weight: 600; }
 </style>
+<style>
+/* === STANDARD ADMIN TOPBAR (matches analytics.php / request.php) === */
+body { padding: 0 !important; }
+
+.admin-topbar {
+    background: #111111;
+    color: #ffffff;
+    padding: 14px 24px;
+    border-bottom: 2px solid #d1b06a;
+}
+.admin-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.admin-title { font-size: 15px; color: #ffffff; }
+.admin-title strong { color: #d1b06a; font-weight: 700; }
+.admin-topbar .btn.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    border: 1px solid #555;
+    background: transparent;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.admin-topbar .btn.btn-outline:hover {
+    background: #333;
+    border-color: #d1b06a;
+    color: #ffffff;
+}
+.admin-topbar .btn.btn-outline i { font-size: 13px; }
+</style>
 </head>
 <body>
+<header class="admin-topbar">
+    <div class="admin-container">
+        <div class="admin-title">
+            <strong>Auger Rénovation</strong> — Portail Administratif
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <a href="analytics.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px;">
+                <i class="fa-solid fa-chart-line"></i> Analytics
+            </a>
+            <a href="send-review.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px;">
+                <i class="fa-solid fa-star"></i> Demandes d'avis
+            </a>
+            <a href="admin.php" class="btn btn-outline" style="color: #fff; border-color: #555; text-decoration: none; padding: 6px 14px; border-radius: 4px; background: #444;">
+                <i class="fa-solid fa-arrow-left"></i> Retour au Tableau de bord
+            </a>
+        </div>
+    </div>
+</header>
 <div class="container">
     <h1>⚙️ Paramètres — Auger Renovations</h1>
-    <p><a href="admin.php" class="back">← Retour admin</a></p>
 
     <?php if ($message): ?>
         <div class="message"><?= $message ?></div>

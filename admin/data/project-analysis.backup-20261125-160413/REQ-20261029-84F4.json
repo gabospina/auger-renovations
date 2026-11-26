@@ -1,0 +1,126 @@
+{
+    "request_id": "REQ-20261029-84F4",
+    "analysis_date": "2026-10-30 19:57:18",
+    "room_type": "bathroom",
+    "complexity": "medium",
+    "risk_level": "high",
+    "recommended_tier": "premium",
+    "estimated_hours": 26,
+    "dimensions": {
+        "length": 7,
+        "width": 5,
+        "ceiling_height": 8
+    },
+    "surfaces": {
+        "floor_area": 35,
+        "wall_area": 192,
+        "ceiling_area": 35
+    },
+    "detected_items": [
+        "Bain-douche encastré",
+        "Toilette standard",
+        "Vanité simple (30\")",
+        "Plancher en Ceramic"
+    ],
+    "recommendations": {
+        "replace_tub": true,
+        "replace_toilet": true,
+        "replace_vanity": true,
+        "replace_flooring": true,
+        "water_damage_inspection": true,
+        "heated_floor_installation": true
+    },
+    "matching_portfolio_photos": [
+        "assets/images/salle_de_bains/ARenovation-BathroomShowerGrayGlassMetalFrameVanityGrayCountertopWhite.jpeg",
+        "assets/images/salle_de_bains/ARenovation-BathroomShowerBlackWhite-3.jpeg",
+        "assets/images/salle_de_bains/ARenovation-BathroomWhiteModermBathtubBlackTiles.JPG"
+    ],
+    "confidence": 0.93,
+    "mapped_materials": {
+        "request_id": "REQ-20261029-84F4",
+        "mapped_at": "2026-10-30 19:57:20",
+        "materials": [
+            {
+                "sku": "SKU-1001690476",
+                "name": "Merola Tile Carreau mural et de sol Amberes Azul II, 13 po x 13 po, céramique, 15,85 pi2/bte",
+                "quantity": 3,
+                "unit": "box",
+                "estimated_unit_price": 168.04,
+                "total": 504.12
+            },
+            {
+                "sku": "SKU-1000668022",
+                "name": "Custom Building Products SimpleGrout #165 Delorean Gray 1 Qt. Coulis pré-mélangé",
+                "quantity": 1,
+                "unit": "bag",
+                "estimated_unit_price": 25.28,
+                "total": 25.28
+            },
+            {
+                "sku": "SKU-1000150306",
+                "name": "Custom Building Products RedGard 3.78 L 100 pi² Membrane d’imperméabilisation et de fissuration prête à l’emploi pour carreaux et pierre",
+                "quantity": 1,
+                "unit": "pail",
+                "estimated_unit_price": 105,
+                "total": 105
+            },
+            {
+                "sku": "SKU-1000113392",
+                "name": "CGC Durock Panneau de ciment avec EdgeGuard 1/2 pouce. x 3 pieds x 5",
+                "quantity": 6,
+                "unit": "feuille",
+                "estimated_unit_price": 26.98,
+                "total": 161.88
+            },
+            {
+                "sku": "SKU-1000152285",
+                "name": "CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger résistant à la moisissure",
+                "quantity": 6,
+                "unit": "sheet",
+                "estimated_unit_price": 29.98,
+                "total": 179.88
+            },
+            {
+                "sku": "SKU-1001978790",
+                "name": "Artika Ewen 27 po à 1 lumière 15 W noir à DEL intégrée à blanc sélectionnable et intensité variable 5CCT luminaire de vanité",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 69.99,
+                "total": 69.99
+            },
+            {
+                "sku": "CANAC-VANITY-36",
+                "name": "Meuble-vanité 36 po chêne naturel avec comptoir quartz",
+                "quantity": 1,
+                "unit": "unité",
+                "estimated_unit_price": 829,
+                "total": 829
+            },
+            {
+                "sku": "SKU-1000116247",
+                "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 8.47,
+                "total": 8.47
+            },
+            {
+                "sku": "SKU-1000116247",
+                "name": "LESSO Bride de toilette en plastique ABS, 4 x 3 po, femelle",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 8.47,
+                "total": 8.47
+            },
+            {
+                "sku": "SKU-1001978790",
+                "name": "Artika Ewen 27 po à 1 lumière 15 W noir à DEL intégrée à blanc sélectionnable et intensité variable 5CCT luminaire de vanité",
+                "quantity": 1,
+                "unit": "piece",
+                "estimated_unit_price": 69.99,
+                "total": 69.99
+            }
+        ],
+        "total_materials_cost": 1962.08
+    }
+}

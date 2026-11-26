@@ -21,6 +21,34 @@ $requestsFile = __DIR__ . '/../data/requests.json';
 $allRequests = file_exists($requestsFile) ? json_decode(file_get_contents($requestsFile), true) : [];
 $requestData = $allRequests[$reqId] ?? [];
 $project = $requestData['project'] ?? [];
+$electricalItems =
+    $project['electrical'] ?? [];
+
+$plumbingItems =
+    $project['plumbing'] ?? [];
+
+$showerItems =
+    $project['shower'] ?? [];
+
+$countertopItems =
+    $project['countertop'] ?? [];
+
+if (!is_array($electricalItems)) {
+    $electricalItems = [$electricalItems];
+}
+
+if (!is_array($plumbingItems)) {
+    $plumbingItems = [$plumbingItems];
+}
+
+if (!is_array($showerItems)) {
+    $showerItems = [$showerItems];
+}
+
+if (!is_array($countertopItems)) {
+    $countertopItems = [$countertopItems];
+}
+
 
 // 3. Load Materials Catalog / Tiers to get real SKUs & Prices
 $materialsFile = __DIR__ . '/../data/materials.json';
@@ -31,6 +59,49 @@ $catalog = [];
 if (file_exists($materialsFile)) {
     $catalog = json_decode(file_get_contents($materialsFile), true) ?: [];
 }
+
+error_log(
+    'CATALOG COUNT => ' .
+    count($catalog)
+);
+
+error_log(
+    'HEAT PRODUCT => ' .
+    json_encode(
+        $catalog['SKU-HEAT-001'] ?? null
+    )
+);
+
+error_log(
+    'THERMO PRODUCT => ' .
+    json_encode(
+        $catalog['SKU-THERMO-001'] ?? null
+    )
+);
+
+// ==========================================
+// LOAD MATERIAL RULES
+// ==========================================
+
+$materialRulesFile =
+    __DIR__ . '/../data/material-rules.json';
+
+$materialRules = [];
+
+if (file_exists($materialRulesFile)) {
+
+    $materialRules =
+        json_decode(
+            file_get_contents($materialRulesFile),
+            true
+        ) ?: [];
+
+}
+
+error_log(
+    'RULES LOADED => ' .
+    implode(', ', array_keys($materialRules))
+);
 
 // Surfaces from analysis
 $surfaces = $analysis['surfaces'] ?? ['floor_area' => 48, 'wall_area' => 200];
@@ -212,7 +283,7 @@ function addMaterialIfFound(
     $catalog,
     array $keywords,
     $quantity = 1
-) {
+    ) {
 
     $item = findMaterialByCategory(
         $catalog,
@@ -226,6 +297,54 @@ function addMaterialIfFound(
                 $item,
                 $quantity
             );
+    }
+}
+
+function addMaterialsFromRule(
+    &$mappedMaterials,
+    $catalog,
+    array $rule,
+    $quantity = 1
+    )
+    {
+    $keywords =
+        $rule['required_keywords']
+        ?? [];
+
+    foreach ($keywords as $keyword) {
+
+        error_log(
+            'SEARCHING => ' .
+            $keyword
+        );
+
+        $item =
+            findMaterialByCategory(
+                $catalog,
+                [$keyword]
+            );
+
+        if ($item) {
+
+            error_log(
+                'FOUND => ' .
+                ($item['data']['name'] ?? 'UNKNOWN')
+            );
+
+            $mappedMaterials[] =
+                buildMaterialLine(
+                    $item,
+                    $quantity
+                );
+
+        } else {
+
+            error_log(
+                'NOT FOUND => ' .
+                $keyword
+            );
+
+        }
     }
 }
 
@@ -320,6 +439,24 @@ if ($durockItem) {
             $durockItem,
             $drywallSheets
         );
+}
+
+$paintingSelections =
+    $project['painting'] ?? [];
+
+if (
+    !empty($paintingSelections)
+    &&
+    isset(
+        $materialRules['painting']
+    )
+)
+{
+    addMaterialsFromRule(
+        $mappedMaterials,
+        $catalog,
+        $materialRules['painting']
+    );
 }
 
 // ==========================================
@@ -494,36 +631,16 @@ if (
     !empty(
         $analysis['recommendations']['replace_toilet']
     )
-) {
-
-    addMaterialIfFound(
+    &&
+    isset(
+        $materialRules['new_toilet']
+    )
+)
+{
+    addMaterialsFromRule(
         $mappedMaterials,
         $catalog,
-        ['toilette'],
-        1
-    );
-
-    // Optional accessories
-
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        ['bride'],
-        1
-    );
-
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        ['wax'],
-        1
-    );
-
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        ['supply'],
-        1
+        $materialRules['new_toilet']
     );
 }
 
@@ -533,63 +650,139 @@ if (
 // GFCI
 // ==========================================
 
-$electricalItems =
-    $project['electrical'] ?? [];
-
 if (
-    in_array(
-        'gfci',
-        $electricalItems
-    )
-) {
-
-    $gfciItem =
-        findMaterialByCategory(
-            $catalog,
-            [
-                'ddft',
-                'gfci'
-            ]
-        );
-
-    if ($gfciItem) {
-
-        $mappedMaterials[] =
-            buildMaterialLine(
-                $gfciItem,
-                1
-            );
-    }
+    in_array('gfci', $electricalItems)
+    &&
+    isset($materialRules['gfci'])
+)
+{
+    addMaterialsFromRule(
+        $mappedMaterials,
+        $catalog,
+        $materialRules['gfci']
+    );
 }
 
 // ==========================================
 // HEATED FLOOR
 // ==========================================
 
+error_log(
+    'ELECTRICAL ITEMS => ' .
+    json_encode($electricalItems)
+);
+
+error_log(
+    'HEATED FLOOR RULE EXISTS => ' .
+    (
+        isset(
+            $materialRules['heated_floor']
+        )
+            ? 'YES'
+            : 'NO'
+    )
+);
+
 if (
     in_array(
         'heated_floor',
         $electricalItems
     )
-) {
+)
+{
+    error_log(
+        'HEATED FLOOR SELECTED'
+    );
+}
 
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        [
-            'chauffant'
-        ],
-        1
+if (
+    in_array(
+        'heated_floor',
+        $electricalItems
+    )
+)
+{
+    error_log(
+        'HEATED FLOOR BLOCK EXECUTED'
     );
 
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        [
-            'thermostat'
-        ],
-        1
-    );
+    // ==========================
+    // HEAT MAT
+    // ==========================
+
+    if (
+        isset(
+            $catalog['SKU-HEAT-001']
+        )
+    ) {
+
+        error_log(
+            'ADDING SKU-HEAT-001'
+        );
+
+        $mappedMaterials[] = [
+            'sku' => 'SKU-HEAT-001',
+            'name' =>
+                $catalog['SKU-HEAT-001']['name'],
+            'quantity' => 1,
+            'unit' =>
+                $catalog['SKU-HEAT-001']['unit']
+                ?? 'unité',
+            'estimated_unit_price' =>
+                (float)$catalog['SKU-HEAT-001']['price'],
+            'total' =>
+                round(
+                    (float)$catalog['SKU-HEAT-001']['price'],
+                    2
+                )
+        ];
+
+    } else {
+
+        error_log(
+            'SKU-HEAT-001 NOT FOUND'
+        );
+
+    }
+
+    // ==========================
+    // THERMOSTAT
+    // ==========================
+
+    if (
+        isset(
+            $catalog['SKU-THERMO-001']
+        )
+    ) {
+
+        error_log(
+            'ADDING SKU-THERMO-001'
+        );
+
+        $mappedMaterials[] = [
+            'sku' => 'SKU-THERMO-001',
+            'name' =>
+                $catalog['SKU-THERMO-001']['name'],
+            'quantity' => 1,
+            'unit' =>
+                $catalog['SKU-THERMO-001']['unit']
+                ?? 'unité',
+            'estimated_unit_price' =>
+                (float)$catalog['SKU-THERMO-001']['price'],
+            'total' =>
+                round(
+                    (float)$catalog['SKU-THERMO-001']['price'],
+                    2
+                )
+        ];
+
+    } else {
+
+        error_log(
+            'SKU-THERMO-001 NOT FOUND'
+        );
+
+    }
 }
 
 // ==========================================
@@ -597,19 +790,15 @@ if (
 // ==========================================
 
 if (
-    in_array(
-        'fan_replace',
-        $electricalItems
-    )
-) {
-
-    addMaterialIfFound(
+    in_array('fan_replace', $electricalItems)
+    &&
+    isset($materialRules['fan_replace'])
+)
+{
+    addMaterialsFromRule(
         $mappedMaterials,
         $catalog,
-        [
-            'ventilateur'
-        ],
-        1
+        $materialRules['fan_replace']
     );
 }
 
@@ -618,29 +807,16 @@ if (
 // ==========================================
 
 if (
-    in_array(
-        'led_mirror',
-        $electricalItems
-    )
-) {
-
-    $lightItem =
-        findMaterialByCategory(
-            $catalog,
-            [
-                'luminaire',
-                'vanité'
-            ]
-        );
-
-    if ($lightItem) {
-
-        $mappedMaterials[] =
-            buildMaterialLine(
-                $lightItem,
-                1
-            );
-    }
+    in_array('led_mirror', $electricalItems)
+    &&
+    isset($materialRules['led_mirror'])
+)
+{
+    addMaterialsFromRule(
+        $mappedMaterials,
+        $catalog,
+        $materialRules['led_mirror']
+    );
 }
 
 // ==========================================
@@ -651,22 +827,36 @@ if (
     !empty(
         $analysis['recommendations']['plumbing_relocation']
     )
-) {
+    &&
+    isset(
+        $materialRules['plumbing_relocation']
+    )
+)
+{
+    addMaterialsFromRule(
+        $mappedMaterials,
+        $catalog,
+        $materialRules['plumbing_relocation'],
+        4
+    );
+}
 
-    $pexItem =
-        findMaterialByCategory(
-            $catalog,
-            ['pex']
-        );
-
-    if ($pexItem) {
-
-        $mappedMaterials[] =
-            buildMaterialLine(
-                $pexItem,
-                4
-            );
-    }
+if (
+    in_array(
+        'pot_lights',
+        $electricalItems
+    )
+    &&
+    isset(
+        $materialRules['pot_lights']
+    )
+)
+{
+    addMaterialsFromRule(
+        $mappedMaterials,
+        $catalog,
+        $materialRules['pot_lights']
+    );
 }
 
 $grandTotalMaterials = 0;
@@ -685,6 +875,20 @@ $mappingResult = [
 // Update analysis JSON with mapped materials
 $analysis['mapped_materials'] = $mappingResult;
 file_put_contents($analysisFile, json_encode($analysis, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+
+error_log(
+    'MAPPED MATERIAL COUNT => ' .
+    count($mappedMaterials)
+);
+
+error_log(
+    'HEAT PRESENT => ' .
+    (
+        json_encode($mappedMaterials)
+    )
+);
+
 
 // 5. Output JSON response
 echo json_encode([

@@ -9,11 +9,37 @@ if (empty($reqId)) {
 }
 
 // 1. Load Project Analysis JSON (which now includes mapped materials)
-$analysisFile = __DIR__ . '/../data/project-analysis/' . $reqId . '.json';
+$analysisFile =
+    __DIR__ .
+    '/../data/project-analysis/' .
+    $reqId .
+    '.json';
+
 if (!file_exists($analysisFile)) {
-    echo json_encode(['success' => false, 'error' => 'Aucune analyse IA trouvée. Veuillez d\'abord analyser la demande.']);
+
+    @file_get_contents(
+        'http://localhost/auger-renovations/admin/ai/analyze-request.php?id=' .
+        urlencode($reqId)
+    );
+
+    @file_get_contents(
+        'http://localhost/auger-renovations/admin/ai/material-mapper.php?id=' .
+        urlencode($reqId)
+    );
+
+    clearstatcache();
+}
+
+if (!file_exists($analysisFile)) {
+
+    echo json_encode([
+        'success' => false,
+        'error' => 'Impossible de générer l’analyse IA.'
+    ]);
+
     exit;
 }
+
 $analysis = json_decode(file_get_contents($analysisFile), true) ?: [];
 
 // 2. Load Requests JSON for client contact info and full form responses
