@@ -47,11 +47,24 @@ if (file_exists($dataFile)) {
 
 // Load quotes index mapped by request_id
 $quotesByReq = [];
+
 if (file_exists($quotesFile)) {
-    $rawQuotes = json_decode(file_get_contents($quotesFile), true) ?: [];
+
+    $rawQuotes = json_decode(
+        file_get_contents($quotesFile),
+        true
+    ) ?: [];
+
     foreach ($rawQuotes as $qId => $qData) {
-        if (!empty($qData['request_id'])) {
-            $quotesByReq[$qData['request_id']] = $qData;
+
+        if (
+            is_array($qData)
+            && !empty($qData['request_id'])
+        ) {
+
+            $quotesByReq[
+                $qData['request_id']
+            ][] = $qData;
         }
     }
 }
@@ -377,9 +390,26 @@ function formatRenovationType($project)
                 $photoCount = $curCount + $desCount;
 
                 // Check quote status
-                $matchingQuote = $quotesByReq[$reqId] ?? null;
-                $quoteId = $req['quote_id'] ?? ($matchingQuote['quote_id'] ?? ($matchingQuote['quote_number'] ?? null));
-                $quoteAmount = $req['quote_amount'] ?? ($matchingQuote['totals']['grand_total'] ?? null);
+                $matchingQuotes = $quotesByReq[$reqId] ?? [];
+                $currentQuote = null;
+                if (!empty($matchingQuotes)) {
+                    usort(
+                        $matchingQuotes,
+                        function ($a, $b) {
+                            return strcmp(
+                                $b['created_at'] ?? '',
+                                $a['created_at'] ?? ''
+                            );
+                        }
+                    );
+                    $currentQuote = $matchingQuotes[0];
+                }
+                
+                $quoteId = $req['quote_id'] ?? ($currentQuote['quote_id'] ?? ($currentQuote['quote_number'] ?? null));
+                $quoteAmount = $req['quote_amount'] ?? ($currentQuote['totals']['grand_total'] ?? null);
+
+                $quoteCreated = $currentQuote['created_at'] ?? null;
+                $quoteCount = count($matchingQuotes);
   
                 $rawStatus = strtolower($req['status'] ?? 'pending');
                 $isAccepted = (strpos($rawStatus, 'accept') !== false);
@@ -450,12 +480,39 @@ function formatRenovationType($project)
                   <?php if ($quoteId): ?>
                     <div class="quote-meta-info">
                       <strong><?= htmlspecialchars($quoteId) ?></strong>
+                      <?php if ($quoteCount > 1): ?>
+                      <br>
+                      <small style="color:#b45309;font-weight:600;">
+                      <?= $quoteCount ?> devis enregistrés
+                      </small>
+                      <?php if ($quoteCreated): ?>
+                      <br>
+                      <small style="color:#666;">
+                      Dernier devis:
+                      <?= htmlspecialchars($quoteCreated) ?>
+                      </small>
+
+                      <?php endif; ?>
+                      <?php endif; ?>
                       <?php if ($quoteAmount !== null): ?>
                         (<?= is_numeric($quoteAmount) ? number_format((float)$quoteAmount, 2, '.', ',') . ' $' : htmlspecialchars($quoteAmount) ?>)
                       <?php endif; ?><br>
                       <a href="../view-quote.php?quote_id=<?= urlencode($quoteId) ?>" target="_blank" class="link-view-quote">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Voir le devis client
                       </a>
+                      <?php if ($quoteCount > 1): ?>
+                          <br>
+                          <small style="color:#b45309;font-weight:600;">
+                              <?= $quoteCount ?> devis enregistrés
+                          </small>
+                          <br>
+                          <a
+                              href="quote-history.php?request_id=<?= urlencode($reqId) ?>"
+                              class="link-view-quote">
+                              <i class="fa-solid fa-clock-rotate-left"></i>
+                              Voir l'historique
+                          </a>
+                      <?php endif; ?>
                     </div>
                   <?php endif; ?>
                 </td>

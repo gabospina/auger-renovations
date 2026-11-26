@@ -402,5 +402,78 @@
             "current": [],
             "desired": []
         }
+    },
+    "REQ-20261126-82B8": {
+        "request_id": "REQ-20261126-82B8",
+        "created_at": "2026-11-26 16:35:38",
+        "status": "Soumission envoyée",
+        "client": {
+            "name": "History",
+            "address": "Rue History",
+            "email": "history@gmail.com",
+            "phone": "987-765-4321"
+        },
+        "project": {
+            "type": "complete",
+            "condition": "average",
+            "renovation_level": "complete",
+            "size_sqft": "36",
+            "length": "6",
+            "width": "6",
+            "ceiling_height": "8",
+            "issues": [
+                "water_damage",
+                "mold",
+                "soft_floor",
+                "cracked_tiles"
+            ],
+            "demo": [
+                "vanity",
+                "toilet",
+                "shower",
+                "floor_tile",
+                "wall_tile",
+                "drywall",
+                "ceiling"
+            ],
+            "plumbing": [
+                "replace_tub"
+            ],
+            "electrical": [
+                "potlights",
+                "gfci"
+            ],
+            "shower": [
+                "walk_in_shower",
+                "rain_shower"
+            ],
+            "floor": [
+                "ceramic"
+            ],
+            "vanity": [
+                "30"
+            ],
+            "countertop": [
+                "quartz"
+            ],
+            "painting": [
+                "walls",
+                "ceiling",
+                "door",
+                "trim"
+            ],
+            "budget_range": "5000_10000",
+            "design_style": "modern",
+            "desired_start_date": "2026-12-01",
+            "project_priority": "urgent",
+            "ai_render_requested": false,
+            "notes": "History"
+        },
+        "photos": {
+            "current": [],
+            "desired": []
+        },
+        "quote_id": "AR-2026-0032",
+        "quote_amount": "15 729.73 $"
     }
 }

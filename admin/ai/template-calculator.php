@@ -306,7 +306,7 @@ function findCatalogItemByKeyword($keyword, $catalog) {
 
 $rawCalculatedItems = [];
 
-function addOrMergeItem(&$collection, $sku, $name, $qty, $price, $source = 'template') {
+function addOrMergeItem(&$collection, $sku, $name, $qty, $price, $source = 'template', $pending = false) {
     $normalizedKey = !empty($sku) ? $sku : strtolower(trim($name));
     
     // Prevent duplicate fixtures
@@ -333,8 +333,9 @@ function addOrMergeItem(&$collection, $sku, $name, $qty, $price, $source = 'temp
             'sku' => $sku,
             'name' => $name,
             'quantity' => $qty,
-            'estimated_unit_price' => $price > 0 ? $price : 25.00,
-            'source' => $source
+            'estimated_unit_price' => $pending ? 0 : ($price > 0 ? $price : 25.00),
+            'source' => $source,
+            'pending' => $pending
         ];
     }
 }
@@ -508,20 +509,26 @@ foreach ($mappedMaterials as $m) {
 $mappedMaterials = array_values($dedupedMapped);
 
 foreach ($mappedMaterials as $mappedItem) {
-    tc_debug('ADDING MAPPED => ' . ($mappedItem['sku'] ?? 'NO SKU') . ' | ' . ($mappedItem['name'] ?? 'NO NAME'));
+
     error_log(
-        'ADDING CUSTOMER MATERIAL => ' .
-        ($mappedItem['name'] ?? '')
+        'ADDING MAPPED => ' .
+        ($mappedItem['sku'] ?? 'NO SKU') .
+        (!empty($mappedItem['pending']) ? ' [PENDING]' : '')
     );
+
     addOrMergeItem(
         $rawCalculatedItems,
         $mappedItem['sku'] ?? '',
         $mappedItem['name'] ?? '',
-        floatval($mappedItem['quantity'] ?? 1),
-        floatval($mappedItem['estimated_unit_price'] ?? 0),
-        'customer_request'
+        floatval(
+            $mappedItem['quantity'] ?? 1
+        ),
+        floatval(
+            $mappedItem['estimated_unit_price'] ?? 0
+        ),
+        'customer_request',
+        !empty($mappedItem['pending'])
     );
-    
 }
 
 tc_debug('AFTER MAPPER MERGE: $rawCalculatedItems count = ' . count($rawCalculatedItems));
@@ -592,7 +599,8 @@ foreach ($rawCalculatedItems as $item) {
         'unit'                 => 'unité',
         'estimated_unit_price' => $billedUnit,
         'total'                => $lineTotal,
-        'source'               => $item['source']
+        'source'               => $item['source'],
+        'pending'              => $item['pending'] ?? false
     ];
 }
 

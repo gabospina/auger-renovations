@@ -258,7 +258,7 @@ body { padding: 0 !important; }
 <div class="container">
 
     <div class="header-bar">
-        <h1>🧹 Nettoyage des anciens dossiers</h1>
+        <h1>📁 Gestion des dossiers archivés</h1>
     </div>
 
     <?php if ($deletedCount > 0): ?>

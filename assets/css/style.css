@@ -834,6 +834,19 @@ body.contact-page {
   color: var(--primary);
 }
 
+/* Pending items — yellow highlight for items missing from catalog */
+.quote-row.row-pending {
+    background: #fff8e1 !important;
+    border-left: 3px solid #f59e0b;
+    padding-left: 8px !important;
+}
+.quote-row.row-pending .mat-desc,
+.quote-row.row-pending .mat-unit {
+    background: #fff8e1 !important;
+    color: #92400e;
+    font-weight: 600;
+}
+
 
 @media (max-width: 768px) {
   .grid-2,

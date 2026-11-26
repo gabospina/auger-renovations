@@ -1,0 +1,309 @@
+{
+    "quote_id": "AR-2026-0017",
+    "quote_number": "AR-2026-0017",
+    "request_id": "REQ-20261103-D9FC",
+    "client": {
+        "name": "Client",
+        "email": "",
+        "phone": "",
+        "address": ""
+    },
+    "materials": [
+        {
+            "desc": "CGC Durock Panneau de ciment avec EdgeGuard 1/2 pouce. x 3 pieds x 5",
+            "qty": 33,
+            "unit": 26.98,
+            "total": 890.34
+        },
+        {
+            "desc": "composé à joints tout usage cgc sheetrock (seau 17 l)",
+            "qty": 22,
+            "unit": 37.31,
+            "total": 820.82
+        },
+        {
+            "desc": "CGC Securock Panneaux de revêtement extérieur de marque CGC UltraLegérs Securock de 1/2 po x 4 pi x 8 pi",
+            "qty": 1,
+            "unit": 34.48,
+            "total": 34.48
+        },
+        {
+            "desc": "CGC Sheetrock 1/2 po x 4 pi x 8 pi - Panneau de gypse UltraLéger",
+            "qty": 15,
+            "unit": 16.98,
+            "total": 254.70000000000002
+        },
+        {
+            "desc": "LePage PL Premium Adhésif de construction en polyuréthane, Intérieur/Extérieur, étanche, 295 ml",
+            "qty": 1,
+            "unit": 7.97,
+            "total": 7.97
+        },
+        {
+            "desc": "Custom Building Products RedGard 3.78 L 100 pi² Membrane d’imperméabilisation et de fissuration prête à l’emploi pour carreaux et pierre",
+            "qty": 17,
+            "unit": 105,
+            "total": 1785
+        },
+        {
+            "desc": "Southwire 14/2 NMD90 150M Romex SIMpull Fil électrique - Blanc",
+            "qty": 1,
+            "unit": 239,
+            "total": 239
+        },
+        {
+            "desc": "Broan-NuTone Ventilateur 50 pi³/min de la série Économique de Broan-Nutone®, 2,0 sones - ENERGY STAR®",
+            "qty": 1,
+            "unit": 34.98,
+            "total": 34.98
+        },
+        {
+            "desc": "Ivy Hill Tile Carreau pour planchers et murs Granada, 24 x 24 po, porcelaine, Olimpia, naturel, 11,62 pi²/bte",
+            "qty": 17,
+            "unit": 250.77,
+            "total": 4263.09
+        },
+        {
+            "desc": "BEHR ULTRA Peinture et apprêt très durable pour l’intérieur, émail coquille d’œuf en Blanc ultra pur, 3,79 L",
+            "qty": 2,
+            "unit": 63.57,
+            "total": 127.14
+        },
+        {
+            "desc": "Pintar Couverture de rouleau en Mousse 240mm x 10mm",
+            "qty": 2,
+            "unit": 9.97,
+            "total": 19.94
+        },
+        {
+            "desc": "Paulin #6 x 1-1/4 po à tête plate Phillips Drive à filetage grossier Vis pour cloison sèche - 500 pièces",
+            "qty": 1,
+            "unit": 16.28,
+            "total": 16.28
+        },
+        {
+            "desc": "Paulin Vis de construction à tête plate carrée #8 x 3 pouces en zinc jaune - 250pcs",
+            "qty": 1,
+            "unit": 26.98,
+            "total": 26.98
+        },
+        {
+            "desc": "Paulin Vis de construction à tête plate carrée #8 x 2-1/2 en zinc jaune - 350pcs",
+            "qty": 1,
+            "unit": 30.88,
+            "total": 30.88
+        },
+        {
+            "desc": "Paulin Clous pour charpente en spirale de 3-1/2 pouces (16d) galvanisés à chaud - 1,5 kg (environ 178 pièces par paquet)",
+            "qty": 1,
+            "unit": 27.18,
+            "total": 27.18
+        },
+        {
+            "desc": "STANLEY 16 Gauge 2-1/2-inch 20-Degree Angled Finish Nails (2500 pro Box)",
+            "qty": 1,
+            "unit": 41.98,
+            "total": 41.98
+        },
+        {
+            "desc": "3/4 4x8 Standard contreplaqué Spruce",
+            "qty": 1,
+            "unit": 59.98,
+            "total": 59.98
+        },
+        {
+            "desc": "APOLLO Tuyau PEX-B blanc de 1/2 po x 10 pi",
+            "qty": 1,
+            "unit": 6.98,
+            "total": 6.98
+        },
+        {
+            "desc": "SharkBite Robinet d arret droit a compression pour PEX-A, dilatation 1/2 po x 3/8 po",
+            "qty": 1,
+            "unit": 14.98,
+            "total": 14.98
+        },
+        {
+            "desc": "CB Performance Advantage Kit de raccordement de la conduite d'alimentation en eau du lave-vaisselle",
+            "qty": 1,
+            "unit": 19.54,
+            "total": 19.54
+        },
+        {
+            "desc": "Husky Ruban d'étanchéité pour filets, 1/2 po x 260 po (6,6 m)",
+            "qty": 1,
+            "unit": 1.48,
+            "total": 1.48
+        },
+        {
+            "desc": "MONO Silicone PRO - K&B de 290 mL, blanc",
+            "qty": 1,
+            "unit": 9.97,
+            "total": 9.97
+        },
+        {
+            "desc": "Leviton Decora 15A125V prise inviolable à DDFT Blanc",
+            "qty": 1,
+            "unit": 23.87,
+            "total": 23.87
+        },
+        {
+            "desc": "Leviton Interrupteur unipolaire Decora(md) , blanc",
+            "qty": 1,
+            "unit": 2.41,
+            "total": 2.41
+        },
+        {
+            "desc": "Marrette Connecteur de fils ACS pour conducteur en aluminium et/ou cuivre-brun (Emb de 25 unités)",
+            "qty": 1,
+            "unit": 12.87,
+            "total": 12.87
+        },
+        {
+            "desc": "Custom Building Products SimpleGrout #165 Delorean Gray 1 Qt. Coulis pré-mélangé",
+            "qty": 1,
+            "unit": 25.28,
+            "total": 25.28
+        },
+        {
+            "desc": "QEP Entretoises flexibles de 1/4 po pour l'installation de carreaux de sol et de mur (paquet de 200)",
+            "qty": 17,
+            "unit": 6.88,
+            "total": 116.96
+        },
+        {
+            "desc": "Merola Tile Carreau mural et de sol Amberes Azul II, 13 po x 13 po, céramique, 15,85 pi2/bte",
+            "qty": 17,
+            "unit": 168.04,
+            "total": 2856.68
+        },
+        {
+            "desc": "American Standard Toilette allongée deux pièces Mainstream, 4,8 L p.c., hauteur standard, à chasse simple, blanc",
+            "qty": 1,
+            "unit": 198,
+            "total": 198
+        },
+        {
+            "desc": "Glacier Bay Irena Kit de vidange escamotable pour robinet de salle de bains à 2 poignées centrales de 4 pouces en chrome",
+            "qty": 1,
+            "unit": 89.98,
+            "total": 89.98
+        },
+        {
+            "desc": "Alexandria Moulding Plinthe MDF 1/2 x 5.1/2 x 12' ( 5 morceaux par paquet)",
+            "qty": 1,
+            "unit": 98.98,
+            "total": 98.98
+        },
+        {
+            "desc": "DAP ALEX Calfeutrant au Latex Acrylique Blanc Pour Peintres - Pour Entrepreneur (12-300ml Cartouches)",
+            "qty": 1,
+            "unit": 20.97,
+            "total": 20.97
+        },
+        {
+            "desc": "Bois d'uvre de classe Select Structural, 2 po x 4 po x 8 pi, EPS",
+            "qty": 1,
+            "unit": 4.14,
+            "total": 4.14
+        },
+        {
+            "desc": "Everbilt Toile de protection en canevas, 2,6 m x 3,6 m (8 pi 9 po x 11 pi 9 po), 227 g (8 oz)",
+            "qty": 1,
+            "unit": 36.97,
+            "total": 36.97
+        },
+        {
+            "desc": "Swiss Madison Plan vasque en granite 36 pour meuble-lavabo, en blanc",
+            "qty": 1,
+            "unit": 269,
+            "total": 269
+        },
+        {
+            "desc": "Magick Woods Dessus blanc granite de 78,74 cm [31 po] larg. x 55,88 cm [22 po] prof. avec lavabo non encastré",
+            "qty": 1,
+            "unit": 239,
+            "total": 239
+        },
+        {
+            "desc": "The Marble Factory Comptoir de Salle de Bain en granite D'ingénierie de 49 po. x 22 po. Avec Lavabo Centré Ondulé, Trou Unique en Ultra Blanc",
+            "qty": 1,
+            "unit": 754,
+            "total": 754
+        },
+        {
+            "desc": "Ensemble complet douche étanche Schluter-Kerdi 38x60",
+            "qty": 1,
+            "unit": 685,
+            "total": 685
+        },
+        {
+            "desc": "Vanité suspendue sur mesure 60 po double vasque en noyer véritable",
+            "qty": 1,
+            "unit": 2,
+            "total": 2
+        },
+        {
+            "desc": "Porcelaine rectifiée Calacatta Gold 24x48 (boîte 16 pi²)",
+            "qty": 17,
+            "unit": 118,
+            "total": 2006
+        }
+    ],
+    "labor": [
+        {
+            "desc": "Démolition",
+            "hours": 8,
+            "rate": 75,
+            "total": 600
+        },
+        {
+            "desc": "Plomberie",
+            "hours": 10,
+            "rate": 85,
+            "total": 850
+        },
+        {
+            "desc": "Électricité",
+            "hours": 6,
+            "rate": 85,
+            "total": 510
+        },
+        {
+            "desc": "Douche / céramique",
+            "hours": 16,
+            "rate": 75,
+            "total": 1200
+        },
+        {
+            "desc": "Pose de plancher",
+            "hours": 8,
+            "rate": 65,
+            "total": 520
+        },
+        {
+            "desc": "Peinture",
+            "hours": 6,
+            "rate": 60,
+            "total": 360
+        },
+        {
+            "desc": "Installation vanité",
+            "hours": 4,
+            "rate": 75,
+            "total": 300
+        }
+    ],
+    "totals": {
+        "materials": 16175.799999999997,
+        "labor": 4340,
+        "subtotal": 20515.799999999996,
+        "tps": 1025.7899999999997,
+        "tvq": 2046.4510499999997,
+        "grand_total": 23588.041049999996
+    },
+    "status": "Envoyée",
+    "file": "quotes/quote-AR-2026-0017.html",
+    "created_at": "2026-11-03 22:10",
+    "valid_until": "2026-12-03"
+}

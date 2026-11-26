@@ -13,6 +13,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 $quotesDir = __DIR__ . '/quotes';
 $dataDir   = __DIR__ . '/data';
+require_once __DIR__ . '/includes/quote-storage.php';
 
 if (!is_dir($quotesDir)) {
     mkdir($quotesDir, 0777, true);
@@ -353,7 +354,7 @@ file_put_contents($filePath, $htmlQuote);
 
 // 6. Append to quotes.json Database
 $validUntil = date('Y-m-d', strtotime('+30 days'));
-$allQuotes[$quoteNumber] = [
+$quoteData = [
     'quote_id'     => $quoteNumber,
     'quote_number' => $quoteNumber,
     'request_id'   => $data['request_id'] ?? '',
@@ -366,7 +367,19 @@ $allQuotes[$quoteNumber] = [
     'created_at'   => $dateCreated,
     'valid_until'  => $validUntil
 ];
+
+$allQuotes[$quoteNumber] = $quoteData;
+
 file_put_contents($quotesLogFile, json_encode($allQuotes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+
+if (!empty($quoteData['request_id'])) {
+
+    saveQuoteToHistory(
+        $quoteData['request_id'],
+        $quoteNumber,
+        $quoteData
+    );
+}
 
 // 6b. Update requests.json so the status becomes "Soumission envoyée" in requests.php
 $reqId = $data['request_id'] ?? '';

@@ -125,6 +125,75 @@ $drywallSheets = ceil($wallArea / 32);
 // ==========================================
 // MATERIAL CATALOG LOOKUP HELPERS
 // ==========================================
+/**
+ * STRICT match — ALL required keywords must be present.
+ * Used for size-specific lookups (e.g., vanity "30"" must be exact).
+ */
+function findMaterialByCategoryStrict(array $catalog, array $requiredKeywords) {
+    foreach ($catalog as $sku => $item) {
+        $name     = strtolower((string)($item['name'] ?? ''));
+        $category = strtolower((string)($item['category'] ?? ''));
+        $id       = strtolower((string)($item['id'] ?? $sku));
+        $haystack = $name . ' ' . $category . ' ' . $id;
+
+        $allFound = true;
+        foreach ($requiredKeywords as $kw) {
+            $kw = strtolower(trim((string)$kw));
+            if ($kw === '') continue;
+            if (strpos($haystack, $kw) === false) {
+                $allFound = false;
+                break;
+            }
+        }
+        if ($allFound) {
+            return ['sku' => $sku, 'data' => $item];
+        }
+    }
+    return null;
+}
+
+/**
+ * Find a STANDALONE countertop (name contains material + "comptoir",
+ * but does NOT contain "vanité"/"vanity" — excludes vanity+top combos).
+ */
+function findStandaloneCountertop(array $catalog, string $material) {
+    $material = strtolower($material);
+    foreach ($catalog as $sku => $item) {
+        $name     = strtolower((string)($item['name'] ?? ''));
+        $category = strtolower((string)($item['category'] ?? ''));
+
+        $hasMaterial = strpos($name, $material) !== false
+                    || strpos($category, $material) !== false;
+        $hasCountertopWord = strpos($name, 'comptoir') !== false
+                          || strpos($name, 'countertop') !== false;
+        $isVanityCombo = strpos($name, 'vanité') !== false
+                      || strpos($name, 'vanity') !== false;
+
+        if ($hasMaterial && $hasCountertopWord && !$isVanityCombo) {
+            return ['sku' => $sku, 'data' => $item];
+        }
+    }
+    return null;
+}
+
+/**
+ * Build a PENDING line (placeholder for an item not found in catalog).
+ * Price = 0 so it doesn't inflate the quote total.
+ * Manager edits the row to set a real price + save.
+ */
+function buildPendingLine($description, $category, $requestedValue = '') {
+    $slug = preg_replace('/[^A-Z0-9]/i', '', (string)$requestedValue);
+    return [
+        'sku'                  => 'PENDING-' . strtoupper($category) . ($slug ? '-' . $slug : ''),
+        'name'                 => $description . ' — À DÉTERMINER (non trouvé dans le catalogue)',
+        'quantity'             => 1,
+        'unit'                 => 'unité',
+        'estimated_unit_price' => 0,
+        'total'                => 0,
+        'pending'              => true,
+    ];
+}
+
 
 function findMaterialByCategory(array $catalog, array $keywords) {
     $matches = [];
@@ -478,150 +547,99 @@ if ($drywallItem) {
 }
 
 // ==========================================
-// VANITY
+// VANITY — strict size match, placeholder if not found
 // ==========================================
 
 if (!empty($analysis['recommendations']['replace_vanity'])) {
 
     $vanitySize = $project['vanity'] ?? '36';
-
     if (is_array($vanitySize)) {
         $vanitySize = $vanitySize[0] ?? '36';
     }
+    // Normalize "30\"" / "30 po" → "30"
+    $vanitySize = trim(str_replace(['"', 'po', ' PO', ' Po'], '', (string)$vanitySize));
 
-    $countertops =
-        $project['countertop'] ?? [];
-
+    $countertops = $project['countertop'] ?? [];
     if (!is_array($countertops)) {
         $countertops = [$countertops];
     }
 
-    /*
-    --------------------------------------------------
-    If a countertop is being selected separately
-    prefer cabinet-only vanities.
-    --------------------------------------------------
-    */
-
     $needsSeparateCountertop =
         in_array('granite', $countertops) ||
-        in_array('quartz', $countertops) ||
-        in_array('marble', $countertops);
+        in_array('quartz',  $countertops) ||
+        in_array('marble',  $countertops);
 
     $vanityItem = null;
 
+    // STRICT match — all keywords must be present
     if ($needsSeparateCountertop) {
-
-        $cabinetKeywords = [
-            'vanité',
-            (string)$vanitySize,
-            'sans comptoir'
-        ];
-
-        error_log(
-            'VANITY SIZE: ' .
-            $vanitySize
+        $vanityItem = findMaterialByCategoryStrict(
+            $catalog,
+            ['vanité', $vanitySize, 'sans comptoir']
         );
-        $vanityItem =
-            findMaterialByCategory(
-                $catalog,
-                $cabinetKeywords
-            );
-
-        /*
-        Fallback if exact cabinet-only model not found
-        */
         if (!$vanityItem) {
-
-            $vanityItem =
-                findMaterialByCategory(
-                    $catalog,
-                    [
-                        'vanité',
-                        (string)$vanitySize,
-                        'armoire'
-                    ]
-                );
+            $vanityItem = findMaterialByCategoryStrict(
+                $catalog,
+                ['vanité', $vanitySize, 'armoire']
+            );
         }
     }
-
-    /*
-    --------------------------------------------------
-    Original behaviour remains unchanged
-    --------------------------------------------------
-    */
-
     if (!$vanityItem) {
-
-        $vanityKeywords = [
-            'vanité',
-            (string)$vanitySize
-        ];
-
-        $vanityItem =
-            findMaterialByCategory(
-                $catalog,
-                $vanityKeywords
-            );
+        $vanityItem = findMaterialByCategoryStrict(
+            $catalog,
+            ['vanité', $vanitySize]
+        );
     }
 
     if ($vanityItem) {
-
-        $mappedMaterials[] =
-            buildMaterialLine(
-                $vanityItem,
-                1
-            );
+        $mappedMaterials[] = buildMaterialLine($vanityItem, 1);
+    } else {
+        // No exact size in catalog → placeholder
+        $mappedMaterials[] = buildPendingLine(
+            'Vanité ' . $vanitySize . ' po',
+            'vanity',
+            $vanitySize
+        );
+        error_log('[MAPPER] Vanity ' . $vanitySize . '" not in catalog — placeholder created');
     }
 }
 
+
 // ==========================================
-// COUNTERTOPS
+// COUNTERTOPS — standalone only, placeholder if not found
 // ==========================================
 
-$countertops =
-    $project['countertop'] ?? [];
-
+$countertops = $project['countertop'] ?? [];
 if (!is_array($countertops)) {
     $countertops = [$countertops];
 }
 
-if (in_array('granite', $countertops)) {
+$countertopMap = [
+    'granite'  => ['label' => 'Granite',   'search' => 'granite'],
+    'quartz'   => ['label' => 'Quartz',    'search' => 'quartz'],
+    'marble'   => ['label' => 'Marbre',    'search' => 'marble'],
+    'laminate' => ['label' => 'Stratifié', 'search' => 'stratifié'],
+];
 
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        ['granite'],
-        1
-    );
+foreach ($countertops as $ct) {
+    $ct = strtolower(trim((string)$ct));
+    if ($ct === '' || !isset($countertopMap[$ct])) continue;
 
-} elseif (in_array('quartz', $countertops)) {
+    $config = $countertopMap[$ct];
+    $ctItem = findStandaloneCountertop($catalog, $config['search']);
 
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        ['quartz'],
-        1
-    );
-
-} elseif (in_array('marble', $countertops)) {
-
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        ['marble'],
-        1
-    );
-
-} elseif (in_array('laminate', $countertops)) {
-
-    addMaterialIfFound(
-        $mappedMaterials,
-        $catalog,
-        ['stratifié'],
-        1
-    );
+    if ($ctItem) {
+        $mappedMaterials[] = buildMaterialLine($ctItem, 1);
+    } else {
+        $mappedMaterials[] = buildPendingLine(
+            'Comptoir ' . $config['label'],
+            'countertop',
+            $ct
+        );
+        error_log('[MAPPER] Countertop ' . $config['label'] . ' not in catalog — placeholder created');
+    }
 }
+
 
 // ==========================================
 // TOILET

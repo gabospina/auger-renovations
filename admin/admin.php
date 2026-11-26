@@ -217,6 +217,13 @@ $data = json_decode(file_get_contents($siteTextFile), true);
           <h3>Nettoyage</h3>
           <p>Supprimer les anciens dossiers et soumissions</p>
       </a>
+
+      <a href="quote-audit.php" class="card">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <h3>Audit des soumissions</h3>
+          <p>Versions, historiques et vérifications</p>
+      </a>
+
     </div>
 
     <div class="settings-panel">

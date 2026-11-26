@@ -1,0 +1,42 @@
+{
+    "quote_id": "DEV-202610-001",
+    "request_id": "REQ-20261005-64C9",
+    "created_at": "2026-10-08 03:05:36",
+    "valid_until": "2026-11-07",
+    "status": "Envoyée",
+    "client": {
+        "name": "Gabriel Ospina",
+        "address": "11 Rue du Château-Kirkland",
+        "email": "gobasuras@gmail.com",
+        "phone": "514-758-6158"
+    },
+    "materials": [
+        {
+            "desc": "Fournitures de plomberie de base, raccords PEX & évacuation",
+            "qty": 1,
+            "unit": 220,
+            "total": "220.00 $"
+        },
+        {
+            "desc": "Panneau de gypse Sheetrock 1/2 po x 4 pi x 8 pi",
+            "qty": 9,
+            "unit": 18.98,
+            "total": "170.82 $"
+        }
+    ],
+    "labor": [
+        {
+            "desc": "Travaux généraux de menuiserie et rénovation",
+            "hours": 12,
+            "rate": 75,
+            "total": "900.00 $"
+        }
+    ],
+    "totals": {
+        "materials": "390.82 $",
+        "labor": "900.00 $",
+        "subtotal": "1,290.82 $",
+        "taxes": "193.30 $",
+        "grand_total": "1,484.12 $"
+    }
+}
