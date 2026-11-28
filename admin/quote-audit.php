@@ -24,6 +24,7 @@ if (!$loggedIn) {
 
 $requestsFile = __DIR__ . '/data/requests.json';
 $quotesFile   = __DIR__ . '/data/quotes.json';
+require_once __DIR__ . '/includes/quote-storage.php';
 
 $requests = file_exists($requestsFile)
     ? json_decode(file_get_contents($requestsFile), true)
@@ -32,6 +33,12 @@ $requests = file_exists($requestsFile)
 $quotes = file_exists($quotesFile)
     ? json_decode(file_get_contents($quotesFile), true)
     : [];
+
+$historyBaseDir =
+    getQuoteHistoryBaseDir();
+
+$requestFolders =
+    getAllRequestHistoryFolders();
 
 if (!is_array($requests)) $requests = [];
 if (!is_array($quotes)) $quotes = [];
@@ -60,36 +67,39 @@ $requestSummary = [];
 $acceptedQuotes = [];
 $orphanQuotes = [];
 
-foreach ($quotes as $key => $quote) {
+foreach ($requestFolders as $folder) {
 
-    $isModern =
-        is_array($quote)
-        && (
-            isset($quote['quote_id'])
-            || isset($quote['quote_number'])
-        );
+    $requestId = basename($folder);
 
-    if (!$isModern) {
-        $legacyRecords[$key] = $quote;
-        continue;
+    $quotesForRequest =
+        loadQuoteHistory($requestId);
+
+    foreach ($quotesForRequest as $quoteId => $quote) {
+
+        $modernQuotes[$quoteId] = $quote;
+
+        $requestToQuotes[$requestId][] =
+            $quoteId;
+
+        $status =
+            strtolower(
+                $quote['status']
+                ?? ''
+            );
+
+        if (
+            strpos($status, 'accept')
+            !== false
+        ) {
+
+            $acceptedQuotes[$quoteId] =
+                $quote;
+        }
     }
 
-    $quoteId =
-        $quote['quote_id']
-        ?? $quote['quote_number']
-        ?? $key;
+    if (!isset($requests[$requestId])) {
 
-    $modernQuotes[$quoteId] = $quote;
-
-    $requestId =
-        $quote['request_id']
-        ?? '';
-
-    if ($requestId !== '') {
-
-        $requestToQuotes[$requestId][] = $quoteId;
-
-        if (!isset($requests[$requestId])) {
+        foreach ($quotesForRequest as $quoteId => $quote) {
 
             $orphanQuotes[$quoteId] = [
                 'quote_id' => $quoteId,
@@ -97,13 +107,24 @@ foreach ($quotes as $key => $quote) {
             ];
         }
     }
+}
 
-    $status = strtolower($quote['status'] ?? '');
+foreach ($quotes as $key => $quote) {
 
-    if (
-        strpos($status, 'accept') !== false
-    ) {
-        $acceptedQuotes[$quoteId] = $quote;
+    $isLegacy =
+        !is_array($quote)
+        ||
+        empty($quote['quote_id'])
+        ||
+        strpos(
+            $quote['quote_id'],
+            'AR-'
+        ) !== 0;
+
+    if ($isLegacy) {
+
+        $legacyRecords[$key] =
+            $quote;
     }
 }
 
@@ -152,21 +173,25 @@ foreach ($requestToQuotes as $requestId => $quoteIds) {
         'accepted_count' => count($acceptedQuotesForRequest)
     ];
 
+    $acceptedQuoteId = null;
+
     foreach ($quotesForRequest as $quoteId => $quote) {
 
-        if (count($acceptedQuotesForRequest) > 1) {
+        if (isAcceptedQuote($quote)) {
+            $acceptedQuoteId = $quoteId;
+            break;
+        }
+    }
 
-            $quoteStatuses[$quoteId] = 'multiple_accepted';
+    foreach ($quotesForRequest as $quoteId => $quote) {
 
-        } elseif (count($acceptedQuotesForRequest) === 1) {
-
+        if ($acceptedQuoteId !== null) {
             $quoteStatuses[$quoteId] =
-                in_array($quoteId, $acceptedQuotesForRequest, true)
+                ($quoteId === $acceptedQuoteId)
                 ? 'accepted'
                 : 'superseded';
 
         } else {
-
             $quoteStatuses[$quoteId] =
                 ($quoteId === $latestQuoteId)
                 ? 'current'
@@ -207,11 +232,15 @@ foreach ($requests as $requestId => $requestData) {
    STATS
 ========================== */
 
+// $totalModernQuotes      = count($modernQuotes);
+
 $totalModernQuotes      = count($modernQuotes);
+
 $totalLegacyQuotes      = count($legacyRecords);
 $totalAcceptedQuotes    = count($acceptedQuotes);
 $totalDuplicateRequests = count($multipleQuoteRequests);
 $totalMissingQuotes     = count($requestsWithoutQuotes);
+$totalRequestFolders = count($requestFolders);
 
 ?>
 <!DOCTYPE html>
@@ -221,258 +250,248 @@ $totalMissingQuotes     = count($requestsWithoutQuotes);
 <title>Audit des soumissions</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-body {
-    padding:0 !important;
-}
+    body {
+        padding:0 !important;
+    }
 
-.admin-topbar {
-    background:#111111;
-    color:#ffffff;
-    padding:14px 24px;
-    border-bottom:2px solid #d1b06a;
-}
+    .admin-topbar {
+        background:#111111;
+        color:#ffffff;
+        padding:14px 24px;
+        border-bottom:2px solid #d1b06a;
+    }
 
-.admin-container {
-    max-width:1400px;
-    margin:0 auto;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:12px;
-}
+    .admin-container {
+        max-width:1400px;
+        margin:0 auto;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        flex-wrap:wrap;
+        gap:12px;
+    }
 
-.admin-title {
-    font-size:15px;
-    color:#ffffff;
-}
+    .admin-title {
+        font-size:15px;
+        color:#ffffff;
+    }
 
-.admin-title strong {
-    color:#d1b06a;
-    font-weight:700;
-}
+    .admin-title strong {
+        color:#d1b06a;
+        font-weight:700;
+    }
 
-.admin-topbar .btn.btn-outline {
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    color:#ffffff;
-    border:1px solid #555;
-    background:transparent;
-    text-decoration:none;
-    padding:6px 14px;
-    border-radius:4px;
-    font-size:14px;
-    font-weight:600;
-}
+    .admin-topbar .btn.btn-outline {
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        color:#ffffff;
+        border:1px solid #555;
+        background:transparent;
+        text-decoration:none;
+        padding:6px 14px;
+        border-radius:4px;
+        font-size:14px;
+        font-weight:600;
+    }
 
-.admin-topbar .btn.btn-outline:hover {
-    background:#333;
-    border-color:#d1b06a;
-}
+    .admin-topbar .btn.btn-outline:hover {
+        background:#333;
+        border-color:#d1b06a;
+    }
 </style>
 <style>
-body {
-    font-family: -apple-system, Arial, sans-serif;
-    background: #f6f8fa;
-    margin: 0;
-    padding: 0;
-    color: #24292e;
-}
+    body {
+        font-family: -apple-system, Arial, sans-serif;
+        background: #f6f8fa;
+        margin: 0;
+        padding: 0;
+        color: #24292e;
+    }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-.header-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-}
+    .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
 
-h1 {
-    color: #24292e;
-    margin: 0;
-}
+    h1 {
+        color: #24292e;
+        margin: 0;
+    }
 
-.info-card {
-    background: #e3f2fd;
-    border-left: 4px solid #2196f3;
-    padding: 16px 20px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-    line-height: 1.6;
-    color: #0d47a1;
-}
+    .info-card {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 16px 20px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        line-height: 1.6;
+        color: #0d47a1;
+    }
 
-.stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-    margin-bottom: 24px;
-}
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
 
-.stat {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    border-left: 4px solid #ccc;
-    box-shadow: 0 2px 8px rgba(0,0,0,.05);
-}
+    .stat {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #ccc;
+        box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
 
-.stat.active {
-    border-left-color: #10b981;
-}
+    .stat.active {
+        border-left-color: #10b981;
+    }
 
-.stat.warning {
-    border-left-color: #f59e0b;
-}
+    .stat.warning {
+        border-left-color: #f59e0b;
+    }
 
-.stat.danger {
-    border-left-color: #dc2626;
-}
+    .stat.danger {
+        border-left-color: #dc2626;
+    }
 
-.stat-value {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #24292e;
-    margin-bottom: 4px;
-}
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #24292e;
+        margin-bottom: 4px;
+    }
 
-.stat-label {
-    font-size: .82rem;
-    color: #666;
-    font-weight: 600;
-    text-transform: uppercase;
-}
+    .stat-label {
+        font-size: .82rem;
+        color: #666;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
 
-.card {
-    background: #fff;
-    border: 1px solid #d0d7de;
-    border-radius: 8px;
-    padding: 24px;
-    margin-bottom: 24px;
-}
+    .card {
+        background: #fff;
+        border: 1px solid #d0d7de;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
 
-.card h2 {
-    margin-top: 0;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 12px;
-    color: #24292e;
-}
+    .card h2 {
+        margin-top: 0;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 12px;
+        color: #24292e;
+    }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: .88rem;
-}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .88rem;
+    }
 
-th {
-    background: #24292e;
-    color: #fff;
-    padding: 12px 10px;
-    text-align: left;
-    font-weight: 700;
-    font-size: .78rem;
-    text-transform: uppercase;
-}
+    th {
+        background: #24292e;
+        color: #fff;
+        padding: 12px 10px;
+        text-align: left;
+        font-weight: 700;
+        font-size: .78rem;
+        text-transform: uppercase;
+    }
 
-td {
-    padding: 12px 10px;
-    border-bottom: 1px solid #eef1f5;
-    vertical-align: top;
-}
+    td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #eef1f5;
+        vertical-align: top;
+    }
 
-tr:hover td {
-    background: #f9fafb;
-}
+    tr:hover td {
+        background: #f9fafb;
+    }
 
-.badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: .72rem;
-    font-weight: 700;
-}
+    .badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: .72rem;
+        font-weight: 700;
+    }
 
-.badge-yes {
-    background: #d1fae5;
-    color: #065f46;
-}
+    .badge-yes {
+        background: #d1fae5;
+        color: #065f46;
+    }
 
-.badge-warning {
-    background: #fef3c7;
-    color: #92400e;
-}
+    .badge-warning {
+        background: #fef3c7;
+        color: #92400e;
+    }
 
-.badge-danger {
-    background: #fee2e2;
-    color: #991b1b;
-}
+    .badge-danger {
+        background: #fee2e2;
+        color: #991b1b;
+    }
 
-code {
-    background: #f0f4fa;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: .85rem;
-}
+    code {
+        background: #f0f4fa;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: .85rem;
+    }
 
-.stat.active  { border-left-color:#10b981; } /* green */
-.stat.warning { border-left-color:#f59e0b; } /* amber */
-.stat.danger  { border-left-color:#dc2626; } /* red */
+    .stat.active  { border-left-color:#10b981; } /* green */
+    .stat.warning { border-left-color:#f59e0b; } /* amber */
+    .stat.danger  { border-left-color:#dc2626; } /* red */
 
-.badge-multiple {
-    background:#dc2626;
-    color:white;
-}
+    .badge-current {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
 
-.badge-current {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
+    .badge-accepted {
+        background: #d1fae5;
+        color: #065f46;
+    }
 
-.badge-accepted {
-    background: #d1fae5;
-    color: #065f46;
-}
+    .badge-superseded {
+        background: #fef3c7;
+        color: #92400e;
+    }
 
-.badge-superseded {
-    background: #fef3c7;
-    color: #92400e;
-}
+    .badge-danger{
+        background:#fee2e2;
+        color:#991b1b;
+    }
 
-.badge-multiple {
-    background:#dc2626;
-    color:#ffffff;
-}
+    .badge-current{
+        background:#dbeafe;
+        color:#1d4ed8;
+    }
 
-.badge-danger{
-    background:#fee2e2;
-    color:#991b1b;
-}
+    .badge-accepted{
+        background:#d1fae5;
+        color:#065f46;
+    }
 
-.badge-current{
-    background:#dbeafe;
-    color:#1d4ed8;
-}
+    .badge-superseded{
+        background:#fef3c7;
+        color:#92400e;
+    }
 
-.badge-accepted{
-    background:#d1fae5;
-    color:#065f46;
-}
-
-.badge-superseded{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.badge-danger{
-    background:#fee2e2;
-    color:#991b1b;
-}
+    .badge-danger{
+        background:#fee2e2;
+        color:#991b1b;
+    }
 </style>
 </head>
 <body>
@@ -517,19 +536,6 @@ code {
         les demandes sans soumissions et les anciens formats de données.
     </div>
 
-    <?php
-
-    $multipleAcceptedRequests = 0;
-
-    foreach ($requestSummary as $row) {
-
-        if (($row['accepted_count'] ?? 0) > 1) {
-            $multipleAcceptedRequests++;
-        }
-    }
-
-    ?>
-
     <div class="stats">
 
         <div class="stat active">
@@ -547,11 +553,6 @@ code {
             <div class="stat-label">Soumissions acceptées</div>
         </div>
 
-        <div class="stat danger">
-            <div class="stat-value"><?= $multipleAcceptedRequests ?></div>
-            <div class="stat-label">Dossiers à vérifier</div>
-        </div>
-
         <div class="stat warning">
             <div class="stat-value"><?= $totalDuplicateRequests ?></div>
             <div class="stat-label">Dossiers avec plusieurs devis</div>
@@ -562,6 +563,14 @@ code {
             <div class="stat-label">Demandes sans devis</div>
         </div>
 
+        <div class="stat active">
+            <div class="stat-value">
+                <?= $totalRequestFolders ?>
+            </div>
+            <div class="stat-label">
+                Dossiers avec historique
+            </div>
+        </div>
 
     </div>
 
@@ -633,11 +642,6 @@ code {
         <?php elseif ($status === 'superseded'): ?>
             <span class="badge badge-superseded">
                 Remplacée
-            </span>
-
-        <?php elseif ($status === 'multiple_accepted'): ?>
-            <span class="badge badge-multiple">
-                Vérifier
             </span>
 
         <?php endif; ?>
@@ -752,36 +756,36 @@ $hasQuoteFile =
 
 </div>
 
-<div class="card">
+<!-- <div class="card">
 
-<h2>🏛️ Enregistrements hérités (Legacy)</h2>
+    <h2>🏛️ Enregistrements hérités (Legacy)</h2>
 
-<table>
+    <table>
 
-<tr>
-    <th>Clé</th>
-    <th>Type</th>
-</tr>
+        <tr>
+            <th>Clé</th>
+            <th>Type</th>
+        </tr>
 
-<?php foreach ($legacyRecords as $key => $value): ?>
+        <?php foreach ($legacyRecords as $key => $value): ?>
 
-<tr>
+        <tr>
 
-<td>
-<code><?= htmlspecialchars($key) ?></code>
-</td>
+        <td>
+        <code><?= htmlspecialchars($key) ?></code>
+        </td>
 
-<td>
-<?= gettype($value) ?>
-</td>
+        <td>
+        <?= gettype($value) ?>
+        </td>
 
-</tr>
+        </tr>
 
-<?php endforeach; ?>
+        <?php endforeach; ?>
 
-</table>
+    </table>
 
-</div>
+</div> -->
 
 </body>
 </html>

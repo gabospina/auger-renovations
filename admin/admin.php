@@ -224,6 +224,18 @@ $data = json_decode(file_get_contents($siteTextFile), true);
           <p>Versions, historiques et vérifications</p>
       </a>
 
+      <a href="quote-history.php?request_id=REQ-20261103-D9FC" class="card">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <h3>Historique des soumissions</h3>
+          <p>Consulter toutes les versions de devis par dossier</p>
+      </a>
+
+      <a href="quote-history-dashboard.php" class="card">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <h3>Historique des soumissions</h3>
+          <p>Consulter toutes les versions de devis par dossier</p>
+      </a>
+
     </div>
 
     <div class="settings-panel">

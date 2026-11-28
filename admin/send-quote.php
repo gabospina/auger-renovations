@@ -126,8 +126,63 @@ if (!$data || empty($data['client'])) {
 $quotesLogFile = $dataDir . '/quotes.json';
 $allQuotes = file_exists($quotesLogFile) ? (json_decode(file_get_contents($quotesLogFile), true) ?: []) : [];
 
-$quoteSeq = count($allQuotes) + 1;
-$quoteNumber = 'AR-' . date('Y') . '-' . str_pad($quoteSeq, 4, '0', STR_PAD_LEFT);
+$nextNumber = 1;
+
+foreach ($allQuotes as $quote) {
+    $quoteId =
+        $quote['quote_id']
+        ?? '';
+    if (
+        preg_match(
+            '/AR-\d{4}-(\d+)/',
+            $quoteId,
+            $matches
+        )
+    ) {
+        $nextNumber =
+            max(
+                $nextNumber,
+                (int)$matches[1] + 1
+            );
+    }
+}
+
+$nextNumber = 1;
+
+foreach ($allQuotes as $quote) {
+
+    $quoteId =
+        $quote['quote_id']
+        ?? '';
+
+    if (
+        preg_match(
+            '/AR-\d{4}-(\d+)/',
+            $quoteId,
+            $matches
+        )
+    ) {
+
+        $nextNumber =
+            max(
+                $nextNumber,
+                (int)$matches[1] + 1
+            );
+    }
+}
+
+$quoteNumber =
+    'AR-'
+    . date('Y')
+    . '-'
+    . str_pad(
+        $nextNumber,
+        4,
+        '0',
+        STR_PAD_LEFT
+    );
+
+
 $dateCreated = date('Y-m-d H:i');
 
 // 2. Prepare Client & Financials
@@ -354,10 +409,66 @@ file_put_contents($filePath, $htmlQuote);
 
 // 6. Append to quotes.json Database
 $validUntil = date('Y-m-d', strtotime('+30 days'));
+
+/* Normalize Materials */
+
+foreach ($materials as &$item) {
+
+    if (isset($item['unit'])) {
+        $item['unit'] =
+            round((float)$item['unit'], 2);
+    }
+
+    if (isset($item['total'])) {
+        $item['total'] =
+            round((float)$item['total'], 2);
+    }
+}
+
+unset($item);
+
+/* Normalize Labor */
+
+foreach ($labor as &$item) {
+
+    if (isset($item['rate'])) {
+        $item['rate'] =
+            round((float)$item['rate'], 2);
+    }
+
+    if (isset($item['total'])) {
+        $item['total'] =
+            round((float)$item['total'], 2);
+    }
+}
+
+unset($item);
+
+/* Normalize Totals */
+
+$totals['materials'] =
+    round((float)($totals['materials'] ?? 0), 2);
+
+$totals['labor'] =
+    round((float)($totals['labor'] ?? 0), 2);
+
+$totals['subtotal'] =
+    round((float)($totals['subtotal'] ?? 0), 2);
+
+$totals['tps'] =
+    round((float)($totals['tps'] ?? 0), 2);
+
+$totals['tvq'] =
+    round((float)($totals['tvq'] ?? 0), 2);
+
+$totals['grand_total'] =
+    round((float)($totals['grand_total'] ?? 0), 2);
+
 $quoteData = [
     'quote_id'     => $quoteNumber,
     'quote_number' => $quoteNumber,
     'request_id'   => $data['request_id'] ?? '',
+    'lifecycle_status' => 'current',
     'client'       => $client,
     'materials'    => $materials,
     'labor'        => $labor,
@@ -382,15 +493,40 @@ if (!empty($quoteData['request_id'])) {
 }
 
 // 6b. Update requests.json so the status becomes "Soumission envoyée" in requests.php
-$reqId = $data['request_id'] ?? '';
-$requestsFile = $dataDir . '/requests.json';
-if (!empty($reqId) && file_exists($requestsFile)) {
-    $allRequests = json_decode(file_get_contents($requestsFile), true) ?: [];
-    if (isset($allRequests[$reqId])) {
-        $allRequests[$reqId]['status']       = 'Soumission envoyée';
-        $allRequests[$reqId]['quote_id']     = $quoteNumber;
-        $allRequests[$reqId]['quote_amount'] = number_format((float)($totals['grand_total'] ?? 0), 2, '.', ' ') . ' $';
-        file_put_contents($requestsFile, json_encode($allRequests, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+$requestId =
+    $data['request_id']
+    ?? '';
+
+if ($requestId !== '') {
+
+    $requestsFile =
+        $dataDir . '/requests.json';
+
+    if (file_exists($requestsFile)) {
+
+        $requests =
+            json_decode(
+                file_get_contents($requestsFile),
+                true
+            ) ?: [];
+
+        if (isset($requests[$requestId])) {
+
+            /*
+             * Only change if not already accepted
+             */
+            if (!str_contains(strtolower($requests[$requestId]['status'] ?? ''), 'accept')) {
+              $requests[$requestId]['status'] = 'Soumission envoyée';
+            }
+
+            $requests[$requestId]['quote_id'] = $quoteNumber;
+            $requests[$requestId]['last_quote_sent_at'] = date('Y-m-d H:i:s');
+
+            file_put_contents(
+                $requestsFile,
+                json_encode($requests, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+            );
+        }
     }
 }
 

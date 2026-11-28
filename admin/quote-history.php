@@ -33,34 +33,12 @@ if ($requestId === '') {
 /* ==========================
    LOAD QUOTES
 ========================== */
+require_once __DIR__ . '/includes/quote-storage.php';
 
-$quotesFile = __DIR__ . '/data/quotes.json';
-
-$quotes = file_exists($quotesFile)
-    ? json_decode(file_get_contents($quotesFile), true)
-    : [];
-
-if (!is_array($quotes)) {
-    $quotes = [];
-}
-
-$history = [];
-
-foreach ($quotes as $quoteId => $quote) {
-
-    if (
-        !is_array($quote)
-        || empty($quote['request_id'])
-    ) {
-        continue;
-    }
-
-    if ($quote['request_id'] !== $requestId) {
-        continue;
-    }
-
-    $history[$quoteId] = $quote;
-}
+$history =
+    loadQuoteHistory(
+        $requestId
+    );
 
 if (empty($history)) {
     die("Aucune soumission trouvée pour {$requestId}");
@@ -107,25 +85,49 @@ foreach ($history as $quoteId => $quote) {
 
 $quoteStatuses = [];
 
+$latestQuoteId =
+    array_key_first($history);
+
 foreach ($history as $quoteId => $quote) {
 
-    if (count($acceptedQuotes) > 1) {
-
-        $quoteStatuses[$quoteId] = 'review';
-
-    } elseif (count($acceptedQuotes) === 1) {
+    /*
+     * New system
+     */
+    if (!empty($quote['lifecycle_status'])) {
 
         $quoteStatuses[$quoteId] =
-            in_array($quoteId, $acceptedQuotes, true)
-            ? 'accepted'
-            : 'superseded';
+            $quote['lifecycle_status'];
+
+        continue;
+    }
+
+    /*
+     * Compatibility with old quotes
+     */
+    $status =
+        strtolower(
+            $quote['status'] ?? ''
+        );
+
+    if (
+        strpos(
+            $status,
+            'accept'
+        ) !== false
+    ) {
+
+        $quoteStatuses[$quoteId] =
+            'accepted';
+
+    } elseif ($quoteId === $latestQuoteId) {
+
+        $quoteStatuses[$quoteId] =
+            'current';
 
     } else {
 
         $quoteStatuses[$quoteId] =
-            ($quoteId === $latestQuoteId)
-            ? 'current'
-            : 'superseded';
+            'superseded';
     }
 }
 
@@ -269,11 +271,6 @@ tr:hover td{
 .badge-superseded{
     background:#fef3c7;
     color:#92400e;
-}
-
-.badge-multiple{
-    background:#dc2626;
-    color:white;
 }
 
 .btn{
@@ -484,12 +481,6 @@ code{
 
                             <span class="badge badge-superseded">
                                 Remplacée
-                            </span>
-
-                        <?php elseif ($status === 'review'): ?>
-
-                            <span class="badge badge-multiple">
-                                Vérifier
                             </span>
 
                         <?php endif; ?>

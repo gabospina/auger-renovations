@@ -864,8 +864,11 @@ async function runQuotePrefill(reqId) {
   try {
     // Map materials and generate prefill cache
     await fetch(`ai/analyze-request.php?id=${encodeURIComponent(reqId)}`);
+
     await fetch(`ai/material-mapper.php?id=${encodeURIComponent(reqId)}`);
-    const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`);
+
+    const res = await fetch(`ai/quote-prefill.php?id=${encodeURIComponent(reqId)}`
+);
 
     const json = await res.json();
 

@@ -453,7 +453,17 @@ function addMaterialRow(desc = '', qty = 0, unit = 0) {
     updateCalculations();
   });
 
-  container.appendChild(row);
+  const baseDivider = Array.from(
+      container.querySelectorAll('.materials-divider')
+  ).find(div =>
+      (div.dataset.label || '').includes('Matériaux de base')
+  );
+
+  if (baseDivider) {
+      container.insertBefore(row, baseDivider);
+  } else {
+      container.appendChild(row);
+  }
 }
 
 /**

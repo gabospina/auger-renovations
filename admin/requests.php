@@ -3,6 +3,8 @@
 $dataFile = __DIR__ . '/data/requests.json';
 $quotesFile = __DIR__ . '/data/quotes.json';
 $uploadsBaseDir = __DIR__ . '/../uploads';
+require_once __DIR__ . '/includes/quote-storage.php';
+
 $message = '';
 
 // Handle Delete Action via POST
@@ -33,39 +35,111 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Load requests
-$requests = [];
-if (file_exists($dataFile)) {
-    $raw = json_decode(file_get_contents($dataFile), true);
-    if (is_array($raw)) {
-        foreach ($raw as $key => $item) {
-            if (is_array($item)) {
-                $requests[$key] = $item;
-            }
-        }
+
+$requests = file_exists($dataFile)
+    ? json_decode(
+        file_get_contents($dataFile),
+        true
+    )
+    : [];
+
+if (!is_array($requests)) {
+    $requests = [];
+}
+
+/* ==========================
+   STATUS COUNTERS
+========================== */
+
+$totalRequests = count($requests);
+
+$statusCounts = [
+    'En attente' => 0,
+    'Soumission envoyée' => 0,
+    'Accepté' => 0,
+    'Chantier en cours' => 0,
+    'Terminé' => 0,
+    'Autres' => 0
+];
+
+foreach ($requests as $request) {
+
+    $status =
+        trim($request['status'] ?? '');
+
+    // echo '<pre>'; var_dump($status); echo '</pre>';
+
+    switch ($status) {
+
+        case 'En attente':
+        case 'Nouvelle demande':
+        case 'pending':
+            $statusCounts['En attente']++;
+            break;
+
+        case 'Soumission envoyée':
+            $statusCounts['Soumission envoyée']++;
+            break;
+
+        case 'Accepté':
+        case 'Accepté - Chantier à planifier':
+            $statusCounts['Accepté']++;
+            break;
+
+        case 'Chantier en cours':
+            $statusCounts['Chantier en cours']++;
+            break;
+
+        case 'Terminé':
+            $statusCounts['Terminé']++;
+            break;
+
+        default:
+            $statusCounts['Autres']++;
+            break;
     }
 }
 
-// Load quotes index mapped by request_id
+/* ==========================
+   NORMALIZE REQUESTS
+========================== */
+
+$normalizedRequests = [];
+
+foreach ($requests as $key => $item) {
+
+    if (is_array($item)) {
+
+        $normalizedRequests[$key] =
+            $item;
+    }
+}
+
+$requests = $normalizedRequests;
+
+/* ==========================
+   LOAD QUOTE HISTORY
+========================== */
+
 $quotesByReq = [];
 
-if (file_exists($quotesFile)) {
+$requestFolders =
+    getAllRequestHistoryFolders();
 
-    $rawQuotes = json_decode(
-        file_get_contents($quotesFile),
-        true
-    ) ?: [];
+foreach ($requestFolders as $folder) {
 
-    foreach ($rawQuotes as $qId => $qData) {
+    $requestId =
+        basename($folder);
 
-        if (
-            is_array($qData)
-            && !empty($qData['request_id'])
-        ) {
+    $latestQuote =
+        getLatestQuote(
+            $requestId
+        );
 
-            $quotesByReq[
-                $qData['request_id']
-            ][] = $qData;
-        }
+    if ($latestQuote) {
+
+        $quotesByReq[$requestId] =
+            $latestQuote;
     }
 }
 
@@ -295,6 +369,53 @@ function formatRenovationType($project)
       text-align: left;
       table-layout: auto;
     }
+
+    .stats {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:16px;
+    margin-bottom:24px;
+    }
+
+    .stat {
+        background:#fff;
+        padding:20px;
+        border-radius:10px;
+        border-left:4px solid #ccc;
+        box-shadow:0 2px 8px rgba(0,0,0,.05);
+    }
+
+    .stat.new {
+        border-left-color:#2563eb;
+    }
+
+    .stat.sent {
+        border-left-color:#f59e0b;
+    }
+
+    .stat.accepted {
+        border-left-color:#10b981;
+    }
+
+    .stat.progress {
+        border-left-color:#7c3aed;
+    }
+
+    .stat.done {
+        border-left-color:#374151;
+    }
+
+    .stat-value {
+        font-size:1.8rem;
+        font-weight:800;
+    }
+
+    .stat-label {
+        font-size:.82rem;
+        color:#666;
+        font-weight:600;
+        text-transform:uppercase;
+    }
   </style>
 </head>
 <body class="admin-estimator-body">
@@ -331,9 +452,64 @@ function formatRenovationType($project)
         <h1 style="margin: 0 0 6px 0; font-size: 24px;">Demandes de soumission – Salle de bain</h1>
         <p style="margin: 0; color: #666;">Liste complète des demandes soumises par les clients via le site web.</p>
       </div>
-      <div>
-        <span style="font-weight: 600; font-size: 15px;">Total dossiers : <?= count($requests) ?></span>
+    </div>
+
+    <div class="stats">
+
+      <div class="stat active">
+          <div class="stat-value">
+              <?= $totalRequests ?>
+          </div>
+          <div class="stat-label">
+              Total des demandes
+          </div>
       </div>
+
+      <div class="stat new">
+          <div class="stat-value">
+              <?= $statusCounts['En attente'] ?>
+          </div>
+          <div class="stat-label">
+              En attente
+          </div>
+      </div>
+
+      <div class="stat sent">
+          <div class="stat-value">
+              <?= $statusCounts['Soumission envoyée'] ?>
+          </div>
+          <div class="stat-label">
+              Soumissions envoyées
+          </div>
+      </div>
+
+      <div class="stat accepted">
+          <div class="stat-value">
+            <?= $statusCounts['Accepté'] ?>  
+          </div>
+          <div class="stat-label">
+              Acceptées
+          </div>
+      </div>
+
+      <div class="stat progress">
+          <div class="stat-value">
+              <?= $statusCounts['Chantier en cours'] ?>
+          </div>
+          <div class="stat-label">
+              Chantiers en cours
+          </div>
+      </div>
+
+      <div class="stat done">
+          <div class="stat-value">
+              <?= $statusCounts['Terminé'] ?>
+          </div>
+          <div class="stat-label">
+              Terminés
+          </div>
+      </div>
+
     </div>
 
     <div class="table-container">

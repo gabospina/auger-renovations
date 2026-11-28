@@ -5,6 +5,7 @@ $quoteData = null;
 
 $quotesFile = __DIR__ . '/admin/data/quotes.json';
 $requestsFile = __DIR__ . '/admin/data/requests.json';
+require_once __DIR__ . '/admin/includes/quote-storage.php';
 
 if ($quoteId && file_exists($quotesFile)) {
     $quotes = json_decode(file_get_contents($quotesFile), true) ?: [];
@@ -75,30 +76,131 @@ $tvqAmount  = $totals['tvq'] ?? ((float)$subTotal * 0.09975);
 $grandTotal = $totals['grand_total'] ?? ((float)$subTotal + (float)$tpsAmount + (float)$tvqAmount);
 
 // Handle Client Acceptance
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept_quote') {
-    $signerName = trim($_POST['signer_name'] ?? '');
-    
+// Handle Client Acceptance
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST'
+    && isset($_POST['action'])
+    && $_POST['action'] === 'accept_quote'
+) {
+
+    $signerName =
+        trim($_POST['signer_name'] ?? '');
+
     if (!empty($signerName)) {
+
         // 1. Update quotes.json
-        $quotes = json_decode(file_get_contents($quotesFile), true) ?: [];
+
+        $quotes =
+            json_decode(
+                file_get_contents($quotesFile),
+                true
+            ) ?: [];
+
         if (isset($quotes[$quoteId])) {
+
+            $requestId =
+                $quotes[$quoteId]['request_id']
+                ?? '';
+
+            /*
+             * Mark all other quotes
+             * in the same request
+             * as superseded
+             */
+            if ($requestId !== '') {
+
+                foreach ($quotes as $otherQuoteId => &$otherQuote) {
+
+                    if (
+                        ($otherQuote['request_id'] ?? '')
+                        === $requestId
+                        && $otherQuoteId !== $quoteId
+                    ) {
+
+                        $otherQuote['lifecycle_status'] = 'superseded';
+                        $otherQuote['status'] = 'Remplacée';
+                    }
+                }
+                unset($otherQuote);
+            }
+            /*
+             * Accepted quote
+             */
             $quotes[$quoteId]['status'] = 'Acceptée';
             $quotes[$quoteId]['accepted_at'] = date('Y-m-d H:i:s');
             $quotes[$quoteId]['accepted_by'] = $signerName;
-            file_put_contents($quotesFile, json_encode($quotes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+            $quotes[$quoteId]['lifecycle_status'] = 'accepted';
+
+            file_put_contents(
+                $quotesFile,
+                json_encode($quotes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+            );
+
             $quoteData = $quotes[$quoteId];
+
+            /*
+             * Synchronize quote-history
+             */
+            if (!empty($quoteData['request_id'])) {
+
+                $requestId = $quoteData['request_id'];
+                $history = loadQuoteHistory($requestId);
+
+                foreach ($history as $histQuoteId => $histQuote) {
+
+                    // Accepted quote
+                    if ($histQuoteId === $quoteId) {
+
+                        $histQuote['status'] = 'Acceptée';
+                        $histQuote['lifecycle_status'] = 'accepted';
+                        $histQuote['accepted_at'] = $quoteData['accepted_at'];
+                        $histQuote['accepted_by'] = $quoteData['accepted_by'];
+
+                    } else {
+
+                        // Older quotes become superseded
+                        $histQuote['status'] = 'Remplacée';
+                        $histQuote['lifecycle_status'] = 'superseded';
+                    }
+                    saveQuoteToHistory($requestId, $histQuoteId, $histQuote);
+                }
+            }
         }
 
         // 2. Update requests.json
+
         if ($reqId && file_exists($requestsFile)) {
-            $requests = json_decode(file_get_contents($requestsFile), true) ?: [];
-            if (isset($requests[$reqId])) {
-                $requests[$reqId]['status'] = 'Accepté - Chantier à planifier';
-                $requests[$reqId]['accepted_at'] = date('Y-m-d H:i:s');
-                $requests[$reqId]['quote_id'] = $quoteId;
-                $requests[$reqId]['quote_amount'] = fmtCurrency($grandTotal);
-                file_put_contents($requestsFile, json_encode($requests, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-            }
+
+          $requests =
+              json_decode(
+                  file_get_contents($requestsFile),
+                  true
+              ) ?: [];
+
+          if (isset($requests[$reqId])) {
+
+              $requests[$reqId]['status'] =
+                  'Accepté - Chantier à planifier';
+
+              $requests[$reqId]['accepted_at'] =
+                  date('Y-m-d H:i:s');
+
+              $requests[$reqId]['quote_id'] =
+                  $quoteId;
+
+              $requests[$reqId]['quote_amount'] =
+                  fmtCurrency($grandTotal);
+
+              file_put_contents(
+                  $requestsFile,
+                  json_encode(
+                      $requests,
+                      JSON_PRETTY_PRINT
+                      | JSON_UNESCAPED_SLASHES
+                      | JSON_UNESCAPED_UNICODE
+                  )
+              );
+          }
         }
 
         $status = 'Acceptée';

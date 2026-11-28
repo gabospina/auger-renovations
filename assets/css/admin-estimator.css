@@ -12,44 +12,58 @@
 }
 
 .admin-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .admin-title {
-    font-size: 15px;
-    color: #ffffff;
+  font-size: 15px;
+  color: #ffffff;
 }
 .admin-title strong {
-    color: #d1b06a;
+  color: #d1b06a;
 }
 .btn.btn-outline {
-    color: #ffffff;
-    border: 1px solid #555;
-    background: transparent;
-    text-decoration: none;
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+  color: #003366;
+  border: 1px solid #555;
+  background: #e27145;
+  border: 1px solid #003366;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
 }
 .btn.btn-outline:hover {
-    background: #333;
-    border-color: #d1b06a;
-    color: #ffffff;
+  background: #eeeff0;
+  border-color: #d1b06a;
+  color: #ffffff;
 }
 .btn.btn-outline i {
-    font-size: 13px;
+  color: inherit;
+  font-size: 13px;
+}
+
+/* Small variant retains its sizing, but inherits text color */
+.btn.btn-outline.btn-sm {
+    color: #e3e6e9;
+    background: #ddab6a;
+    border: 1px solid #003366;
+}
+.btn.btn-outline.btn-sm:hover {
+    background: #dfe0e2;
+    color: #ffffff;
+    border-color: #003366;
 }
 
 .badge-req {
@@ -200,17 +214,41 @@
 }
 
 #add-material,
-#add-labor,
-#btn-prefill-quote {
-  padding: 4px 10px !important;
-  font-size: 12px !important;
-  border-radius: 6px !important;
+#add-labor {
+  background: #e27145 !important;
+  color: #ffffff !important;
+  border: 1px solid #003366 !important;
+
+  font-family: "Segoe UI", Roboto, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+
+  width: auto !important;
+  min-width: 140px !important;
+  max-width: 140px !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
 }
 
-#add-labor {
+
+#add-material:hover,
+#add-labor:hover {
+    background-color: #e27145;
+    color: #ffffff;
+    border-color: #003366;
+}
+
+/* #add-labor {
   width: auto !important;
   justify-self: center;
-}
+} */
 
 .estimator-btn {
     padding: 4px 10px;
@@ -229,15 +267,15 @@
 
 /* Pending items — yellow highlight for items missing from catalog */
 .quote-row.row-pending {
-    background: #fff8e1 !important;
-    border-left: 3px solid #f59e0b;
-    padding-left: 8px !important;
+  background: #fff8e1 !important;
+  border-left: 3px solid #f59e0b;
+  padding-left: 8px !important;
 }
 .quote-row.row-pending .mat-desc,
 .quote-row.row-pending .mat-unit {
-    background: #fff8e1 !important;
-    color: #92400e;
-    font-weight: 600;
+  background: #fff8e1 !important;
+  color: #92400e;
+  font-weight: 600;
 }
 
 @media (max-width: 1024px) {
